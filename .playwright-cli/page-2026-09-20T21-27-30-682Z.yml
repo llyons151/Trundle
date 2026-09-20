@@ -1,0 +1,15 @@
+- generic [ref=e4]:
+  - generic [ref=e161]:
+    - generic [ref=e162]: Apps
+    - generic [ref=e163]: Coming soon
+  - tablist [ref=e149]:
+    - tab "Home" [ref=e150] [cursor=pointer]:
+      - generic [ref=e151]: 
+    - tab "Apps" [active] [ref=e152] [cursor=pointer]:
+      - generic [ref=e153]: 
+    - button "Lock my apps" [ref=e154] [cursor=pointer]:
+      - generic [ref=e155]: 
+    - tab "Trail" [ref=e156] [cursor=pointer]:
+      - generic [ref=e157]: 
+    - tab "You" [ref=e158] [cursor=pointer]:
+      - generic [ref=e159]: 

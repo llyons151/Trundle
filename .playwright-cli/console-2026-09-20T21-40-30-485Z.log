@@ -1,0 +1,479 @@
+[     576ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:8081/index.ts.bundle?platform=web&dev=true&hot=false&lazy=true&transform.engine=hermes&transform.routerRoot=app&unstable_transformProfile=hermes-stable:1498
+[     693ms] [LOG] Running application "main" with appParams:
+ {rootTag: #root, hydrate: undefined} 
+Development-level warnings: ON.
+Performance optimizations: OFF. @ http://localhost:8081/index.ts.bundle?platform=web&dev=true&hot=false&lazy=true&transform.engine=hermes&transform.routerRoot=app&unstable_transformProfile=hermes-stable:1498
+[     762ms] [WARNING] props.pointerEvents is deprecated. Use style.pointerEvents @ http://localhost:8081/index.ts.bundle?platform=web&dev=true&hot=false&lazy=true&transform.engine=hermes&transform.routerRoot=app&unstable_transformProfile=hermes-stable:1498
+[  177421ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:8081/index.ts.bundle?platform=web&dev=true&hot=false&lazy=true&transform.engine=hermes&transform.routerRoot=app&unstable_transformProfile=hermes-stable:1498
+[  177546ms] [LOG] Running application "main" with appParams:
+ {rootTag: #root, hydrate: undefined} 
+Development-level warnings: ON.
+Performance optimizations: OFF. @ http://localhost:8081/index.ts.bundle?platform=web&dev=true&hot=false&lazy=true&transform.engine=hermes&transform.routerRoot=app&unstable_transformProfile=hermes-stable:1498
+[  177616ms] [WARNING] props.pointerEvents is deprecated. Use style.pointerEvents @ http://localhost:8081/index.ts.bundle?platform=web&dev=true&hot=false&lazy=true&transform.engine=hermes&transform.routerRoot=app&unstable_transformProfile=hermes-stable:1498
+[  290548ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:8081/index.ts.bundle?platform=web&dev=true&hot=false&lazy=true&transform.engine=hermes&transform.routerRoot=app&unstable_transformProfile=hermes-stable:1498
+[  290689ms] [LOG] Running application "main" with appParams:
+ {rootTag: #root, hydrate: undefined} 
+Development-level warnings: ON.
+Performance optimizations: OFF. @ http://localhost:8081/index.ts.bundle?platform=web&dev=true&hot=false&lazy=true&transform.engine=hermes&transform.routerRoot=app&unstable_transformProfile=hermes-stable:1498
+[  290769ms] [WARNING] props.pointerEvents is deprecated. Use style.pointerEvents @ http://localhost:8081/index.ts.bundle?platform=web&dev=true&hot=false&lazy=true&transform.engine=hermes&transform.routerRoot=app&unstable_transformProfile=hermes-stable:1498
+[  409956ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:8081/index.ts.bundle?platform=web&dev=true&hot=false&lazy=true&transform.engine=hermes&transform.routerRoot=app&unstable_transformProfile=hermes-stable:1498
+[  410066ms] [LOG] Running application "main" with appParams:
+ {rootTag: #root, hydrate: undefined} 
+Development-level warnings: ON.
+Performance optimizations: OFF. @ http://localhost:8081/index.ts.bundle?platform=web&dev=true&hot=false&lazy=true&transform.engine=hermes&transform.routerRoot=app&unstable_transformProfile=hermes-stable:1498
+[  410132ms] [WARNING] props.pointerEvents is deprecated. Use style.pointerEvents @ http://localhost:8081/index.ts.bundle?platform=web&dev=true&hot=false&lazy=true&transform.engine=hermes&transform.routerRoot=app&unstable_transformProfile=hermes-stable:1498
+[  441189ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:8081/index.ts.bundle?platform=web&dev=true&hot=false&lazy=true&transform.engine=hermes&transform.routerRoot=app&unstable_transformProfile=hermes-stable:1498
+[  441294ms] [LOG] Running application "main" with appParams:
+ {rootTag: #root, hydrate: undefined} 
+Development-level warnings: ON.
+Performance optimizations: OFF. @ http://localhost:8081/index.ts.bundle?platform=web&dev=true&hot=false&lazy=true&transform.engine=hermes&transform.routerRoot=app&unstable_transformProfile=hermes-stable:1498
+[  441355ms] [WARNING] props.pointerEvents is deprecated. Use style.pointerEvents @ http://localhost:8081/index.ts.bundle?platform=web&dev=true&hot=false&lazy=true&transform.engine=hermes&transform.routerRoot=app&unstable_transformProfile=hermes-stable:1498
+[  441995ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:8081/index.ts.bundle?platform=web&dev=true&hot=false&lazy=true&transform.engine=hermes&transform.routerRoot=app&unstable_transformProfile=hermes-stable:1498
+[  442028ms] [LOG] Running application "main" with appParams:
+ {rootTag: #root, hydrate: undefined} 
+Development-level warnings: ON.
+Performance optimizations: OFF. @ http://localhost:8081/index.ts.bundle?platform=web&dev=true&hot=false&lazy=true&transform.engine=hermes&transform.routerRoot=app&unstable_transformProfile=hermes-stable:1498
+[  442066ms] [WARNING] props.pointerEvents is deprecated. Use style.pointerEvents @ http://localhost:8081/index.ts.bundle?platform=web&dev=true&hot=false&lazy=true&transform.engine=hermes&transform.routerRoot=app&unstable_transformProfile=hermes-stable:1498
+[ 1577208ms] TypeError: Cannot read properties of undefined (reading 'display')
+    at http://localhost:8081/index.ts.bundle?platform=web&dev=true&hot=false&lazy=true&transform.engine=hermes&transform.routerRoot=app&unstable_transformProfile=hermes-stable:120061:32
+    at loadModuleImplementation (http://localhost:8081/index.ts.bundle?platform=web&dev=true&hot=false&lazy=true&transform.engine=hermes&transform.routerRoot=app&unstable_transformProfile=hermes-stable:254:34)
+    at guardedLoadModule (http://localhost:8081/index.ts.bundle?platform=web&dev=true&hot=false&lazy=true&transform.engine=hermes&transform.routerRoot=app&unstable_transformProfile=hermes-stable:159:23)
+    at metroRequire (http://localhost:8081/index.ts.bundle?platform=web&dev=true&hot=false&lazy=true&transform.engine=hermes&transform.routerRoot=app&unstable_transformProfile=hermes-stable:79:75)
+    at runUpdatedModule (http://localhost:8081/index.ts.bundle?platform=web&dev=true&hot=false&lazy=true&transform.engine=hermes&transform.routerRoot=app&unstable_transformProfile=hermes-stable:497:7)
+    at metroHotUpdateModule (http://localhost:8081/index.ts.bundle?platform=web&dev=true&hot=false&lazy=true&transform.engine=hermes&transform.routerRoot=app&unstable_transformProfile=hermes-stable:387:26)
+    at define (http://localhost:8081/index.ts.bundle?platform=web&dev=true&hot=false&lazy=true&transform.engine=hermes&transform.routerRoot=app&unstable_transformProfile=hermes-stable:33:18)
+    at eval (http://localhost:8081/src/theme.bundle//&platform=web&dev=true&hot=false&lazy=true&transform.engine=hermes&transform.routerRoot=app&unstable_transformProfile=hermes-stable&minify=false&modulesOnly=true&runModule=false&shallow=true:1:1)
+    at inject (http://localhost:8081/index.ts.bundle?platform=web&dev=true&hot=false&lazy=true&transform.engine=hermes&transform.routerRoot=app&unstable_transformProfile=hermes-stable:1853:7)
+    at Array.forEach (<anonymous>)
+[ 1665873ms] Unable to resolve module @react-native-async-storage/async-storage from /home/mokey/Documents/Projects/Trundle/src/theme.ts: @react-native-async-storage/async-storage could not be found within the project or in these directories:
+  node_modules
+> 1 | import AsyncStorage from '@react-native-async-storage/async-storage';
+    |                           ^
+  2 | import { useMemo, useSyncExternalStore } from 'react';
+  3 |
+  4 | const fontPair = (family: string, display = `${family}_600SemiBold`) => ({
+[ 1666506ms] Metro has encountered an error: Failed to get the SHA-1 for: /home/mokey/Documents/Projects/Trundle/node_modules/@react-native-async-storage/async-storage/lib/module/createAsyncStorage.js.
+      Potential causes:
+        1) The file is not watched. Ensure it is under the configured `projectRoot` or `watchFolders`.
+        2) Check `blockList` in your metro.config.js and make sure it isn't excluding the file path.
+        3) The file may have been deleted since it was resolved - try refreshing your app.
+        4) Otherwise, this is a bug in Metro or the configured resolver - please report it.: /home/mokey/Documents/Projects/Trundle/node_modules/metro/src/node-haste/DependencyGraph.js (202:13)
+
+  200 |     const result = await this._fileSystem.getOrComputeSha1(mixedPath);
+  201 |     if (!result || !result.sha1) {
+> 202 |       throw new Error(`Failed to get the SHA-1 for: ${mixedPath}.
+      |             ^
+  203 |       Potential causes:
+  204 |         1) The file is not watched. Ensure it is under the configured \`projectRoot\` or \`watchFolders\`.
+  205 |         2) Check \`blockList\` in your metro.config.js and make sure it isn't excluding the file path.
+[ 1723694ms] Metro has encountered an error: Failed to get the SHA-1 for: /home/mokey/Documents/Projects/Trundle/node_modules/@react-native-async-storage/async-storage/lib/module/createAsyncStorage.js.
+      Potential causes:
+        1) The file is not watched. Ensure it is under the configured `projectRoot` or `watchFolders`.
+        2) Check `blockList` in your metro.config.js and make sure it isn't excluding the file path.
+        3) The file may have been deleted since it was resolved - try refreshing your app.
+        4) Otherwise, this is a bug in Metro or the configured resolver - please report it.: /home/mokey/Documents/Projects/Trundle/node_modules/metro/src/node-haste/DependencyGraph.js (202:13)
+
+  200 |     const result = await this._fileSystem.getOrComputeSha1(mixedPath);
+  201 |     if (!result || !result.sha1) {
+> 202 |       throw new Error(`Failed to get the SHA-1 for: ${mixedPath}.
+      |             ^
+  203 |       Potential causes:
+  204 |         1) The file is not watched. Ensure it is under the configured \`projectRoot\` or \`watchFolders\`.
+  205 |         2) Check \`blockList\` in your metro.config.js and make sure it isn't excluding the file path.
+[ 1746630ms] Metro has encountered an error: Failed to get the SHA-1 for: /home/mokey/Documents/Projects/Trundle/node_modules/@react-native-async-storage/async-storage/lib/module/createAsyncStorage.js.
+      Potential causes:
+        1) The file is not watched. Ensure it is under the configured `projectRoot` or `watchFolders`.
+        2) Check `blockList` in your metro.config.js and make sure it isn't excluding the file path.
+        3) The file may have been deleted since it was resolved - try refreshing your app.
+        4) Otherwise, this is a bug in Metro or the configured resolver - please report it.: /home/mokey/Documents/Projects/Trundle/node_modules/metro/src/node-haste/DependencyGraph.js (202:13)
+
+  200 |     const result = await this._fileSystem.getOrComputeSha1(mixedPath);
+  201 |     if (!result || !result.sha1) {
+> 202 |       throw new Error(`Failed to get the SHA-1 for: ${mixedPath}.
+      |             ^
+  203 |       Potential causes:
+  204 |         1) The file is not watched. Ensure it is under the configured \`projectRoot\` or \`watchFolders\`.
+  205 |         2) Check \`blockList\` in your metro.config.js and make sure it isn't excluding the file path.
+[ 1747222ms] Metro has encountered an error: Failed to get the SHA-1 for: /home/mokey/Documents/Projects/Trundle/node_modules/@react-native-async-storage/async-storage/lib/module/createAsyncStorage.js.
+      Potential causes:
+        1) The file is not watched. Ensure it is under the configured `projectRoot` or `watchFolders`.
+        2) Check `blockList` in your metro.config.js and make sure it isn't excluding the file path.
+        3) The file may have been deleted since it was resolved - try refreshing your app.
+        4) Otherwise, this is a bug in Metro or the configured resolver - please report it.: /home/mokey/Documents/Projects/Trundle/node_modules/metro/src/node-haste/DependencyGraph.js (202:13)
+
+  200 |     const result = await this._fileSystem.getOrComputeSha1(mixedPath);
+  201 |     if (!result || !result.sha1) {
+> 202 |       throw new Error(`Failed to get the SHA-1 for: ${mixedPath}.
+      |             ^
+  203 |       Potential causes:
+  204 |         1) The file is not watched. Ensure it is under the configured \`projectRoot\` or \`watchFolders\`.
+  205 |         2) Check \`blockList\` in your metro.config.js and make sure it isn't excluding the file path.
+[ 1787780ms] Metro has encountered an error: Failed to get the SHA-1 for: /home/mokey/Documents/Projects/Trundle/node_modules/@react-native-async-storage/async-storage/lib/module/createAsyncStorage.js.
+      Potential causes:
+        1) The file is not watched. Ensure it is under the configured `projectRoot` or `watchFolders`.
+        2) Check `blockList` in your metro.config.js and make sure it isn't excluding the file path.
+        3) The file may have been deleted since it was resolved - try refreshing your app.
+        4) Otherwise, this is a bug in Metro or the configured resolver - please report it.: /home/mokey/Documents/Projects/Trundle/node_modules/metro/src/node-haste/DependencyGraph.js (202:13)
+
+  200 |     const result = await this._fileSystem.getOrComputeSha1(mixedPath);
+  201 |     if (!result || !result.sha1) {
+> 202 |       throw new Error(`Failed to get the SHA-1 for: ${mixedPath}.
+      |             ^
+  203 |       Potential causes:
+  204 |         1) The file is not watched. Ensure it is under the configured \`projectRoot\` or \`watchFolders\`.
+  205 |         2) Check \`blockList\` in your metro.config.js and make sure it isn't excluding the file path.
+[ 1790284ms] Metro has encountered an error: Failed to get the SHA-1 for: /home/mokey/Documents/Projects/Trundle/node_modules/@react-native-async-storage/async-storage/lib/module/createAsyncStorage.js.
+      Potential causes:
+        1) The file is not watched. Ensure it is under the configured `projectRoot` or `watchFolders`.
+        2) Check `blockList` in your metro.config.js and make sure it isn't excluding the file path.
+        3) The file may have been deleted since it was resolved - try refreshing your app.
+        4) Otherwise, this is a bug in Metro or the configured resolver - please report it.: /home/mokey/Documents/Projects/Trundle/node_modules/metro/src/node-haste/DependencyGraph.js (202:13)
+
+  200 |     const result = await this._fileSystem.getOrComputeSha1(mixedPath);
+  201 |     if (!result || !result.sha1) {
+> 202 |       throw new Error(`Failed to get the SHA-1 for: ${mixedPath}.
+      |             ^
+  203 |       Potential causes:
+  204 |         1) The file is not watched. Ensure it is under the configured \`projectRoot\` or \`watchFolders\`.
+  205 |         2) Check \`blockList\` in your metro.config.js and make sure it isn't excluding the file path.
+[ 1790672ms] Metro has encountered an error: Failed to get the SHA-1 for: /home/mokey/Documents/Projects/Trundle/node_modules/@react-native-async-storage/async-storage/lib/module/createAsyncStorage.js.
+      Potential causes:
+        1) The file is not watched. Ensure it is under the configured `projectRoot` or `watchFolders`.
+        2) Check `blockList` in your metro.config.js and make sure it isn't excluding the file path.
+        3) The file may have been deleted since it was resolved - try refreshing your app.
+        4) Otherwise, this is a bug in Metro or the configured resolver - please report it.: /home/mokey/Documents/Projects/Trundle/node_modules/metro/src/node-haste/DependencyGraph.js (202:13)
+
+  200 |     const result = await this._fileSystem.getOrComputeSha1(mixedPath);
+  201 |     if (!result || !result.sha1) {
+> 202 |       throw new Error(`Failed to get the SHA-1 for: ${mixedPath}.
+      |             ^
+  203 |       Potential causes:
+  204 |         1) The file is not watched. Ensure it is under the configured \`projectRoot\` or \`watchFolders\`.
+  205 |         2) Check \`blockList\` in your metro.config.js and make sure it isn't excluding the file path.
+[ 1840645ms] Metro has encountered an error: Failed to get the SHA-1 for: /home/mokey/Documents/Projects/Trundle/node_modules/@react-native-async-storage/async-storage/lib/module/createAsyncStorage.js.
+      Potential causes:
+        1) The file is not watched. Ensure it is under the configured `projectRoot` or `watchFolders`.
+        2) Check `blockList` in your metro.config.js and make sure it isn't excluding the file path.
+        3) The file may have been deleted since it was resolved - try refreshing your app.
+        4) Otherwise, this is a bug in Metro or the configured resolver - please report it.: /home/mokey/Documents/Projects/Trundle/node_modules/metro/src/node-haste/DependencyGraph.js (202:13)
+
+  200 |     const result = await this._fileSystem.getOrComputeSha1(mixedPath);
+  201 |     if (!result || !result.sha1) {
+> 202 |       throw new Error(`Failed to get the SHA-1 for: ${mixedPath}.
+      |             ^
+  203 |       Potential causes:
+  204 |         1) The file is not watched. Ensure it is under the configured \`projectRoot\` or \`watchFolders\`.
+  205 |         2) Check \`blockList\` in your metro.config.js and make sure it isn't excluding the file path.
+[ 1841119ms] Metro has encountered an error: Failed to get the SHA-1 for: /home/mokey/Documents/Projects/Trundle/node_modules/@react-native-async-storage/async-storage/lib/module/createAsyncStorage.js.
+      Potential causes:
+        1) The file is not watched. Ensure it is under the configured `projectRoot` or `watchFolders`.
+        2) Check `blockList` in your metro.config.js and make sure it isn't excluding the file path.
+        3) The file may have been deleted since it was resolved - try refreshing your app.
+        4) Otherwise, this is a bug in Metro or the configured resolver - please report it.: /home/mokey/Documents/Projects/Trundle/node_modules/metro/src/node-haste/DependencyGraph.js (202:13)
+
+  200 |     const result = await this._fileSystem.getOrComputeSha1(mixedPath);
+  201 |     if (!result || !result.sha1) {
+> 202 |       throw new Error(`Failed to get the SHA-1 for: ${mixedPath}.
+      |             ^
+  203 |       Potential causes:
+  204 |         1) The file is not watched. Ensure it is under the configured \`projectRoot\` or \`watchFolders\`.
+  205 |         2) Check \`blockList\` in your metro.config.js and make sure it isn't excluding the file path.
+[ 1841443ms] Metro has encountered an error: Failed to get the SHA-1 for: /home/mokey/Documents/Projects/Trundle/node_modules/@react-native-async-storage/async-storage/lib/module/createAsyncStorage.js.
+      Potential causes:
+        1) The file is not watched. Ensure it is under the configured `projectRoot` or `watchFolders`.
+        2) Check `blockList` in your metro.config.js and make sure it isn't excluding the file path.
+        3) The file may have been deleted since it was resolved - try refreshing your app.
+        4) Otherwise, this is a bug in Metro or the configured resolver - please report it.: /home/mokey/Documents/Projects/Trundle/node_modules/metro/src/node-haste/DependencyGraph.js (202:13)
+
+  200 |     const result = await this._fileSystem.getOrComputeSha1(mixedPath);
+  201 |     if (!result || !result.sha1) {
+> 202 |       throw new Error(`Failed to get the SHA-1 for: ${mixedPath}.
+      |             ^
+  203 |       Potential causes:
+  204 |         1) The file is not watched. Ensure it is under the configured \`projectRoot\` or \`watchFolders\`.
+  205 |         2) Check \`blockList\` in your metro.config.js and make sure it isn't excluding the file path.
+[ 1841835ms] Metro has encountered an error: Failed to get the SHA-1 for: /home/mokey/Documents/Projects/Trundle/node_modules/@react-native-async-storage/async-storage/lib/module/createAsyncStorage.js.
+      Potential causes:
+        1) The file is not watched. Ensure it is under the configured `projectRoot` or `watchFolders`.
+        2) Check `blockList` in your metro.config.js and make sure it isn't excluding the file path.
+        3) The file may have been deleted since it was resolved - try refreshing your app.
+        4) Otherwise, this is a bug in Metro or the configured resolver - please report it.: /home/mokey/Documents/Projects/Trundle/node_modules/metro/src/node-haste/DependencyGraph.js (202:13)
+
+  200 |     const result = await this._fileSystem.getOrComputeSha1(mixedPath);
+  201 |     if (!result || !result.sha1) {
+> 202 |       throw new Error(`Failed to get the SHA-1 for: ${mixedPath}.
+      |             ^
+  203 |       Potential causes:
+  204 |         1) The file is not watched. Ensure it is under the configured \`projectRoot\` or \`watchFolders\`.
+  205 |         2) Check \`blockList\` in your metro.config.js and make sure it isn't excluding the file path.
+[ 1842140ms] Metro has encountered an error: Failed to get the SHA-1 for: /home/mokey/Documents/Projects/Trundle/node_modules/@react-native-async-storage/async-storage/lib/module/createAsyncStorage.js.
+      Potential causes:
+        1) The file is not watched. Ensure it is under the configured `projectRoot` or `watchFolders`.
+        2) Check `blockList` in your metro.config.js and make sure it isn't excluding the file path.
+        3) The file may have been deleted since it was resolved - try refreshing your app.
+        4) Otherwise, this is a bug in Metro or the configured resolver - please report it.: /home/mokey/Documents/Projects/Trundle/node_modules/metro/src/node-haste/DependencyGraph.js (202:13)
+
+  200 |     const result = await this._fileSystem.getOrComputeSha1(mixedPath);
+  201 |     if (!result || !result.sha1) {
+> 202 |       throw new Error(`Failed to get the SHA-1 for: ${mixedPath}.
+      |             ^
+  203 |       Potential causes:
+  204 |         1) The file is not watched. Ensure it is under the configured \`projectRoot\` or \`watchFolders\`.
+  205 |         2) Check \`blockList\` in your metro.config.js and make sure it isn't excluding the file path.
+[ 1901897ms] Metro has encountered an error: Failed to get the SHA-1 for: /home/mokey/Documents/Projects/Trundle/node_modules/@react-native-async-storage/async-storage/lib/module/createAsyncStorage.js.
+      Potential causes:
+        1) The file is not watched. Ensure it is under the configured `projectRoot` or `watchFolders`.
+        2) Check `blockList` in your metro.config.js and make sure it isn't excluding the file path.
+        3) The file may have been deleted since it was resolved - try refreshing your app.
+        4) Otherwise, this is a bug in Metro or the configured resolver - please report it.: /home/mokey/Documents/Projects/Trundle/node_modules/metro/src/node-haste/DependencyGraph.js (202:13)
+
+  200 |     const result = await this._fileSystem.getOrComputeSha1(mixedPath);
+  201 |     if (!result || !result.sha1) {
+> 202 |       throw new Error(`Failed to get the SHA-1 for: ${mixedPath}.
+      |             ^
+  203 |       Potential causes:
+  204 |         1) The file is not watched. Ensure it is under the configured \`projectRoot\` or \`watchFolders\`.
+  205 |         2) Check \`blockList\` in your metro.config.js and make sure it isn't excluding the file path.
+[ 1912621ms] Metro has encountered an error: Failed to get the SHA-1 for: /home/mokey/Documents/Projects/Trundle/node_modules/@react-native-async-storage/async-storage/lib/module/createAsyncStorage.js.
+      Potential causes:
+        1) The file is not watched. Ensure it is under the configured `projectRoot` or `watchFolders`.
+        2) Check `blockList` in your metro.config.js and make sure it isn't excluding the file path.
+        3) The file may have been deleted since it was resolved - try refreshing your app.
+        4) Otherwise, this is a bug in Metro or the configured resolver - please report it.: /home/mokey/Documents/Projects/Trundle/node_modules/metro/src/node-haste/DependencyGraph.js (202:13)
+
+  200 |     const result = await this._fileSystem.getOrComputeSha1(mixedPath);
+  201 |     if (!result || !result.sha1) {
+> 202 |       throw new Error(`Failed to get the SHA-1 for: ${mixedPath}.
+      |             ^
+  203 |       Potential causes:
+  204 |         1) The file is not watched. Ensure it is under the configured \`projectRoot\` or \`watchFolders\`.
+  205 |         2) Check \`blockList\` in your metro.config.js and make sure it isn't excluding the file path.
+[ 1974542ms] Metro has encountered an error: Failed to get the SHA-1 for: /home/mokey/Documents/Projects/Trundle/node_modules/@react-native-async-storage/async-storage/lib/module/createAsyncStorage.js.
+      Potential causes:
+        1) The file is not watched. Ensure it is under the configured `projectRoot` or `watchFolders`.
+        2) Check `blockList` in your metro.config.js and make sure it isn't excluding the file path.
+        3) The file may have been deleted since it was resolved - try refreshing your app.
+        4) Otherwise, this is a bug in Metro or the configured resolver - please report it.: /home/mokey/Documents/Projects/Trundle/node_modules/metro/src/node-haste/DependencyGraph.js (202:13)
+
+  200 |     const result = await this._fileSystem.getOrComputeSha1(mixedPath);
+  201 |     if (!result || !result.sha1) {
+> 202 |       throw new Error(`Failed to get the SHA-1 for: ${mixedPath}.
+      |             ^
+  203 |       Potential causes:
+  204 |         1) The file is not watched. Ensure it is under the configured \`projectRoot\` or \`watchFolders\`.
+  205 |         2) Check \`blockList\` in your metro.config.js and make sure it isn't excluding the file path.
+[ 1975835ms] Metro has encountered an error: Failed to get the SHA-1 for: /home/mokey/Documents/Projects/Trundle/node_modules/@react-native-async-storage/async-storage/lib/module/createAsyncStorage.js.
+      Potential causes:
+        1) The file is not watched. Ensure it is under the configured `projectRoot` or `watchFolders`.
+        2) Check `blockList` in your metro.config.js and make sure it isn't excluding the file path.
+        3) The file may have been deleted since it was resolved - try refreshing your app.
+        4) Otherwise, this is a bug in Metro or the configured resolver - please report it.: /home/mokey/Documents/Projects/Trundle/node_modules/metro/src/node-haste/DependencyGraph.js (202:13)
+
+  200 |     const result = await this._fileSystem.getOrComputeSha1(mixedPath);
+  201 |     if (!result || !result.sha1) {
+> 202 |       throw new Error(`Failed to get the SHA-1 for: ${mixedPath}.
+      |             ^
+  203 |       Potential causes:
+  204 |         1) The file is not watched. Ensure it is under the configured \`projectRoot\` or \`watchFolders\`.
+  205 |         2) Check \`blockList\` in your metro.config.js and make sure it isn't excluding the file path.
+[ 2099861ms] Metro has encountered an error: Failed to get the SHA-1 for: /home/mokey/Documents/Projects/Trundle/node_modules/@react-native-async-storage/async-storage/lib/module/createAsyncStorage.js.
+      Potential causes:
+        1) The file is not watched. Ensure it is under the configured `projectRoot` or `watchFolders`.
+        2) Check `blockList` in your metro.config.js and make sure it isn't excluding the file path.
+        3) The file may have been deleted since it was resolved - try refreshing your app.
+        4) Otherwise, this is a bug in Metro or the configured resolver - please report it.: /home/mokey/Documents/Projects/Trundle/node_modules/metro/src/node-haste/DependencyGraph.js (202:13)
+
+  200 |     const result = await this._fileSystem.getOrComputeSha1(mixedPath);
+  201 |     if (!result || !result.sha1) {
+> 202 |       throw new Error(`Failed to get the SHA-1 for: ${mixedPath}.
+      |             ^
+  203 |       Potential causes:
+  204 |         1) The file is not watched. Ensure it is under the configured \`projectRoot\` or \`watchFolders\`.
+  205 |         2) Check \`blockList\` in your metro.config.js and make sure it isn't excluding the file path.
+[ 2100205ms] Metro has encountered an error: Failed to get the SHA-1 for: /home/mokey/Documents/Projects/Trundle/node_modules/@react-native-async-storage/async-storage/lib/module/createAsyncStorage.js.
+      Potential causes:
+        1) The file is not watched. Ensure it is under the configured `projectRoot` or `watchFolders`.
+        2) Check `blockList` in your metro.config.js and make sure it isn't excluding the file path.
+        3) The file may have been deleted since it was resolved - try refreshing your app.
+        4) Otherwise, this is a bug in Metro or the configured resolver - please report it.: /home/mokey/Documents/Projects/Trundle/node_modules/metro/src/node-haste/DependencyGraph.js (202:13)
+
+  200 |     const result = await this._fileSystem.getOrComputeSha1(mixedPath);
+  201 |     if (!result || !result.sha1) {
+> 202 |       throw new Error(`Failed to get the SHA-1 for: ${mixedPath}.
+      |             ^
+  203 |       Potential causes:
+  204 |         1) The file is not watched. Ensure it is under the configured \`projectRoot\` or \`watchFolders\`.
+  205 |         2) Check \`blockList\` in your metro.config.js and make sure it isn't excluding the file path.
+[ 2100506ms] Metro has encountered an error: Failed to get the SHA-1 for: /home/mokey/Documents/Projects/Trundle/node_modules/@react-native-async-storage/async-storage/lib/module/createAsyncStorage.js.
+      Potential causes:
+        1) The file is not watched. Ensure it is under the configured `projectRoot` or `watchFolders`.
+        2) Check `blockList` in your metro.config.js and make sure it isn't excluding the file path.
+        3) The file may have been deleted since it was resolved - try refreshing your app.
+        4) Otherwise, this is a bug in Metro or the configured resolver - please report it.: /home/mokey/Documents/Projects/Trundle/node_modules/metro/src/node-haste/DependencyGraph.js (202:13)
+
+  200 |     const result = await this._fileSystem.getOrComputeSha1(mixedPath);
+  201 |     if (!result || !result.sha1) {
+> 202 |       throw new Error(`Failed to get the SHA-1 for: ${mixedPath}.
+      |             ^
+  203 |       Potential causes:
+  204 |         1) The file is not watched. Ensure it is under the configured \`projectRoot\` or \`watchFolders\`.
+  205 |         2) Check \`blockList\` in your metro.config.js and make sure it isn't excluding the file path.
+[ 2100806ms] Metro has encountered an error: Failed to get the SHA-1 for: /home/mokey/Documents/Projects/Trundle/node_modules/@react-native-async-storage/async-storage/lib/module/createAsyncStorage.js.
+      Potential causes:
+        1) The file is not watched. Ensure it is under the configured `projectRoot` or `watchFolders`.
+        2) Check `blockList` in your metro.config.js and make sure it isn't excluding the file path.
+        3) The file may have been deleted since it was resolved - try refreshing your app.
+        4) Otherwise, this is a bug in Metro or the configured resolver - please report it.: /home/mokey/Documents/Projects/Trundle/node_modules/metro/src/node-haste/DependencyGraph.js (202:13)
+
+  200 |     const result = await this._fileSystem.getOrComputeSha1(mixedPath);
+  201 |     if (!result || !result.sha1) {
+> 202 |       throw new Error(`Failed to get the SHA-1 for: ${mixedPath}.
+      |             ^
+  203 |       Potential causes:
+  204 |         1) The file is not watched. Ensure it is under the configured \`projectRoot\` or \`watchFolders\`.
+  205 |         2) Check \`blockList\` in your metro.config.js and make sure it isn't excluding the file path.
+[ 2149012ms] Metro has encountered an error: Failed to get the SHA-1 for: /home/mokey/Documents/Projects/Trundle/node_modules/@react-native-async-storage/async-storage/lib/module/createAsyncStorage.js.
+      Potential causes:
+        1) The file is not watched. Ensure it is under the configured `projectRoot` or `watchFolders`.
+        2) Check `blockList` in your metro.config.js and make sure it isn't excluding the file path.
+        3) The file may have been deleted since it was resolved - try refreshing your app.
+        4) Otherwise, this is a bug in Metro or the configured resolver - please report it.: /home/mokey/Documents/Projects/Trundle/node_modules/metro/src/node-haste/DependencyGraph.js (202:13)
+
+  200 |     const result = await this._fileSystem.getOrComputeSha1(mixedPath);
+  201 |     if (!result || !result.sha1) {
+> 202 |       throw new Error(`Failed to get the SHA-1 for: ${mixedPath}.
+      |             ^
+  203 |       Potential causes:
+  204 |         1) The file is not watched. Ensure it is under the configured \`projectRoot\` or \`watchFolders\`.
+  205 |         2) Check \`blockList\` in your metro.config.js and make sure it isn't excluding the file path.
+[ 2150668ms] Metro has encountered an error: Failed to get the SHA-1 for: /home/mokey/Documents/Projects/Trundle/node_modules/@react-native-async-storage/async-storage/lib/module/createAsyncStorage.js.
+      Potential causes:
+        1) The file is not watched. Ensure it is under the configured `projectRoot` or `watchFolders`.
+        2) Check `blockList` in your metro.config.js and make sure it isn't excluding the file path.
+        3) The file may have been deleted since it was resolved - try refreshing your app.
+        4) Otherwise, this is a bug in Metro or the configured resolver - please report it.: /home/mokey/Documents/Projects/Trundle/node_modules/metro/src/node-haste/DependencyGraph.js (202:13)
+
+  200 |     const result = await this._fileSystem.getOrComputeSha1(mixedPath);
+  201 |     if (!result || !result.sha1) {
+> 202 |       throw new Error(`Failed to get the SHA-1 for: ${mixedPath}.
+      |             ^
+  203 |       Potential causes:
+  204 |         1) The file is not watched. Ensure it is under the configured \`projectRoot\` or \`watchFolders\`.
+  205 |         2) Check \`blockList\` in your metro.config.js and make sure it isn't excluding the file path.
+[ 2158588ms] Metro has encountered an error: Failed to get the SHA-1 for: /home/mokey/Documents/Projects/Trundle/node_modules/@react-native-async-storage/async-storage/lib/module/createAsyncStorage.js.
+      Potential causes:
+        1) The file is not watched. Ensure it is under the configured `projectRoot` or `watchFolders`.
+        2) Check `blockList` in your metro.config.js and make sure it isn't excluding the file path.
+        3) The file may have been deleted since it was resolved - try refreshing your app.
+        4) Otherwise, this is a bug in Metro or the configured resolver - please report it.: /home/mokey/Documents/Projects/Trundle/node_modules/metro/src/node-haste/DependencyGraph.js (202:13)
+
+  200 |     const result = await this._fileSystem.getOrComputeSha1(mixedPath);
+  201 |     if (!result || !result.sha1) {
+> 202 |       throw new Error(`Failed to get the SHA-1 for: ${mixedPath}.
+      |             ^
+  203 |       Potential causes:
+  204 |         1) The file is not watched. Ensure it is under the configured \`projectRoot\` or \`watchFolders\`.
+  205 |         2) Check \`blockList\` in your metro.config.js and make sure it isn't excluding the file path.
+[ 2176952ms] Metro has encountered an error: Failed to get the SHA-1 for: /home/mokey/Documents/Projects/Trundle/node_modules/@react-native-async-storage/async-storage/lib/module/createAsyncStorage.js.
+      Potential causes:
+        1) The file is not watched. Ensure it is under the configured `projectRoot` or `watchFolders`.
+        2) Check `blockList` in your metro.config.js and make sure it isn't excluding the file path.
+        3) The file may have been deleted since it was resolved - try refreshing your app.
+        4) Otherwise, this is a bug in Metro or the configured resolver - please report it.: /home/mokey/Documents/Projects/Trundle/node_modules/metro/src/node-haste/DependencyGraph.js (202:13)
+
+  200 |     const result = await this._fileSystem.getOrComputeSha1(mixedPath);
+  201 |     if (!result || !result.sha1) {
+> 202 |       throw new Error(`Failed to get the SHA-1 for: ${mixedPath}.
+      |             ^
+  203 |       Potential causes:
+  204 |         1) The file is not watched. Ensure it is under the configured \`projectRoot\` or \`watchFolders\`.
+  205 |         2) Check \`blockList\` in your metro.config.js and make sure it isn't excluding the file path.
+[ 2177780ms] Metro has encountered an error: Failed to get the SHA-1 for: /home/mokey/Documents/Projects/Trundle/node_modules/@react-native-async-storage/async-storage/lib/module/createAsyncStorage.js.
+      Potential causes:
+        1) The file is not watched. Ensure it is under the configured `projectRoot` or `watchFolders`.
+        2) Check `blockList` in your metro.config.js and make sure it isn't excluding the file path.
+        3) The file may have been deleted since it was resolved - try refreshing your app.
+        4) Otherwise, this is a bug in Metro or the configured resolver - please report it.: /home/mokey/Documents/Projects/Trundle/node_modules/metro/src/node-haste/DependencyGraph.js (202:13)
+
+  200 |     const result = await this._fileSystem.getOrComputeSha1(mixedPath);
+  201 |     if (!result || !result.sha1) {
+> 202 |       throw new Error(`Failed to get the SHA-1 for: ${mixedPath}.
+      |             ^
+  203 |       Potential causes:
+  204 |         1) The file is not watched. Ensure it is under the configured \`projectRoot\` or \`watchFolders\`.
+  205 |         2) Check \`blockList\` in your metro.config.js and make sure it isn't excluding the file path.
+[ 2178449ms] Metro has encountered an error: Failed to get the SHA-1 for: /home/mokey/Documents/Projects/Trundle/node_modules/@react-native-async-storage/async-storage/lib/module/createAsyncStorage.js.
+      Potential causes:
+        1) The file is not watched. Ensure it is under the configured `projectRoot` or `watchFolders`.
+        2) Check `blockList` in your metro.config.js and make sure it isn't excluding the file path.
+        3) The file may have been deleted since it was resolved - try refreshing your app.
+        4) Otherwise, this is a bug in Metro or the configured resolver - please report it.: /home/mokey/Documents/Projects/Trundle/node_modules/metro/src/node-haste/DependencyGraph.js (202:13)
+
+  200 |     const result = await this._fileSystem.getOrComputeSha1(mixedPath);
+  201 |     if (!result || !result.sha1) {
+> 202 |       throw new Error(`Failed to get the SHA-1 for: ${mixedPath}.
+      |             ^
+  203 |       Potential causes:
+  204 |         1) The file is not watched. Ensure it is under the configured \`projectRoot\` or \`watchFolders\`.
+  205 |         2) Check \`blockList\` in your metro.config.js and make sure it isn't excluding the file path.
+[ 2179341ms] Metro has encountered an error: Failed to get the SHA-1 for: /home/mokey/Documents/Projects/Trundle/node_modules/@react-native-async-storage/async-storage/lib/module/createAsyncStorage.js.
+      Potential causes:
+        1) The file is not watched. Ensure it is under the configured `projectRoot` or `watchFolders`.
+        2) Check `blockList` in your metro.config.js and make sure it isn't excluding the file path.
+        3) The file may have been deleted since it was resolved - try refreshing your app.
+        4) Otherwise, this is a bug in Metro or the configured resolver - please report it.: /home/mokey/Documents/Projects/Trundle/node_modules/metro/src/node-haste/DependencyGraph.js (202:13)
+
+  200 |     const result = await this._fileSystem.getOrComputeSha1(mixedPath);
+  201 |     if (!result || !result.sha1) {
+> 202 |       throw new Error(`Failed to get the SHA-1 for: ${mixedPath}.
+      |             ^
+  203 |       Potential causes:
+  204 |         1) The file is not watched. Ensure it is under the configured \`projectRoot\` or \`watchFolders\`.
+  205 |         2) Check \`blockList\` in your metro.config.js and make sure it isn't excluding the file path.
+[ 2180052ms] Metro has encountered an error: Failed to get the SHA-1 for: /home/mokey/Documents/Projects/Trundle/node_modules/@react-native-async-storage/async-storage/lib/module/createAsyncStorage.js.
+      Potential causes:
+        1) The file is not watched. Ensure it is under the configured `projectRoot` or `watchFolders`.
+        2) Check `blockList` in your metro.config.js and make sure it isn't excluding the file path.
+        3) The file may have been deleted since it was resolved - try refreshing your app.
+        4) Otherwise, this is a bug in Metro or the configured resolver - please report it.: /home/mokey/Documents/Projects/Trundle/node_modules/metro/src/node-haste/DependencyGraph.js (202:13)
+
+  200 |     const result = await this._fileSystem.getOrComputeSha1(mixedPath);
+  201 |     if (!result || !result.sha1) {
+> 202 |       throw new Error(`Failed to get the SHA-1 for: ${mixedPath}.
+      |             ^
+  203 |       Potential causes:
+  204 |         1) The file is not watched. Ensure it is under the configured \`projectRoot\` or \`watchFolders\`.
+  205 |         2) Check \`blockList\` in your metro.config.js and make sure it isn't excluding the file path.
+[ 2249470ms] Metro has encountered an error: Failed to get the SHA-1 for: /home/mokey/Documents/Projects/Trundle/node_modules/@react-native-async-storage/async-storage/lib/module/createAsyncStorage.js.
+      Potential causes:
+        1) The file is not watched. Ensure it is under the configured `projectRoot` or `watchFolders`.
+        2) Check `blockList` in your metro.config.js and make sure it isn't excluding the file path.
+        3) The file may have been deleted since it was resolved - try refreshing your app.
+        4) Otherwise, this is a bug in Metro or the configured resolver - please report it.: /home/mokey/Documents/Projects/Trundle/node_modules/metro/src/node-haste/DependencyGraph.js (202:13)
+
+  200 |     const result = await this._fileSystem.getOrComputeSha1(mixedPath);
+  201 |     if (!result || !result.sha1) {
+> 202 |       throw new Error(`Failed to get the SHA-1 for: ${mixedPath}.
+      |             ^
+  203 |       Potential causes:
+  204 |         1) The file is not watched. Ensure it is under the configured \`projectRoot\` or \`watchFolders\`.
+  205 |         2) Check \`blockList\` in your metro.config.js and make sure it isn't excluding the file path.
+[ 2263213ms] Metro has encountered an error: Failed to get the SHA-1 for: /home/mokey/Documents/Projects/Trundle/node_modules/@react-native-async-storage/async-storage/lib/module/createAsyncStorage.js.
+      Potential causes:
+        1) The file is not watched. Ensure it is under the configured `projectRoot` or `watchFolders`.
+        2) Check `blockList` in your metro.config.js and make sure it isn't excluding the file path.
+        3) The file may have been deleted since it was resolved - try refreshing your app.
+        4) Otherwise, this is a bug in Metro or the configured resolver - please report it.: /home/mokey/Documents/Projects/Trundle/node_modules/metro/src/node-haste/DependencyGraph.js (202:13)
+
+  200 |     const result = await this._fileSystem.getOrComputeSha1(mixedPath);
+  201 |     if (!result || !result.sha1) {
+> 202 |       throw new Error(`Failed to get the SHA-1 for: ${mixedPath}.
+      |             ^
+  203 |       Potential causes:
+  204 |         1) The file is not watched. Ensure it is under the configured \`projectRoot\` or \`watchFolders\`.
+  205 |         2) Check \`blockList\` in your metro.config.js and make sure it isn't excluding the file path.
+[ 2315339ms] [ERROR] Received `%s` for a non-boolean attribute `%s`.
+
+If you want to write it to the DOM, pass a string instead: %s="%s" or %s={value.toString()}.
+
+If you used to conditionally omit it with %s={condition && value}, pass %s={condition ? value : undefined} instead. false accessible accessible false accessible accessible accessible @ http://localhost:8081/index.ts.bundle?platform=web&dev=true&hot=false&lazy=true&transform.engine=hermes&transform.routerRoot=app&unstable_transformProfile=hermes-stable:1498

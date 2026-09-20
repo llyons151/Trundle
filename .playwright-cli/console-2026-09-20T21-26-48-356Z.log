@@ -1,0 +1,238 @@
+[     287ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:8081/index.ts.bundle?platform=web&dev=true&hot=false&lazy=true&transform.engine=hermes&transform.routerRoot=app&unstable_transformProfile=hermes-stable:33710
+[     427ms] [LOG] Running application "main" with appParams:
+ {rootTag: #root, hydrate: undefined} 
+Development-level warnings: ON.
+Performance optimizations: OFF. @ http://localhost:8081/index.ts.bundle?platform=web&dev=true&hot=false&lazy=true&transform.engine=hermes&transform.routerRoot=app&unstable_transformProfile=hermes-stable:33710
+[     505ms] [WARNING] props.pointerEvents is deprecated. Use style.pointerEvents @ http://localhost:8081/index.ts.bundle?platform=web&dev=true&hot=false&lazy=true&transform.engine=hermes&transform.routerRoot=app&unstable_transformProfile=hermes-stable:33710
+[  175454ms] Unable to resolve module ../../assets/scenery/trundle-atlas.png from /home/mokey/Documents/Projects/Trundle/src/components/SceneAssets.tsx: 
+
+None of these files exist:
+  * trundle-atlas.png
+  * assets/scenery/trundle-atlas.png
+  12 |   const [error, setError] = useState(false);
+  13 |   const [attempt, setAttempt] = useState(0);
+> 14 |   const atlas = useImage(require('../../assets/scenery/trundle-atlas.png'), {
+     |                                   ^
+  15 |     maxWidth: 1448,
+  16 |     onError: () => setError(true),
+  17 |   }, [attempt]);
+[  185034ms] Unable to resolve module ../../assets/scenery/trundle-atlas.png from /home/mokey/Documents/Projects/Trundle/src/components/SceneAssets.tsx: 
+
+None of these files exist:
+  * trundle-atlas.png
+  * assets/scenery/trundle-atlas.png
+  12 |   const [error, setError] = useState(false);
+  13 |   const [attempt, setAttempt] = useState(0);
+> 14 |   const atlas = useImage(require('../../assets/scenery/trundle-atlas.png'), {
+     |                                   ^
+  15 |     maxWidth: 1448,
+  16 |     onError: () => setError(true),
+  17 |   }, [attempt]);
+[  192899ms] Unable to resolve module ../../assets/scenery/trundle-atlas.png from /home/mokey/Documents/Projects/Trundle/src/components/SceneAssets.tsx: 
+
+None of these files exist:
+  * trundle-atlas.png
+  * assets/scenery/trundle-atlas.png
+  12 |   const [error, setError] = useState(false);
+  13 |   const [attempt, setAttempt] = useState(0);
+> 14 |   const atlas = useImage(require('../../assets/scenery/trundle-atlas.png'), {
+     |                                   ^
+  15 |     maxWidth: 1448,
+  16 |     onError: () => setError(true),
+  17 |   }, [attempt]);
+[  299513ms] Unable to resolve module ../../assets/scenery/trundle-atlas.png from /home/mokey/Documents/Projects/Trundle/src/components/SceneAssets.tsx: 
+
+None of these files exist:
+  * trundle-atlas.png
+  * assets/scenery/trundle-atlas.png
+  12 |   const [error, setError] = useState(false);
+  13 |   const [attempt, setAttempt] = useState(0);
+> 14 |   const atlas = useImage(require('../../assets/scenery/trundle-atlas.png'), {
+     |                                   ^
+  15 |     maxWidth: 1448,
+  16 |     onError: () => setError(true),
+  17 |   }, [attempt]);
+[  299635ms] Unable to resolve module ../../assets/scenery/trundle-atlas.png from /home/mokey/Documents/Projects/Trundle/src/components/SceneAssets.tsx: 
+
+None of these files exist:
+  * trundle-atlas.png
+  * assets/scenery/trundle-atlas.png
+  12 |   const [error, setError] = useState(false);
+  13 |   const [attempt, setAttempt] = useState(0);
+> 14 |   const atlas = useImage(require('../../assets/scenery/trundle-atlas.png'), {
+     |                                   ^
+  15 |     maxWidth: 1448,
+  16 |     onError: () => setError(true),
+  17 |   }, [attempt]);
+[  410605ms] Unable to resolve module ../../assets/scenery/trundle-atlas.png from /home/mokey/Documents/Projects/Trundle/src/components/SceneAssets.tsx: 
+
+None of these files exist:
+  * trundle-atlas.png
+  * assets/scenery/trundle-atlas.png
+  12 |   const [error, setError] = useState(false);
+  13 |   const [attempt, setAttempt] = useState(0);
+> 14 |   const atlas = useImage(require('../../assets/scenery/trundle-atlas.png'), {
+     |                                   ^
+  15 |     maxWidth: 1448,
+  16 |     onError: () => setError(true),
+  17 |   }, [attempt]);
+[  444174ms] Unable to resolve module ../../assets/scenery/trundle-atlas.png from /home/mokey/Documents/Projects/Trundle/src/components/SceneAssets.tsx: 
+
+None of these files exist:
+  * trundle-atlas.png
+  * assets/scenery/trundle-atlas.png
+  12 |   const [error, setError] = useState(false);
+  13 |   const [attempt, setAttempt] = useState(0);
+> 14 |   const atlas = useImage(require('../../assets/scenery/trundle-atlas.png'), {
+     |                                   ^
+  15 |     maxWidth: 1448,
+  16 |     onError: () => setError(true),
+  17 |   }, [attempt]);
+[  453348ms] Unable to resolve module ../../assets/scenery/trundle-atlas.png from /home/mokey/Documents/Projects/Trundle/src/components/SceneAssets.tsx: 
+
+None of these files exist:
+  * trundle-atlas.png
+  * assets/scenery/trundle-atlas.png
+  12 |   const [error, setError] = useState(false);
+  13 |   const [attempt, setAttempt] = useState(0);
+> 14 |   const atlas = useImage(require('../../assets/scenery/trundle-atlas.png'), {
+     |                                   ^
+  15 |     maxWidth: 1448,
+  16 |     onError: () => setError(true),
+  17 |   }, [attempt]);
+[  507873ms] Unable to resolve module ../../assets/scenery/trundle-atlas.png from /home/mokey/Documents/Projects/Trundle/src/components/SceneAssets.tsx: 
+
+None of these files exist:
+  * trundle-atlas.png
+  * assets/scenery/trundle-atlas.png
+  12 |   const [error, setError] = useState(false);
+  13 |   const [attempt, setAttempt] = useState(0);
+> 14 |   const atlas = useImage(require('../../assets/scenery/trundle-atlas.png'), {
+     |                                   ^
+  15 |     maxWidth: 1448,
+  16 |     onError: () => setError(true),
+  17 |   }, [attempt]);
+[  541692ms] Unable to resolve module ../../assets/scenery/trundle-atlas.png from /home/mokey/Documents/Projects/Trundle/src/components/SceneAssets.tsx: 
+
+None of these files exist:
+  * trundle-atlas.png
+  * assets/scenery/trundle-atlas.png
+  12 |   const [error, setError] = useState(false);
+  13 |   const [attempt, setAttempt] = useState(0);
+> 14 |   const atlas = useImage(require('../../assets/scenery/trundle-atlas.png'), {
+     |                                   ^
+  15 |     maxWidth: 1448,
+  16 |     onError: () => setError(true),
+  17 |   }, [attempt]);
+[  553097ms] Unable to resolve module ../../assets/scenery/trundle-atlas.png from /home/mokey/Documents/Projects/Trundle/src/components/SceneAssets.tsx: 
+
+None of these files exist:
+  * trundle-atlas.png
+  * assets/scenery/trundle-atlas.png
+  12 |   const [error, setError] = useState(false);
+  13 |   const [attempt, setAttempt] = useState(0);
+> 14 |   const atlas = useImage(require('../../assets/scenery/trundle-atlas.png'), {
+     |                                   ^
+  15 |     maxWidth: 1448,
+  16 |     onError: () => setError(true),
+  17 |   }, [attempt]);
+[  563053ms] Unable to resolve module ../../assets/scenery/trundle-atlas.png from /home/mokey/Documents/Projects/Trundle/src/components/SceneAssets.tsx: 
+
+None of these files exist:
+  * trundle-atlas.png
+  * assets/scenery/trundle-atlas.png
+  12 |   const [error, setError] = useState(false);
+  13 |   const [attempt, setAttempt] = useState(0);
+> 14 |   const atlas = useImage(require('../../assets/scenery/trundle-atlas.png'), {
+     |                                   ^
+  15 |     maxWidth: 1448,
+  16 |     onError: () => setError(true),
+  17 |   }, [attempt]);
+[  580722ms] Unable to resolve module ../../assets/scenery/trundle-atlas.png from /home/mokey/Documents/Projects/Trundle/src/components/SceneAssets.tsx: 
+
+None of these files exist:
+  * trundle-atlas.png
+  * assets/scenery/trundle-atlas.png
+  12 |   const [error, setError] = useState(false);
+  13 |   const [attempt, setAttempt] = useState(0);
+> 14 |   const atlas = useImage(require('../../assets/scenery/trundle-atlas.png'), {
+     |                                   ^
+  15 |     maxWidth: 1448,
+  16 |     onError: () => setError(true),
+  17 |   }, [attempt]);
+[  616935ms] Unable to resolve module ../../assets/scenery/trundle-atlas.png from /home/mokey/Documents/Projects/Trundle/src/components/SceneAssets.tsx: 
+
+None of these files exist:
+  * trundle-atlas.png
+  * assets/scenery/trundle-atlas.png
+  12 |   const [error, setError] = useState(false);
+  13 |   const [attempt, setAttempt] = useState(0);
+> 14 |   const atlas = useImage(require('../../assets/scenery/trundle-atlas.png'), {
+     |                                   ^
+  15 |     maxWidth: 1448,
+  16 |     onError: () => setError(true),
+  17 |   }, [attempt]);
+[  620101ms] Unable to resolve module ../../assets/scenery/trundle-atlas.png from /home/mokey/Documents/Projects/Trundle/src/components/SceneAssets.tsx: 
+
+None of these files exist:
+  * trundle-atlas.png
+  * assets/scenery/trundle-atlas.png
+  12 |   const [error, setError] = useState(false);
+  13 |   const [attempt, setAttempt] = useState(0);
+> 14 |   const atlas = useImage(require('../../assets/scenery/trundle-atlas.png'), {
+     |                                   ^
+  15 |     maxWidth: 1448,
+  16 |     onError: () => setError(true),
+  17 |   }, [attempt]);
+[  633046ms] Unable to resolve module ../../assets/scenery/trundle-atlas.png from /home/mokey/Documents/Projects/Trundle/src/components/SceneAssets.tsx: 
+
+None of these files exist:
+  * trundle-atlas.png
+  * assets/scenery/trundle-atlas.png
+  12 |   const [error, setError] = useState(false);
+  13 |   const [attempt, setAttempt] = useState(0);
+> 14 |   const atlas = useImage(require('../../assets/scenery/trundle-atlas.png'), {
+     |                                   ^
+  15 |     maxWidth: 1448,
+  16 |     onError: () => setError(true),
+  17 |   }, [attempt]);
+[  633409ms] Unable to resolve module ../../assets/scenery/trundle-atlas.png from /home/mokey/Documents/Projects/Trundle/src/components/SceneAssets.tsx: 
+
+None of these files exist:
+  * trundle-atlas.png
+  * assets/scenery/trundle-atlas.png
+  12 |   const [error, setError] = useState(false);
+  13 |   const [attempt, setAttempt] = useState(0);
+> 14 |   const atlas = useImage(require('../../assets/scenery/trundle-atlas.png'), {
+     |                                   ^
+  15 |     maxWidth: 1448,
+  16 |     onError: () => setError(true),
+  17 |   }, [attempt]);
+[  645319ms] Unable to resolve module ../../assets/scenery/trundle-atlas.png from /home/mokey/Documents/Projects/Trundle/src/components/SceneAssets.tsx: 
+
+None of these files exist:
+  * trundle-atlas.png
+  * assets/scenery/trundle-atlas.png
+  12 |   const [error, setError] = useState(false);
+  13 |   const [attempt, setAttempt] = useState(0);
+> 14 |   const atlas = useImage(require('../../assets/scenery/trundle-atlas.png'), {
+     |                                   ^
+  15 |     maxWidth: 1448,
+  16 |     onError: () => setError(true),
+  17 |   }, [attempt]);
+[  645438ms] Unable to resolve module ../../assets/scenery/trundle-atlas.png from /home/mokey/Documents/Projects/Trundle/src/components/SceneAssets.tsx: 
+
+None of these files exist:
+  * trundle-atlas.png
+  * assets/scenery/trundle-atlas.png
+  12 |   const [error, setError] = useState(false);
+  13 |   const [attempt, setAttempt] = useState(0);
+> 14 |   const atlas = useImage(require('../../assets/scenery/trundle-atlas.png'), {
+     |                                   ^
+  15 |     maxWidth: 1448,
+  16 |     onError: () => setError(true),
+  17 |   }, [attempt]);
+[  773455ms] [WARNING] Disconnected from Metro (1006)
+To reconnect:
+- Ensure that Metro is running and available on the same network
+- Reload this app (will trigger further help if Metro cannot be connected to) @ http://localhost:8081/index.ts.bundle?platform=web&dev=true&hot=false&lazy=true&transform.engine=hermes&transform.routerRoot=app&unstable_transformProfile=hermes-stable:33710

@@ -1,0 +1,28 @@
+{
+  "expo": {
+    "name": "Trundle",
+    "slug": "Trundle",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./src/assets/brand/icon.png",
+    "userInterfaceStyle": "dark",
+    "backgroundColor": "#10120F",
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#10120F",
+        "foregroundImage": "./src/assets/brand/adaptive-foreground.png",
+        "monochromeImage": "./src/assets/brand/adaptive-foreground.png"
+      },
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "favicon": "./src/assets/brand/favicon.png"
+    },
+    "plugins": [
+      "expo-font"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+[    3513ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:8081/output/playwright/apps-review.bundle?platform=web&dev=true&hot=false&lazy=true:33188
+[    3639ms] [LOG] Running application "main" with appParams:
+ {rootTag: #root, hydrate: undefined} 
+Development-level warnings: ON.
+Performance optimizations: OFF. @ http://localhost:8081/output/playwright/apps-review.bundle?platform=web&dev=true&hot=false&lazy=true:33188
+[   43092ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:8081/output/playwright/apps-review.bundle?platform=web&dev=true&hot=false&lazy=true:33188
+[   43137ms] [LOG] Running application "main" with appParams:
+ {rootTag: #root, hydrate: undefined} 
+Development-level warnings: ON.
+Performance optimizations: OFF. @ http://localhost:8081/output/playwright/apps-review.bundle?platform=web&dev=true&hot=false&lazy=true:33188
+[   81961ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:8081/output/playwright/apps-review.bundle?platform=web&dev=true&hot=false&lazy=true:33188
+[   82081ms] [LOG] Running application "main" with appParams:
+ {rootTag: #root, hydrate: undefined} 
+Development-level warnings: ON.
+Performance optimizations: OFF. @ http://localhost:8081/output/playwright/apps-review.bundle?platform=web&dev=true&hot=false&lazy=true:33188
+[  235767ms] [WARNING] Disconnected from Metro (1006)
+To reconnect:
+- Ensure that Metro is running and available on the same network
+- Reload this app (will trigger further help if Metro cannot be connected to) @ http://localhost:8081/output/playwright/apps-review.bundle?platform=web&dev=true&hot=false&lazy=true:33188

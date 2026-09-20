@@ -1,0 +1,28 @@
+- generic [ref=e4]:
+  - generic [ref=e7]:
+    - generic [ref=e8]: 0 apps selected · Preview
+    - button "Resume Trundle’s walk" [active] [ref=e160] [cursor=pointer]
+    - generic [ref=e133]:
+      - generic "2 hours 14 minutes reclaimed today" [ref=e134]: 2h 14m
+      - generic [ref=e135]: reclaimed today
+    - generic [ref=e136]:
+      - 'generic "Walked today: 2.4 km" [ref=e137]':
+        - generic [ref=e138]: 2.4 km
+        - generic [ref=e139]: Walked today
+      - 'generic "This week: 11h 40m" [ref=e141]':
+        - generic [ref=e142]: 11h 40m
+        - generic [ref=e143]: This week
+      - 'generic "Streak: 6 days" [ref=e145]':
+        - generic [ref=e146]: 6 days
+        - generic [ref=e147]: Streak
+  - tablist [ref=e149]:
+    - tab "Home" [ref=e150] [cursor=pointer]:
+      - generic [ref=e151]: 
+    - tab "Apps" [ref=e152] [cursor=pointer]:
+      - generic [ref=e153]: 
+    - button "Lock my apps" [ref=e154] [cursor=pointer]:
+      - generic [ref=e155]: 
+    - tab "Trail" [ref=e156] [cursor=pointer]:
+      - generic [ref=e157]: 
+    - tab "You" [ref=e158] [cursor=pointer]:
+      - generic [ref=e159]: 
