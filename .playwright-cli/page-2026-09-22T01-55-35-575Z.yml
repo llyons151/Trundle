@@ -1,0 +1,24 @@
+- generic [ref=e5]:
+  - generic [ref=e6]:
+    - img "Trundle" [ref=e7]
+    - button "Explore first" [ref=e10] [cursor=pointer]
+  - generic [ref=e12]:
+    - generic [ref=e13]:
+      - generic [ref=e14]: Step 1 of 5
+      - generic [ref=e15]: EARLY PREVIEW
+    - progressbar "Setup steps completed" [ref=e16]
+  - generic [ref=e22]:
+    - heading "A little less scrolling. A little more living." [active] [level=1] [ref=e23]
+    - generic [ref=e24]: Meet Trundle, your companion for a calmer daily rhythm.
+  - generic [ref=e25]:
+    - generic [ref=e30]:
+      - img "Trundle sleeping peacefully"
+    - generic [ref=e82]:
+      - generic [ref=e83]: A shared bedtime for you, Trundle, and the apps you choose.
+      - generic [ref=e85]: A 200-step morning walk to wake him and open up your day.
+    - generic [ref=e87]:
+      - generic [ref=e88]: Try the routine, at your pace.
+      - generic [ref=e89]: This early preview saves your setup. It doesn’t block apps or count steps yet.
+  - generic [ref=e90]:
+    - button "Set up our routine" [ref=e91] [cursor=pointer]
+    - generic [ref=e93]: Your choices stay on this device. Change them anytime.

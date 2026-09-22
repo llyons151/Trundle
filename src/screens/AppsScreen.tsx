@@ -1,210 +1,56 @@
-import { Feather } from '@expo/vector-icons';
+import { createSharedStyles } from '../components/app-ui';
+import SegmentedControl from '@expo/ui/community/segmented-control';
 import { useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-
-import { TAB_BAR_HEIGHT } from '../components/TabBar';
-import { APPS, APP_FEATURES, getAppRule, saveAppRule, setSelectedApps, useAppRules, useSelectedApps, type AppId } from '../state/apps';
+import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import { APPS } from '../state/apps';
+import { usePreferences, savePreferences } from '../state/preferences';
 import { AppIcon } from '../components/AppIcon';
-import { IOSSwitch } from '../components/IOSSwitch';
-import { useTheme, useThemedStyles, type Theme } from '../theme';
+import { Screen, Heading, SectionLabel, Surface, PreviewNotice, useSharedStyles } from '../components/app-ui';
+import { Icon } from '../components/icon';
+import { useThemedStyles, type Theme, useTheme } from '../theme';
 
-export function AppsScreen() {
-  const { colors } = useTheme();
+export function AppsScreen({ list, onListChange: setList }: { list: 'scheduled' | 'always'; onListChange: (list: 'scheduled' | 'always') => void }) {
+  const ui = useTheme();
+  const shared = useSharedStyles();
   const styles = useThemedStyles(createStyles);
-  const insets = useSafeAreaInsets();
-  const selected = useSelectedApps();
-  const rules = useAppRules();
-  const [expanded, setExpanded] = useState<AppId | null>(null);
+  const { values, saving, error } = usePreferences();
   const [query, setQuery] = useState('');
-  const [onlySelected, setOnlySelected] = useState(false);
-  const visible = APPS.filter(app =>
-    (!onlySelected || selected.includes(app.id)) &&
-    `${app.name} ${app.category}`.toLowerCase().includes(query.trim().toLowerCase()),
-  );
-
-  return (
-    <>
-    <ScrollView
-      style={styles.fill}
-      contentContainerStyle={[styles.content, {
-        paddingTop: insets.top + 24,
-        paddingBottom: Math.max(insets.bottom, 16) + TAB_BAR_HEIGHT + 24,
-      }]}
-      keyboardShouldPersistTaps="handled"
-      showsVerticalScrollIndicator={false}
-    >
-      <Text style={styles.eyebrow}>A LITTLE LESS SCROLLING</Text>
-      <Text style={styles.title}>Your apps.</Text>
-      <Text style={styles.subtitle}>Choose what to put aside. Make room for your day.</Text>
-
-      <View style={styles.summary}>
-        <View style={styles.summaryTop}>
-          <View style={styles.shield}><Feather name="shield" size={24} color={colors.accent} /></View>
-          <View style={styles.grow}>
-            <Text style={styles.summaryTitle} accessibilityLiveRegion="polite">
-              {selected.length} {selected.length === 1 ? 'app' : 'apps'} selected
-            </Text>
-            <Text style={styles.caption}>Your block list, your call.</Text>
-          </View>
-          <Text style={styles.badge}>PREVIEW</Text>
-        </View>
-        <Text style={styles.preview}>Try your block list with example apps. Device blocking isn’t connected yet.</Text>
-      </View>
-
-      <View style={styles.search}>
-        <Feather name="search" size={18} color={colors.textMuted} />
-        <TextInput
-          value={query}
-          onChangeText={setQuery}
-          placeholder="Find an app"
-          placeholderTextColor={colors.textMuted}
-          accessibilityLabel="Search apps"
-          autoCorrect={false}
-          autoCapitalize="none"
-          style={styles.input}
-        />
-        {query.length > 0 && <Pressable accessibilityRole="button" accessibilityLabel="Clear search" onPress={() => setQuery('')} style={styles.clear}>
-          <Feather name="x" size={18} color={colors.textSoft} />
-        </Pressable>}
-      </View>
-
-      <View style={styles.filters} accessibilityRole="tablist">
-        {[false, true].map(value => (
-          <Pressable
-            key={String(value)}
-            accessibilityRole="tab"
-            accessibilityState={{ selected: onlySelected === value }}
-            onPress={() => setOnlySelected(value)}
-            style={[styles.filter, onlySelected === value && styles.filterActive]}
-          >
-            <Text style={[styles.filterText, onlySelected === value && styles.filterTextActive]}>
-              {value ? `Selected (${selected.length})` : 'All apps'}
-            </Text>
-          </Pressable>
-        ))}
-      </View>
-
-      <View style={styles.listHeading}>
-        <Text style={styles.eyebrow}>{onlySelected ? 'YOUR BLOCK LIST' : 'EXAMPLE APPS'}</Text>
-        <View style={styles.actions}>
-          <Pressable accessibilityRole="button" onPress={() => setSelectedApps(APPS.map(app => app.id))} style={styles.action}>
-            <Text style={styles.actionText}>Select all</Text>
-          </Pressable>
-          <Pressable accessibilityRole="button" disabled={selected.length === 0} onPress={() => setSelectedApps([])} style={[styles.action, selected.length === 0 && styles.disabled]}>
-            <Text style={styles.actionText}>Clear all</Text>
-          </Pressable>
-        </View>
-      </View>
-
-      <Text style={styles.listHint}>Tap an app to customize what you block.</Text>
-      <View style={styles.appList}>
-      {visible.map((app, index) => {
-        const enabled = selected.includes(app.id);
-        const rule = getAppRule(rules, app.id);
-        const options = APP_FEATURES[app.id];
-        const checkedFeatures = rule.mode === 'whole' ? options.map(feature => feature.id) : rule.features;
-        const isExpanded = expanded === app.id;
-        const summary = checkedFeatures.length === options.length ? 'Whole app' : checkedFeatures.length === 0 ? 'Nothing blocked' : options.filter(feature => checkedFeatures.includes(feature.id)).map(feature => feature.title).join(' · ');
-        const updateFeature = (featureId: string) => {
-          const next = checkedFeatures.includes(featureId) ? checkedFeatures.filter(id => id !== featureId) : [...checkedFeatures, featureId];
-          saveAppRule(app.id, { mode: next.length === options.length ? 'whole' : 'custom', features: next });
-          if (next.length === 0) setSelectedApps(selected.filter(id => id !== app.id));
-          else if (!enabled) setSelectedApps([...selected, app.id]);
-        };
-        return (
-          <View key={app.id} style={index > 0 && styles.rowDivider}>
-          <View style={styles.appRow}>
-            <Pressable accessibilityRole="button" accessibilityLabel={`Customize ${app.name} blocking`}
-              aria-expanded={isExpanded} accessibilityState={{ expanded: isExpanded }}
-              onPress={() => setExpanded(isExpanded ? null : app.id)} style={({ pressed }) => [styles.appDetails, pressed && { opacity: 0.65 }]}>
-              <AppIcon id={app.id} />
-              <View style={styles.grow}>
-                <Text style={styles.appName}>{app.name}</Text>
-                <Text numberOfLines={1} style={[styles.caption, enabled && styles.enabledCaption]}>{summary}</Text>
-              </View>
-              <Feather name={isExpanded ? "chevron-up" : "chevron-down"} size={16} color={colors.textMuted} />
-            </Pressable>
-            <IOSSwitch value={enabled}
-              onValueChange={value => {
-                if (value && checkedFeatures.length === 0) saveAppRule(app.id, { mode: 'whole', features: options.map(feature => feature.id) });
-                setSelectedApps(value ? [...selected, app.id] : selected.filter(id => id !== app.id));
-              }}
-              label={`Select ${app.name} for blocking`} />
-          </View>
-          {isExpanded && <View style={styles.dropdown}>
-            <Text style={styles.dropdownHint}>Uncheck anything you want to keep available.</Text>
-            {options.map(feature => {
-              const checked = checkedFeatures.includes(feature.id);
-              return <Pressable key={feature.id} accessibilityRole="checkbox"
-                accessibilityLabel={`Block ${app.name} ${feature.title}`} aria-checked={checked}
-                accessibilityState={{ checked }} onPress={() => updateFeature(feature.id)}
-                style={({ pressed }) => [styles.featureRow, pressed && { opacity: 0.65 }]}>
-                <View style={[styles.checkbox, checked && styles.checkboxChecked]}>
-                  {checked && <Feather name="check" size={15} color={colors.onAccent} />}
-                </View>
-                <Text style={styles.featureName}>{feature.title}</Text>
-                <Text style={styles.featureStatus}>{checked ? 'Block' : 'Keep'}</Text>
-              </Pressable>;
-            })}
-          </View>}
-          </View>
-        );
-      })}
-      </View>
-      {visible.length === 0 && <View style={styles.empty}>
-        <Feather name={query.trim() ? 'search' : 'grid'} size={28} color={colors.textMuted} />
-        <Text style={styles.appName}>{query.trim() ? 'No matching apps' : 'A little space starts here.'}</Text>
-        <Text style={styles.emptyText}>{query.trim() ? 'Try another app name or category.' : 'Choose apps from All apps to build your block list.'}</Text>
-      </View>}
-      <Text style={styles.footer}>You can change your selection anytime.</Text>
-    </ScrollView>
-    </>
-  );
+  const selected = values[list];
+  const visible = APPS.filter(app => `${app.name} ${app.category}`.toLowerCase().includes(query.trim().toLowerCase()));
+  const toggle = (id: string) => { void savePreferences({ [list]: selected.includes(id) ? selected.filter(value => value !== id) : [...selected, id] }); };
+  return <Screen>
+    <Heading eyebrow="MAKE A LITTLE SPACE" title="Apps" subtitle="A little less distraction." />
+    <View style={{ paddingVertical: 6 }}><SegmentedControl values={['Bedtime', 'Always blocked']} selectedIndex={list === 'scheduled' ? 0 : 1} onChange={event => setList(event.nativeEvent.selectedSegmentIndex === 0 ? 'scheduled' : 'always')} appearance="light" style={{ minHeight: 36 }} /></View>
+    <View style={styles.listIntro}><Text style={styles.introTitle}>{list === 'scheduled' ? 'Rest when he rests.' : 'Out of the everyday.'}</Text><Text style={shared.caption}>{list === 'scheduled' ? 'These apps will rest during bedtime and naps. Naps end automatically; mornings begin with your walk.' : 'These apps will stay blocked, even when Trundle is awake. Edit this list anytime.'}</Text></View>
+    <View style={styles.search}><Icon name="search" size={18} color={ui.colors.textMuted} /><TextInput value={query} onChangeText={setQuery} placeholder="Search apps" placeholderTextColor={ui.colors.textMuted} accessibilityLabel="Search apps" autoCorrect={false} autoCapitalize="none" style={styles.input} />{query !== '' && <Pressable accessibilityRole="button" accessibilityLabel="Clear search" onPress={() => setQuery('')} style={({ pressed }) => [styles.clear, { opacity: pressed ? 0.6 : 1 }]}><Icon name="x" size={18} color={ui.colors.textSoft} /></Pressable>}</View>
+    <SectionLabel right={<Text accessibilityLiveRegion="polite" style={styles.count}>{selected.length} selected</Text>}>Choose apps</SectionLabel>
+    <Surface>{visible.map((app, index) => {
+      const checked = selected.includes(app.id);
+      return <Pressable key={app.id} accessibilityRole="checkbox" accessibilityLabel={`${app.name}, ${list === 'scheduled' ? 'bedtime list' : 'always blocked list'}`} aria-checked={checked} accessibilityState={{ checked, disabled: saving }} disabled={saving} onPress={() => toggle(app.id)} style={({ pressed }) => [styles.appRow, index > 0 && styles.divider, pressed && { backgroundColor: ui.colors.track }]}>
+        <AppIcon id={app.id} /><View style={{ flex: 1, gap: 3 }}><Text style={styles.appName}>{app.name}</Text><Text style={shared.caption}>{list === 'scheduled' && values.always.includes(app.id) ? 'Always-blocked list takes priority' : app.category}</Text></View><View style={[styles.check, checked && styles.checked]}>{checked && <Icon name="check" size={16} color={ui.colors.onAccent} />}</View>
+      </Pressable>;
+    })}</Surface>
+    {!visible.length && <View style={styles.empty}><Icon name="search" size={28} color={ui.colors.textMuted} /><Text style={styles.introTitle}>No apps found</Text><Text style={shared.caption}>Try an app name or category.</Text></View>}
+    {error ? <Text accessibilityRole="alert" style={styles.error}>{error}</Text> : null}
+    <PreviewNotice>Selections save on this device. This is an example catalog; native app blocking isn’t connected yet.</PreviewNotice>
+  </Screen>;
 }
-
-const createStyles = ({ colors, fonts }: Theme) => StyleSheet.create({
-  fill: { flex: 1, backgroundColor: colors.bg },
-  content: { paddingHorizontal: 24, width: '100%', maxWidth: 600, alignSelf: 'center' },
-  eyebrow: { fontFamily: fonts.medium, fontSize: 10, letterSpacing: 1.5, color: colors.textMuted },
-  title: { fontFamily: fonts.display, fontSize: 52, color: colors.text, marginTop: 10 },
-  subtitle: { fontFamily: fonts.regular, fontSize: 16, lineHeight: 23, color: colors.textSoft, marginTop: 6, maxWidth: 310 },
-  summary: { backgroundColor: colors.surface, borderRadius: 20, padding: 18, marginVertical: 26, borderWidth: 1, borderColor: colors.border },
-  summaryTop: { flexDirection: 'row', alignItems: 'center', gap: 12, flexWrap: 'wrap' },
-  shield: { width: 40, height: 44, alignItems: 'center', justifyContent: 'center' },
-  grow: { flex: 1 },
-  summaryTitle: { fontFamily: fonts.medium, fontSize: 18, color: colors.text },
-  caption: { fontFamily: fonts.regular, fontSize: 13, color: colors.textMuted, marginTop: 4 },
-  badge: { fontFamily: fonts.medium, fontSize: 9, letterSpacing: 1, color: colors.textSoft },
-  preview: { fontFamily: fonts.regular, fontSize: 13, lineHeight: 19, color: colors.textSoft, marginTop: 16 },
-  search: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingLeft: 16, borderRadius: 14, backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.glassBorder },
-  input: { flex: 1, minWidth: 0, height: 48, fontFamily: fonts.regular, fontSize: 15, color: colors.text },
-  clear: { padding: 14 },
-  filters: { flexDirection: 'row', gap: 8, marginTop: 18, marginBottom: 16 },
-  filter: { paddingHorizontal: 18, paddingVertical: 12, borderRadius: 24 },
-  filterActive: { backgroundColor: colors.glassSelected },
-  filterText: { fontFamily: fonts.medium, fontSize: 14, color: colors.textMuted },
-  filterTextActive: { color: colors.text },
-  listHeading: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 6 },
-  actions: { flexDirection: 'row', gap: 14 },
-  action: { minHeight: 44, justifyContent: 'center' },
-  actionText: { fontFamily: fonts.medium, fontSize: 12, color: colors.textSoft },
-  disabled: { opacity: 0.35 },
-  listHint: { fontFamily: fonts.regular, fontSize: 12, color: colors.textMuted, marginBottom: 16 },
-  appList: { backgroundColor: colors.surface, borderRadius: 22, borderCurve: 'continuous', paddingHorizontal: 16 },
-  appRow: { flexDirection: 'row', alignItems: 'center', gap: 14, minHeight: 84 },
-  rowDivider: { borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: colors.glassBorder },
-  appDetails: { flex: 1, minWidth: 0, flexDirection: 'row', alignItems: 'center', gap: 12, paddingVertical: 16 },
-  dropdown: { paddingBottom: 16, paddingTop: 2 },
-  dropdownHint: { fontFamily: fonts.regular, fontSize: 12, color: colors.textMuted, lineHeight: 18, marginBottom: 10 },
-  featureRow: { flexDirection: 'row', alignItems: 'center', gap: 12, minHeight: 46, paddingHorizontal: 10 },
-  checkbox: { width: 22, height: 22, borderRadius: 6, borderWidth: 1.5, borderColor: colors.textMuted, alignItems: 'center', justifyContent: 'center' },
-  checkboxChecked: { backgroundColor: colors.accent, borderColor: colors.accent },
-  featureName: { flex: 1, fontFamily: fonts.regular, fontSize: 14, color: colors.text },
-  featureStatus: { fontFamily: fonts.regular, fontSize: 12, color: colors.textMuted },
-  enabledCaption: { color: colors.accentText },
-  appName: { fontFamily: fonts.medium, fontSize: 16, color: colors.text },
+const createStyles = (ui: Theme) =>  { const shared = createSharedStyles(ui); return StyleSheet.create({
+  segments: { flexDirection: 'row', padding: 4, borderRadius: ui.radius.control, backgroundColor: ui.colors.surface, gap: 4 },
+  segment: { flex: 1, minHeight: 46, flexDirection: 'row', gap: 7, alignItems: 'center', justifyContent: 'center', borderRadius: 12, paddingHorizontal: 8, paddingVertical: 12, flexWrap: 'wrap' },
+  segmentActive: { backgroundColor: ui.colors.accentSoft },
+  segmentText: { fontFamily: ui.fonts.semibold, fontWeight: '600', fontSize: ui.type.caption, color: ui.colors.textMuted },
+  listIntro: { gap: 6, paddingVertical: 24 },
+  introTitle: { fontFamily: ui.fonts.semibold, fontWeight: '600', fontSize: 20, color: ui.colors.text, letterSpacing: -0.4 },
+  search: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingLeft: 16, backgroundColor: ui.colors.track, borderRadius: 12 },
+  input: { minHeight: 50, flex: 1, minWidth: 0, color: ui.colors.text, fontFamily: ui.fonts.regular, fontSize: 15 },
+  clear: { minWidth: 44, minHeight: 44, alignItems: 'center', justifyContent: 'center' },
+  count: { fontFamily: ui.fonts.medium, fontWeight: '500', fontSize: ui.type.caption, color: ui.colors.accentText },
+  appRow: { minHeight: 78, flexDirection: 'row', alignItems: 'center', paddingVertical: 14, gap: 14 },
+  divider: { borderTopWidth: StyleSheet.hairlineWidth, borderColor: ui.colors.border },
+  appName: { fontFamily: ui.fonts.semibold, fontWeight: '600', fontSize: 16, color: ui.colors.text },
+  check: { width: 25, height: 25, borderRadius: 13, borderWidth: 1, borderColor: ui.colors.controlBorder, alignItems: 'center', justifyContent: 'center' },
+  checked: { backgroundColor: ui.colors.accentStrong, borderColor: ui.colors.accentStrong },
   empty: { alignItems: 'center', paddingVertical: 40, gap: 12 },
-  emptyText: { fontFamily: fonts.regular, fontSize: 14, lineHeight: 21, color: colors.textSoft, textAlign: 'center' },
-  footer: { fontFamily: fonts.regular, fontSize: 12, color: colors.textMuted, textAlign: 'center', marginTop: 24 },
-});
+  error: { ...shared.note, marginTop: 16, color: ui.colors.text },
+}); };

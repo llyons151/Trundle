@@ -1,8 +1,11 @@
 import * as Haptics from 'expo-haptics';
 import { useEffect } from 'react';
-import { Image, Pressable, StyleSheet } from 'react-native';
+import { Pressable, StyleSheet } from 'react-native';
+import { BundledImage } from './BundledImage';
+import { useAccessibilityMotion } from '../state/use-accessibility';
 import Animated, {
   Easing,
+  cancelAnimation,
   interpolate,
   useAnimatedStyle,
   useDerivedValue,
@@ -97,6 +100,9 @@ function footLift(u: number) {
 
 type Props = {
   size: number;
+  sleeping?: boolean;
+  // Keep a mounted character still when its screen is hidden.
+  active?: boolean;
   // 'rest' is the legless rock. Switching to 'walk' has him stand up and set off;
   // switching back has him stop and sit down.
   // 'stand' keeps his feet planted while preserving idle and tap animations.
@@ -106,7 +112,9 @@ type Props = {
   groundSpeed?: number;
 };
 
-export function Trundle({ size, mode = 'rest', groundSpeed }: Props) {
+export function Trundle({ size, mode = 'rest', groundSpeed, active = true, sleeping = false }: Props) {
+  const { reduceMotion, isAppActive } = useAccessibilityMotion();
+  const motionAllowed = active && isAppActive && !reduceMotion;
   const k = size / IMG_W;
   const height = BOX_H * k;
   const hopHeight = size * 0.16;
@@ -115,7 +123,7 @@ export function Trundle({ size, mode = 'rest', groundSpeed }: Props) {
 
   const phase = useSharedValue(0);
   const stand = useSharedValue(mode === 'rest' ? 0 : 1);
-  const gait = useSharedValue(mode === 'walk' ? 1 : 0);
+  const gait = useSharedValue(mode === 'walk' && motionAllowed ? 1 : 0);
   const facing = useSharedValue(mode === 'walk' ? 1 : 0);
   const breath = useSharedValue(0);
   const blink = useSharedValue(1);
@@ -124,6 +132,11 @@ export function Trundle({ size, mode = 'rest', groundSpeed }: Props) {
   const squash = useSharedValue(0);
 
   useEffect(() => {
+    // Restore open eyes and a neutral pose when motion is disabled mid-animation.
+    breath.value = 0;
+    blink.value = 1;
+    tilt.value = 0;
+    if (!motionAllowed) return;
     breath.value = withRepeat(
       withTiming(1, { duration: 1800, easing: Easing.inOut(Easing.sin) }),
       -1,
@@ -145,14 +158,28 @@ export function Trundle({ size, mode = 'rest', groundSpeed }: Props) {
       ),
       -1,
     );
-  }, [breath, blink, tilt]);
+    return () => {
+      cancelAnimation(breath);
+      cancelAnimation(blink);
+      cancelAnimation(tilt);
+    };
+  }, [motionAllowed, breath, blink, tilt]);
 
   useEffect(() => {
     phase.value = 0;
+    if (!motionAllowed || mode !== 'walk') return;
     phase.value = withRepeat(withTiming(1, { duration: cycleMs, easing: Easing.linear }), -1);
-  }, [phase, cycleMs]);
+    return () => cancelAnimation(phase);
+  }, [motionAllowed, mode, phase, cycleMs]);
 
   useEffect(() => {
+    if (!motionAllowed) {
+      stand.value = mode === 'rest' ? 0 : 1;
+      gait.value = 0;
+      squash.value = 0;
+      facing.value = mode === 'walk' ? 1 : 0;
+      return;
+    }
     if (mode === 'walk') {
       facing.value = withTiming(1, { duration: STAND_UP_MS, easing: Easing.inOut(Easing.quad) });
       // Crouch, spring up onto his legs, then ease into the walk.
@@ -178,7 +205,18 @@ export function Trundle({ size, mode = 'rest', groundSpeed }: Props) {
         withTiming(0, { duration: 420, easing: Easing.inOut(Easing.quad) }),
       );
     }
-  }, [mode, stand, gait, squash, facing]);
+    return () => {
+      cancelAnimation(stand);
+      cancelAnimation(gait);
+      cancelAnimation(squash);
+      cancelAnimation(facing);
+    };
+  }, [motionAllowed, mode, stand, gait, squash, facing]);
+
+  useEffect(() => {
+    if (!motionAllowed) lift.value = 0;
+    return () => cancelAnimation(lift);
+  }, [motionAllowed, lift]);
 
   // The whole pose for this frame. Hip height comes from the planted leg, which is
   // what keeps that foot on the ground while the body bobs.
@@ -201,7 +239,9 @@ export function Trundle({ size, mode = 'rest', groundSpeed }: Props) {
   });
 
   const hop = () => {
+    if (!active || !isAppActive || sleeping) return;
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {});
+    if (reduceMotion) return;
     lift.value = withSequence(
       withTiming(0, { duration: 90 }),
       withTiming(-hopHeight, { duration: 220, easing: Easing.out(Easing.quad) }),
@@ -224,7 +264,7 @@ export function Trundle({ size, mode = 'rest', groundSpeed }: Props) {
     const step = Math.cos(phase.value * 4 * Math.PI) * gait.value;
     const sway = Math.sin(phase.value * 2 * Math.PI) * gait.value;
     // The idle head wobble belongs to the resting rock; on his feet it's the walk's sway.
-    const wobble = tilt.value * (1 - stand.value);
+    const wobble = sleeping ? 0 : tilt.value * (1 - stand.value);
     return {
       transform: [
         { rotate: `${wobble + 2.2 * sway}deg` },
@@ -295,7 +335,7 @@ export function Trundle({ size, mode = 'rest', groundSpeed }: Props) {
   }));
 
   const eyesStyle = useAnimatedStyle(() => ({
-    transform: [{ scaleY: blink.value }],
+    transform: [{ scaleY: sleeping ? 0.09 : blink.value }],
   }));
 
   const shadowStyle = useAnimatedStyle(() => {
@@ -317,9 +357,10 @@ export function Trundle({ size, mode = 'rest', groundSpeed }: Props) {
   return (
     <Pressable
       onPress={hop}
-      accessibilityRole="button"
-      accessibilityLabel="Trundle"
-      accessibilityHint="Makes him hop"
+      disabled={sleeping}
+      accessibilityRole={sleeping ? "image" : "button"}
+      accessibilityLabel={sleeping ? "Trundle sleeping peacefully" : "Trundle"}
+      accessibilityHint={sleeping ? undefined : reduceMotion ? 'Greet Trundle' : 'Makes him hop'}
       style={{ width: size, height }}
     >
       <Animated.View
@@ -351,7 +392,7 @@ export function Trundle({ size, mode = 'rest', groundSpeed }: Props) {
           ]}
         >
           {/* Bundled images default to their intrinsic size, so the size must be explicit. */}
-          <Image source={body} style={{ width: size, height: IMG_H * k }} resizeMode="contain" />
+          <BundledImage source={body} style={{ width: size, height: IMG_H * k }} />
           <Animated.View style={[StyleSheet.absoluteFill, faceStyle]}>
             <Svg style={StyleSheet.absoluteFill} viewBox={`0 0 ${IMG_W} ${IMG_H}`}>
               <Path

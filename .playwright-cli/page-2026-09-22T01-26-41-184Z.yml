@@ -1,0 +1,54 @@
+- generic [ref=e4]:
+  - generic [ref=e288]:
+    - generic [ref=e289]:
+      - generic [ref=e290]: YOUR LITTLE CORNER
+      - heading "Made for you." [level=1] [ref=e291]
+      - generic [ref=e292]: A little intention. A little more room to be yourself.
+    - generic [ref=e293]:
+      - generic [aria-hidden] [ref=e295]: 
+      - generic [ref=e296]: Hello, you.
+      - generic [ref=e297]: One small step at a time.
+    - heading "WHAT SHOULD WE CALL YOU?" [level=1] [ref=e299]
+    - generic [ref=e300]:
+      - textbox "Your name" [ref=e301]
+      - button "Save name" [disabled]
+    - heading "MAKE IT YOURS" [level=1] [ref=e304]
+    - generic [ref=e305]:
+      - button "Your routine Bedtime and your morning start" [ref=e306] [cursor=pointer]:
+        - generic [aria-hidden] [ref=e308]: 
+        - generic [ref=e309]:
+          - generic [ref=e310]: Your routine
+          - generic [ref=e311]: Bedtime and your morning start
+        - generic [aria-hidden] [ref=e312]: 
+      - button "Your app lists Decide what to put aside" [ref=e313] [cursor=pointer]:
+        - generic [aria-hidden] [ref=e315]: 
+        - generic [ref=e316]:
+          - generic [ref=e317]: Your app lists
+          - generic [ref=e318]: Decide what to put aside
+        - generic [aria-hidden] [ref=e319]: 
+    - heading "GOOD TO KNOW" [level=1] [ref=e321]
+    - generic [ref=e322]:
+      - button "Your data What stays on this device" [ref=e323] [cursor=pointer]:
+        - generic [aria-hidden] [ref=e325]: 
+        - generic [ref=e326]:
+          - generic [ref=e327]: Your data
+          - generic [ref=e328]: What stays on this device
+        - generic [aria-hidden] [ref=e329]: 
+      - button "A little about Trundle A companion for a gentler routine" [ref=e330] [cursor=pointer]:
+        - generic [aria-hidden] [ref=e332]: 
+        - generic [ref=e333]:
+          - generic [ref=e334]: A little about Trundle
+          - generic [ref=e335]: A companion for a gentler routine
+        - generic [aria-hidden] [ref=e336]: 
+    - generic [ref=e337]:
+      - generic [aria-hidden] [ref=e338]: 
+      - generic [ref=e339]: Local profile · no account or cloud sync is connected.
+    - generic [ref=e340]: TRUNDLE / EARLY PREVIEW
+  - tablist [ref=e135]:
+    - tab "Home" [ref=e136] [cursor=pointer]
+    - tab "Apps" [ref=e141] [cursor=pointer]:
+      - generic [aria-hidden] [ref=e142]: 
+    - tab "Routine" [ref=e144] [cursor=pointer]:
+      - generic [aria-hidden] [ref=e145]: 
+    - tab "You" [active] [selected] [ref=e147] [cursor=pointer]:
+      - generic [aria-hidden] [ref=e148]: 

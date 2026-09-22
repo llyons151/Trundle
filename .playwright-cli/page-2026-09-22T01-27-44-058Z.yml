@@ -1,0 +1,193 @@
+- generic:
+  - generic:
+    - generic:
+      - generic:
+        - generic [aria-hidden]:
+          - generic:
+            - generic:
+              - generic:
+                - generic: A LITTLE REST GOES A LONG WAY
+                - heading [level=1]: His sleepy schedule.
+                - generic: A bedtime to share. Little naps to make room for life.
+              - generic:
+                - generic:
+                  - generic [aria-hidden]: 
+                  - generic: EVERY DAY
+                  - generic: PREVIEW
+                - generic:
+                  - button [active]:
+                    - generic: Tuck him in
+                    - generic: 10:00 PM
+                    - generic:
+                      - generic [aria-hidden]: 
+                      - generic: Tap to edit
+                  - button:
+                    - generic: Morning walk
+                    - generic: 7:00 AM
+                    - generic:
+                      - generic [aria-hidden]: 
+                      - generic: Tap to edit
+                - generic:
+                  - generic [aria-hidden]: 
+                - generic: 9h set aside for the night
+              - generic:
+                - heading [level=1]: HIS DAILY NAPS
+              - generic:
+                - button:
+                  - generic:
+                    - generic [aria-hidden]: 
+                  - generic:
+                    - generic: Schedule a nap
+                    - generic: A little rest while you do your thing
+                  - generic [aria-hidden]: 
+              - generic:
+                - heading [level=1]: THE DAILY RHYTHM
+              - generic:
+                - generic:
+                  - generic:
+                    - generic [aria-hidden]: 
+                  - generic:
+                    - generic: Tuck him in for the night
+                    - generic: At 10:00 PM, your bedtime apps will block.
+                - generic:
+                  - generic:
+                    - generic [aria-hidden]: 
+                  - generic:
+                    - generic: A 200-step good morning
+                    - generic: From 7:00 AM, a short walk will wake Trundle and unlock your bedtime apps.
+                - generic:
+                  - generic:
+                    - generic [aria-hidden]: 
+                  - generic:
+                    - generic: The day is yours
+                    - generic: Between naps, bedtime apps stay available until the next bedtime.
+              - generic:
+                - heading [level=1]: YOUR APP LISTS
+              - generic:
+                - button:
+                  - generic:
+                    - generic [aria-hidden]: 
+                  - generic:
+                    - generic: Bedtime apps
+                    - generic: 1 selected · follow bedtime and naps
+                  - generic [aria-hidden]: 
+                - button:
+                  - generic:
+                    - generic [aria-hidden]: 
+                  - generic:
+                    - generic: Always blocked
+                    - generic: 1 selected · stay blocked after waking
+                  - generic [aria-hidden]: 
+              - generic:
+                - generic [aria-hidden]: 
+                - generic: Your preferences are saved. Trundle follows bedtime and naps here. App blocking and morning step tracking aren’t connected in this preview.
+        - tablist [ref=e426]:
+          - tab [ref=e441] [cursor=pointer]:
+            - generic [ref=e431]: Home
+          - tab [ref=e442] [cursor=pointer]:
+            - generic [aria-hidden] [ref=e433]: 
+            - generic [ref=e434]: Apps
+          - tab [selected] [ref=e443] [cursor=pointer]:
+            - generic [aria-hidden] [ref=e436]: 
+            - generic [ref=e437]: Routine
+          - tab [ref=e444] [cursor=pointer]:
+            - generic [aria-hidden] [ref=e439]: 
+            - generic [ref=e440]: You
+  - dialog [ref=e446]:
+    - heading "Bottom sheet" [level=2] [ref=e447]
+    - generic [ref=e451]:
+      - generic [ref=e452]:
+        - heading "Time to wind down" [level=1] [ref=e453]
+        - button "Cancel editing" [ref=e454] [cursor=pointer]:
+          - generic [aria-hidden] [ref=e455]: 
+      - generic [ref=e457]:
+        - generic [ref=e458]: When should Trundle rest for the night?
+        - generic [ref=e460]:
+          - combobox [ref=e462] [cursor=pointer]:
+            - option "12 AM"
+            - option "1 AM"
+            - option "2 AM"
+            - option "3 AM"
+            - option "4 AM"
+            - option "5 AM"
+            - option "6 AM"
+            - option "7 AM"
+            - option "8 AM"
+            - option "9 AM"
+            - option "10 AM"
+            - option "11 AM"
+            - option "12 PM"
+            - option "1 PM"
+            - option "2 PM"
+            - option "3 PM"
+            - option "4 PM"
+            - option "5 PM"
+            - option "6 PM"
+            - option "7 PM"
+            - option "8 PM"
+            - option "9 PM"
+            - option "10 PM" [selected]
+            - option "11 PM"
+          - combobox [ref=e464] [cursor=pointer]:
+            - option "00 minutes" [selected]
+            - option "01 minutes"
+            - option "02 minutes"
+            - option "03 minutes"
+            - option "04 minutes"
+            - option "05 minutes"
+            - option "06 minutes"
+            - option "07 minutes"
+            - option "08 minutes"
+            - option "09 minutes"
+            - option "10 minutes"
+            - option "11 minutes"
+            - option "12 minutes"
+            - option "13 minutes"
+            - option "14 minutes"
+            - option "15 minutes"
+            - option "16 minutes"
+            - option "17 minutes"
+            - option "18 minutes"
+            - option "19 minutes"
+            - option "20 minutes"
+            - option "21 minutes"
+            - option "22 minutes"
+            - option "23 minutes"
+            - option "24 minutes"
+            - option "25 minutes"
+            - option "26 minutes"
+            - option "27 minutes"
+            - option "28 minutes"
+            - option "29 minutes"
+            - option "30 minutes"
+            - option "31 minutes"
+            - option "32 minutes"
+            - option "33 minutes"
+            - option "34 minutes"
+            - option "35 minutes"
+            - option "36 minutes"
+            - option "37 minutes"
+            - option "38 minutes"
+            - option "39 minutes"
+            - option "40 minutes"
+            - option "41 minutes"
+            - option "42 minutes"
+            - option "43 minutes"
+            - option "44 minutes"
+            - option "45 minutes"
+            - option "46 minutes"
+            - option "47 minutes"
+            - option "48 minutes"
+            - option "49 minutes"
+            - option "50 minutes"
+            - option "51 minutes"
+            - option "52 minutes"
+            - option "53 minutes"
+            - option "54 minutes"
+            - option "55 minutes"
+            - option "56 minutes"
+            - option "57 minutes"
+            - option "58 minutes"
+            - option "59 minutes"
+        - generic [ref=e465]: Changes apply when you tap Save time.
+        - button "Save time" [ref=e467] [cursor=pointer]

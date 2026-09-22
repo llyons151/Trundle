@@ -1,0 +1,134 @@
+{
+  "schemaVersion": 2,
+  "toolVersion": "2.0.3",
+  "higSnapshot": "2025-02-02",
+  "lowDensity": true,
+  "config": {
+    "path": null,
+    "warnings": []
+  },
+  "baseline": {
+    "path": null,
+    "absorbed": 0,
+    "stale": 0
+  },
+  "concerns": [
+    {
+      "ruleId": "web/auto-focus",
+      "severity": "moderate",
+      "engine": "regex",
+      "file": "src/screens/ProfileScreen.tsx",
+      "line": 27,
+      "pattern": "autoFocus",
+      "excerpt": "</Screen><DetailSheet visible={editingName} title=\"What should we call you?\" closeLabel=\"Cancel name editing\" onClose={() => setEditingName(false)}><View style={{ gap: 16 }}><TextInput accessibilityLabel=\"Your name\" value={name} autoFocus onChangeText={value => { setName(value); setSaved(false); }} maxLength={40} placeholder=\"Your name\" placeholderTextColor={ui.colors.textMuted} autoComplete=\"given-name\" returnKeyType=\"done\" style={styles.input} /><Button title={saving ? 'Saving…' : saved ? 'Name saved' : 'Save name'} disabled={saving || name.trim() === values.displayName} onPress={async () => { if (await savePreferences({ displayName: name.trim() })) { setSaved(true); setEditingName(false); } }} />{saved && <Text accessibilityLiveRegion=\"polite\" style={shared.caption}>Your name is saved on this device.</Text>}{!!error && <Text accessibilityRole=\"alert\" style={shared.caption}>{error}</Text>}</View></DetailSheet><DetailSheet visible={info !== null} title={info === 'privacy' ? 'Your space, your data.' : 'Little by little.'} onClose={() => setInfo(null)}><Text style={[shared.body, { marginBottom: 24 }]}>{info === 'privacy' ? 'Your name, routine times, and example app selections are stored locally on this device. There is no connected account, cloud sync, Screen Time tracking, or native blocking in this preview.' : 'Trundle is a small rock companion for a calmer daily rhythm. Put distracting apps to bed in the evening, then take a short morning walk to wake him. No perfect streaks. No punishment. Just another day to begin.'}</Text><Button title=\"Got it\" onPress={() => setInfo(null)} /></DetailSheet></>;",
+      "fix": null,
+      "hig": "https://developer.apple.com/design/human-interface-guidelines/accessibility",
+      "suggestion": null
+    }
+  ],
+  "frameworks": [
+    "react-native"
+  ],
+  "files": {
+    "code": 31,
+    "style": 0,
+    "config": 3
+  },
+  "severities": {
+    "critical": 0,
+    "serious": 0,
+    "moderate": 1
+  },
+  "totals": {
+    "concerns": 1,
+    "positives": 59,
+    "patterns": 14
+  },
+  "failOn": null,
+  "gateTripped": false,
+  "categories": [
+    {
+      "name": "Foundations",
+      "skill": "hig-foundations",
+      "detections": 57,
+      "concerns": 1,
+      "positives": 56,
+      "patterns": 0,
+      "severities": {
+        "critical": 0,
+        "serious": 0,
+        "moderate": 1
+      },
+      "files": [
+        "App.tsx",
+        "src/components/Brand.tsx",
+        "src/components/IOSSwitch.tsx",
+        "src/components/TabBar.tsx",
+        "src/components/Trundle.tsx",
+        "src/components/app-ui.tsx",
+        "src/components/detail-sheet.tsx",
+        "src/components/icon.tsx",
+        "src/components/nap-editor.tsx",
+        "src/screens/AppsScreen.tsx",
+        "src/screens/HomeScreen.tsx",
+        "src/screens/ProfileScreen.tsx",
+        "src/screens/RoutineScreen.tsx"
+      ]
+    },
+    {
+      "name": "Controls",
+      "skill": "hig-components-controls",
+      "detections": 10,
+      "concerns": 0,
+      "positives": 0,
+      "patterns": 10,
+      "severities": {
+        "critical": 0,
+        "serious": 0,
+        "moderate": 0
+      },
+      "files": [
+        "App.tsx",
+        "src/components/IOSSwitch.tsx",
+        "src/components/nap-editor.tsx",
+        "src/screens/HomeScreen.tsx",
+        "src/screens/ProfileScreen.tsx",
+        "src/screens/RoutineScreen.tsx"
+      ]
+    },
+    {
+      "name": "Interaction Patterns",
+      "skill": "hig-patterns",
+      "detections": 4,
+      "concerns": 0,
+      "positives": 0,
+      "patterns": 4,
+      "severities": {
+        "critical": 0,
+        "serious": 0,
+        "moderate": 0
+      },
+      "files": [
+        "src/components/TabBar.tsx",
+        "src/components/Trundle.tsx"
+      ]
+    },
+    {
+      "name": "Input Methods",
+      "skill": "hig-inputs",
+      "detections": 3,
+      "concerns": 0,
+      "positives": 3,
+      "patterns": 0,
+      "severities": {
+        "critical": 0,
+        "serious": 0,
+        "moderate": 0
+      },
+      "files": [
+        "src/screens/AppsScreen.tsx",
+        "src/screens/ProfileScreen.tsx"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+- generic [ref=f2e4]:
+  - generic [ref=f2e7]:
+    - generic [ref=f2e8]:
+      - img "Trundle" [ref=f2e9]
+      - button "Open your profile" [ref=f2e12] [cursor=pointer]
+    - button "Trundle" [ref=f2e18] [cursor=pointer]
+    - generic [ref=f2e86]:
+      - heading "Put your phone down. Let Trundle rest." [level=1] [ref=f2e87]
+      - generic [ref=f2e88]: Make time for his naps, share a bedtime, and start the morning with a little walk.
+    - button "Tuck him in for a nap" [ref=f2e89] [cursor=pointer]
+    - 'button "Preview: app blocking is not connected. Learn more." [ref=f2e91] [cursor=pointer]':
+      - generic [ref=f2e92]: Preview · app blocking isn’t connected
+    - generic [ref=f2e93]:
+      - button "Edit bedtime, 10:00 PM" [ref=f2e94] [cursor=pointer]:
+        - generic [ref=f2e95]: Bedtime
+        - generic [ref=f2e97]: 10:00 PM
+      - button "Edit morning start, 7:00 AM" [ref=f2e98] [cursor=pointer]:
+        - generic [ref=f2e99]: Morning
+        - generic [ref=f2e101]: 7:00 AM
+    - button "Add a daily nap A quiet break · wakes automatically" [ref=f2e102] [cursor=pointer]:
+      - generic [ref=f2e104]:
+        - generic [ref=f2e105]: Add a daily nap
+        - generic [ref=f2e106]: A quiet break · wakes automatically
+    - heading "App lists" [level=1] [ref=f2e108]
+    - generic [ref=f2e109]:
+      - button "Bedtime apps Choose which apps rest with him" [ref=f2e110] [cursor=pointer]:
+        - generic [ref=f2e112]:
+          - generic [ref=f2e113]: Bedtime apps
+          - generic [ref=f2e114]: Choose which apps rest with him
+      - button "Always blocked Keep a separate list, any time of day" [ref=f2e115] [cursor=pointer]:
+        - generic [ref=f2e117]:
+          - generic [ref=f2e118]: Always blocked
+          - generic [ref=f2e119]: Keep a separate list, any time of day
+  - tablist [ref=f2e122]:
+    - tab "Home" [selected] [ref=f2e123] [cursor=pointer]
+    - tab "Apps" [ref=f2e128] [cursor=pointer]
+    - tab "Routine" [ref=f2e130] [cursor=pointer]
+    - tab "You" [ref=f2e132] [cursor=pointer]

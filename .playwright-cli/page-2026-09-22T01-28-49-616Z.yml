@@ -1,0 +1,75 @@
+- generic [ref=f1e8]:
+  - generic [ref=f1e146]:
+    - generic [ref=f1e147]:
+      - generic [ref=f1e148]: A LITTLE REST GOES A LONG WAY
+      - heading "His sleepy schedule." [level=1] [ref=f1e149]
+      - generic [ref=f1e150]: A bedtime to share. Little naps to make room for life.
+    - generic [ref=f1e151]:
+      - generic [ref=f1e152]:
+        - generic [aria-hidden] [ref=f1e153]: 
+        - generic [ref=f1e154]: EVERY DAY
+        - generic [ref=f1e155]: PREVIEW
+      - generic [ref=f1e156]:
+        - button "Edit bedtime, 10:00 PM" [ref=f1e157] [cursor=pointer]:
+          - generic [ref=f1e158]: Tuck him in
+          - generic [ref=f1e159]: 10:00 PM
+          - generic [ref=f1e160]:
+            - generic [aria-hidden] [ref=f1e161]: 
+            - generic [ref=f1e162]: Tap to edit
+        - button "Edit morning start, 7:00 AM" [ref=f1e163] [cursor=pointer]:
+          - generic [ref=f1e164]: Morning walk
+          - generic [ref=f1e165]: 7:00 AM
+          - generic [ref=f1e166]:
+            - generic [aria-hidden] [ref=f1e167]: 
+            - generic [ref=f1e168]: Tap to edit
+      - generic [aria-hidden] [ref=f1e172]: 
+      - generic [ref=f1e173]: 9h set aside for the night
+    - heading "HIS DAILY NAPS" [level=1] [ref=f1e175]
+    - button "Schedule a nap A little rest while you do your thing" [ref=f1e177] [cursor=pointer]:
+      - generic [aria-hidden] [ref=f1e179]: 
+      - generic [ref=f1e180]:
+        - generic [ref=f1e181]: Schedule a nap
+        - generic [ref=f1e182]: A little rest while you do your thing
+      - generic [aria-hidden] [ref=f1e183]: 
+    - heading "THE DAILY RHYTHM" [level=1] [ref=f1e185]
+    - generic [ref=f1e186]:
+      - generic [ref=f1e187]:
+        - generic [aria-hidden] [ref=f1e189]: 
+        - generic [ref=f1e190]:
+          - generic [ref=f1e191]: Tuck him in for the night
+          - generic [ref=f1e192]: At 10:00 PM, your bedtime apps will block.
+      - generic [ref=f1e193]:
+        - generic [aria-hidden] [ref=f1e195]: 
+        - generic [ref=f1e196]:
+          - generic [ref=f1e197]: A 200-step good morning
+          - generic [ref=f1e198]: From 7:00 AM, a short walk will wake Trundle and unlock your bedtime apps.
+      - generic [ref=f1e199]:
+        - generic [aria-hidden] [ref=f1e201]: 
+        - generic [ref=f1e202]:
+          - generic [ref=f1e203]: The day is yours
+          - generic [ref=f1e204]: Between naps, bedtime apps stay available until the next bedtime.
+    - heading "YOUR APP LISTS" [level=1] [ref=f1e206]
+    - generic [ref=f1e207]:
+      - button "Bedtime apps 0 selected · follow bedtime and naps" [ref=f1e208] [cursor=pointer]:
+        - generic [aria-hidden] [ref=f1e210]: 
+        - generic [ref=f1e211]:
+          - generic [ref=f1e212]: Bedtime apps
+          - generic [ref=f1e213]: 0 selected · follow bedtime and naps
+        - generic [aria-hidden] [ref=f1e214]: 
+      - button "Always blocked 0 selected · stay blocked after waking" [ref=f1e215] [cursor=pointer]:
+        - generic [aria-hidden] [ref=f1e217]: 
+        - generic [ref=f1e218]:
+          - generic [ref=f1e219]: Always blocked
+          - generic [ref=f1e220]: 0 selected · stay blocked after waking
+        - generic [aria-hidden] [ref=f1e221]: 
+    - generic [ref=f1e222]:
+      - generic [aria-hidden] [ref=f1e223]: 
+      - generic [ref=f1e224]: Your preferences are saved. Trundle follows bedtime and naps here. App blocking and morning step tracking aren’t connected in this preview.
+  - tablist [ref=f1e129]:
+    - tab "Home" [ref=f1e130] [cursor=pointer]
+    - tab "Apps" [ref=f1e135] [cursor=pointer]:
+      - generic [aria-hidden] [ref=f1e136]: 
+    - tab "Routine" [active] [selected] [ref=f1e138] [cursor=pointer]:
+      - generic [aria-hidden] [ref=f1e139]: 
+    - tab "You" [ref=f1e141] [cursor=pointer]:
+      - generic [aria-hidden] [ref=f1e142]: 

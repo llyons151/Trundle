@@ -1,0 +1,19 @@
+- generic [ref=e5]:
+  - generic [ref=e6]:
+    - img "Trundle" [ref=e7]
+    - button "Explore first" [ref=e10] [cursor=pointer]
+  - generic [ref=e12]:
+    - generic [ref=e13]:
+      - generic [ref=e14]: Step 1 of 14
+      - generic [ref=e15]: Your rhythm
+    - progressbar "Setup steps completed" [ref=e16]
+  - generic [ref=e31]:
+    - heading "A little less scrolling. A little more living." [active] [level=1] [ref=e32]
+    - generic [ref=e33]: Meet Trundle. A little companion for quieter nights and mornings.
+  - generic [ref=e34]:
+    - generic [ref=e39]:
+      - img "Trundle sleeping peacefully"
+    - generic [ref=e91]: Meet Trundle. This preview saves your routine, but doesn’t block apps or count steps yet.
+  - generic [ref=e93]:
+    - button "Find our rhythm" [ref=e94] [cursor=pointer]
+    - generic [ref=e96]: On this device. Editable anytime.

@@ -1,9 +1,9 @@
-import { Feather } from '@expo/vector-icons';
+import { Icon } from './icon';
 import { BlurView } from 'expo-blur';
 import { GlassView, isGlassEffectAPIAvailable, isLiquidGlassAvailable } from 'expo-glass-effect';
 import * as Haptics from 'expo-haptics';
-import { useEffect, type ReactNode } from 'react';
-import { Pressable, StyleSheet, View, useWindowDimensions } from 'react-native';
+import { useEffect, useState, type ReactNode } from 'react';
+import { AccessibilityInfo, Pressable, StyleSheet, Text, View, useWindowDimensions } from 'react-native';
 import Animated, {
   Easing,
   ReduceMotion,
@@ -16,36 +16,32 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme, useThemedStyles, type Theme } from '../theme';
 import { TrundleMark } from './Brand';
 
-type FeatherName = keyof typeof Feather.glyphMap;
+export type TabKey = 'home' | 'apps' | 'routine' | 'you';
 
-export type TabKey = 'home' | 'apps' | 'trail' | 'you';
-
-// The lock sits in the middle slot. It's an action, not a tab, so it never gets the
-// selected capsule.
-const SLOTS: ({ key: TabKey; icon: FeatherName; label: string } | 'lock')[] = [
+// Four destinations, with visible labels and generous touch targets.
+const SLOTS: { key: TabKey; icon: 'home' | 'grid' | 'clock' | 'user'; label: string }[] = [
   { key: 'home', icon: 'home', label: 'Home' },
   { key: 'apps', icon: 'grid', label: 'Apps' },
-  'lock',
-  { key: 'trail', icon: 'map', label: 'Trail' },
+  { key: 'routine', icon: 'clock', label: 'Routine' },
   { key: 'you', icon: 'user', label: 'You' },
 ];
 
-export const TAB_BAR_HEIGHT = 62;
+export const TAB_BAR_HEIGHT = 72;
 
 const PADDING = 6;
-const MAX_SLOT_WIDTH = 62;
+const MAX_SLOT_WIDTH = 84;
 const SIDE_MARGIN = 16;
 
 // Native Liquid Glass requires iOS 26 and a compatible build.
 const hasLiquidGlass = isLiquidGlassAvailable() && isGlassEffectAPIAvailable();
 
-function Glass({ width, children }: { width: number; children: ReactNode }) {
+function Glass({ width, children, opaque }: { width: number; children: ReactNode; opaque: boolean }) {
   const { colors, dark } = useTheme();
   const styles = useThemedStyles(createStyles);
   return (
     <View style={[styles.pill, { width }]}>
       {/* Keep the glass behind the controls so a tap doesn't deform the whole bar. */}
-      {hasLiquidGlass ? (
+      {opaque ? <View style={[StyleSheet.absoluteFill, styles.glassSurface, { backgroundColor: colors.surface }]} /> : hasLiquidGlass ? (
         <GlassView
           pointerEvents="none"
           glassEffectStyle="clear"
@@ -68,13 +64,22 @@ function Glass({ width, children }: { width: number; children: ReactNode }) {
 type Props = {
   active: TabKey;
   onSelect: (tab: TabKey) => void;
-  onLockPress: () => void;
 };
 
-export function TabBar({ active, onSelect, onLockPress }: Props) {
-  const { colors, dark } = useTheme();
+export function TabBar({ active, onSelect }: Props) {
+  const { colors, dark, fonts } = useTheme();
   const styles = useThemedStyles(createStyles);
   const insets = useSafeAreaInsets();
+  const [opaque, setOpaque] = useState(true);
+  useEffect(() => {
+    // React Native Web does not implement this native accessibility API.
+    if (typeof AccessibilityInfo.isReduceTransparencyEnabled !== 'function') return;
+    let live = true;
+    let changed = false;
+    const subscription = AccessibilityInfo.addEventListener('reduceTransparencyChanged', value => { changed = true; setOpaque(value); });
+    AccessibilityInfo.isReduceTransparencyEnabled().then(value => { if (live && !changed) setOpaque(value); }).catch(() => {});
+    return () => { live = false; subscription.remove(); };
+  }, []);
   const { width: screenWidth } = useWindowDimensions();
   const slotWidth = Math.min(
     MAX_SLOT_WIDTH,
@@ -82,7 +87,7 @@ export function TabBar({ active, onSelect, onLockPress }: Props) {
   );
   const width = slotWidth * SLOTS.length + PADDING * 2;
 
-  const activeIndex = SLOTS.findIndex((slot) => slot !== 'lock' && slot.key === active);
+  const activeIndex = SLOTS.findIndex((slot) => slot.key === active);
   const capsuleX = useSharedValue(activeIndex * slotWidth);
 
   useEffect(() => {
@@ -103,12 +108,12 @@ export function TabBar({ active, onSelect, onLockPress }: Props) {
       style={[styles.container, { bottom: Math.max(insets.bottom, 16) }]}
       pointerEvents="box-none"
     >
-      <Glass width={width}>
+      <Glass width={width} opaque={opaque}>
         <Animated.View
           pointerEvents="none"
           style={[styles.capsule, { width: slotWidth }, capsuleStyle]}
         >
-          {hasLiquidGlass ? (
+          {hasLiquidGlass && !opaque ? (
             <GlassView
               glassEffectStyle="regular"
               colorScheme={dark ? "dark" : "light"}
@@ -122,27 +127,6 @@ export function TabBar({ active, onSelect, onLockPress }: Props) {
         </Animated.View>
         <View style={styles.row} accessibilityRole="tablist">
           {SLOTS.map((slot) => {
-            if (slot === 'lock') {
-              return (
-                <Pressable
-                  key="lock"
-                  onPress={() => {
-                    // Haptics can be unavailable (web, Low Power Mode); never worth surfacing.
-                    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium).catch(() => {});
-                    onLockPress();
-                  }}
-                  accessibilityRole="button"
-                  accessibilityLabel="Lock my apps"
-                  style={({ pressed }) => [
-                    styles.slot,
-                    { width: slotWidth },
-                    pressed && styles.pressed,
-                  ]}
-                >
-                  <Feather name="lock" size={24} color={colors.accent} />
-                </Pressable>
-              );
-            }
             const selected = slot.key === active;
             return (
               <Pressable
@@ -152,7 +136,10 @@ export function TabBar({ active, onSelect, onLockPress }: Props) {
                   onSelect(slot.key);
                 }}
                 accessibilityRole="tab"
+                accessibilityShowsLargeContentViewer
+                accessibilityLargeContentTitle={slot.label}
                 accessibilityLabel={slot.label}
+                aria-selected={selected}
                 accessibilityState={{ selected }}
                 style={({ pressed }) => [
                   styles.slot,
@@ -160,11 +147,12 @@ export function TabBar({ active, onSelect, onLockPress }: Props) {
                   pressed && styles.pressed,
                 ]}
               >
-                {slot.key === 'home' ? <TrundleMark color={selected ? colors.text : colors.textSoft} /> : <Feather
+                {slot.key === 'home' ? <TrundleMark color={selected ? colors.text : colors.textSoft} /> : <Icon
                   name={slot.icon}
-                  size={23}
+                  size={21}
                   color={selected ? colors.text : colors.textSoft}
                 />}
+                <Text maxFontSizeMultiplier={1.3} style={{ fontFamily: fonts.medium, fontWeight: '500', fontSize: 12, color: selected ? colors.text : colors.textMuted, marginTop: 4 }}>{slot.label}</Text>
               </Pressable>
             );
           })}
@@ -187,6 +175,7 @@ const createStyles = ({ colors, fonts }: Theme) => StyleSheet.create({
   },
   glassSurface: {
     borderRadius: TAB_BAR_HEIGHT / 2,
+    boxShadow: '0 4px 20px rgba(0,0,0,0.12)',
   },
   pillFallback: {
     overflow: 'hidden',

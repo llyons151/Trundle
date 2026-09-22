@@ -1,0 +1,58 @@
+- generic [ref=e97]:
+  - generic [ref=e100]:
+    - generic [ref=e101]:
+      - img "Trundle" [ref=e102]
+      - button "Open your profile" [ref=e105] [cursor=pointer]:
+        - generic [aria-hidden] [ref=e106]: 
+    - generic [ref=e107]:
+      - generic [ref=e111]:
+        - img "Trundle sleeping peacefully"
+      - button "Switch to night mode" [ref=e163] [cursor=pointer]:
+        - generic [aria-hidden] [ref=e164]: 
+        - generic [ref=e165]: Day
+    - generic [ref=e166]:
+      - heading "Sweet dreams, Trundle." [level=1] [ref=e167]
+      - generic [ref=e168]: All settled in. His morning walk starts at 7:00 AM.
+    - 'button "Preview: app blocking is not connected. Learn more." [ref=e169] [cursor=pointer]':
+      - generic [aria-hidden] [ref=e170]: 
+      - generic [ref=e171]: Preview · app blocking isn’t connected
+      - generic [aria-hidden] [ref=e172]: 
+    - generic [ref=e173]:
+      - button "Edit bedtime, 10:00 PM" [ref=e174] [cursor=pointer]:
+        - generic [ref=e175]:
+          - generic [aria-hidden] [ref=e176]: 
+          - generic [ref=e177]: Bedtime
+        - generic [ref=e178]: 10:00 PM
+      - button "Edit morning start, 7:00 AM" [ref=e179] [cursor=pointer]:
+        - generic [ref=e180]:
+          - generic [aria-hidden] [ref=e181]: 
+          - generic [ref=e182]: Morning
+        - generic [ref=e183]: 7:00 AM
+    - button "Add a daily nap A quiet break · wakes automatically" [ref=e184] [cursor=pointer]:
+      - generic [aria-hidden] [ref=e186]: 
+      - generic [ref=e187]:
+        - generic [ref=e188]: Add a daily nap
+        - generic [ref=e189]: A quiet break · wakes automatically
+      - generic [aria-hidden] [ref=e190]: 
+    - heading "App lists" [level=2] [ref=e192]
+    - generic [ref=e193]:
+      - button "Bedtime apps Choose which apps rest with him" [ref=e194] [cursor=pointer]:
+        - generic [aria-hidden] [ref=e196]: 
+        - generic [ref=e197]:
+          - generic [ref=e198]: Bedtime apps
+          - generic [ref=e199]: Choose which apps rest with him
+        - generic [aria-hidden] [ref=e200]: 
+      - button "Always blocked Keep a separate list, any time of day" [ref=e201] [cursor=pointer]:
+        - generic [aria-hidden] [ref=e203]: 
+        - generic [ref=e204]:
+          - generic [ref=e205]: Always blocked
+          - generic [ref=e206]: Keep a separate list, any time of day
+        - generic [aria-hidden] [ref=e207]: 
+  - tablist [ref=e210]:
+    - tab "Home" [selected] [ref=e211] [cursor=pointer]
+    - tab "Apps" [ref=e216] [cursor=pointer]:
+      - generic [aria-hidden] [ref=e217]: 
+    - tab "Routine" [ref=e219] [cursor=pointer]:
+      - generic [aria-hidden] [ref=e220]: 
+    - tab "You" [ref=e222] [cursor=pointer]:
+      - generic [aria-hidden] [ref=e223]: 

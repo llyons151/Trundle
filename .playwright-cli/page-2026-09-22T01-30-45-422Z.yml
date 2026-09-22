@@ -1,0 +1,93 @@
+- generic [active] [ref=f1e1]:
+  - generic [ref=f1e226]:
+    - generic [ref=f1e229]:
+      - generic [ref=f1e230]:
+        - generic [ref=f1e231]: A LITTLE REST GOES A LONG WAY
+        - heading [level=1] [ref=f1e367]: His sleepy schedule.
+        - generic [ref=f1e233]: A bedtime to share. Little naps to make room for life.
+      - generic [ref=f1e234]:
+        - generic [ref=f1e235]:
+          - generic [aria-hidden] [ref=f1e236]: 
+          - generic [ref=f1e237]: EVERY DAY
+          - generic [ref=f1e238]: PREVIEW
+        - generic [ref=f1e239]:
+          - button [ref=f1e368] [cursor=pointer]:
+            - generic [ref=f1e241]: Tuck him in
+            - generic [ref=f1e242]: 10:00 PM
+            - generic [ref=f1e243]:
+              - generic [aria-hidden] [ref=f1e244]: 
+              - generic [ref=f1e245]: Tap to edit
+          - button [ref=f1e369] [cursor=pointer]:
+            - generic [ref=f1e247]: Morning walk
+            - generic [ref=f1e248]: 7:00 AM
+            - generic [ref=f1e249]:
+              - generic [aria-hidden] [ref=f1e250]: 
+              - generic [ref=f1e251]: Tap to edit
+        - generic [aria-hidden] [ref=f1e255]: 
+        - generic [ref=f1e256]: 9h set aside for the night
+      - heading [level=1] [ref=f1e370]: HIS DAILY NAPS
+      - generic [ref=f1e259]:
+        - button [ref=f1e371] [cursor=pointer]:
+          - generic [aria-hidden] [ref=f1e373]: 
+          - generic [ref=f1e374]:
+            - generic [ref=f1e375]: 2:00 PM – 2:30 PM
+            - generic [ref=f1e376]: Every day · wakes automatically
+          - generic [aria-hidden] [ref=f1e377]: 
+        - button [ref=f1e378] [cursor=pointer]:
+          - generic [aria-hidden] [ref=f1e262]: 
+          - generic [ref=f1e263]:
+            - generic [ref=f1e264]: Schedule a nap
+            - generic [ref=f1e265]: A little rest while you do your thing
+          - generic [aria-hidden] [ref=f1e266]: 
+      - heading [level=1] [ref=f1e379]: THE DAILY RHYTHM
+      - generic [ref=f1e269]:
+        - generic [ref=f1e270]:
+          - generic [aria-hidden] [ref=f1e272]: 
+          - generic [ref=f1e273]:
+            - generic [ref=f1e274]: Tuck him in for the night
+            - generic [ref=f1e275]: At 10:00 PM, your bedtime apps will block.
+        - generic [ref=f1e276]:
+          - generic [aria-hidden] [ref=f1e278]: 
+          - generic [ref=f1e279]:
+            - generic [ref=f1e280]: A 200-step good morning
+            - generic [ref=f1e281]: From 7:00 AM, a short walk will wake Trundle and unlock your bedtime apps.
+        - generic [ref=f1e282]:
+          - generic [aria-hidden] [ref=f1e284]: 
+          - generic [ref=f1e285]:
+            - generic [ref=f1e286]: The day is yours
+            - generic [ref=f1e287]: Between naps, bedtime apps stay available until the next bedtime.
+      - heading [level=1] [ref=f1e380]: YOUR APP LISTS
+      - generic [ref=f1e290]:
+        - button [ref=f1e381] [cursor=pointer]:
+          - generic [aria-hidden] [ref=f1e293]: 
+          - generic [ref=f1e294]:
+            - generic [ref=f1e295]: Bedtime apps
+            - generic [ref=f1e296]: 0 selected · follow bedtime and naps
+          - generic [aria-hidden] [ref=f1e297]: 
+        - button [ref=f1e382] [cursor=pointer]:
+          - generic [aria-hidden] [ref=f1e300]: 
+          - generic [ref=f1e301]:
+            - generic [ref=f1e302]: Always blocked
+            - generic [ref=f1e303]: 0 selected · stay blocked after waking
+          - generic [aria-hidden] [ref=f1e304]: 
+      - generic [ref=f1e305]:
+        - generic [aria-hidden] [ref=f1e306]: 
+        - generic [ref=f1e307]: Your preferences are saved. Trundle follows bedtime and naps here. App blocking and morning step tracking aren’t connected in this preview.
+    - tablist [ref=f1e310]:
+      - tab [ref=f1e325] [cursor=pointer]:
+        - generic [ref=f1e315]: Home
+      - tab [ref=f1e326] [cursor=pointer]:
+        - generic [aria-hidden] [ref=f1e317]: 
+        - generic [ref=f1e318]: Apps
+      - tab [selected] [ref=f1e327] [cursor=pointer]:
+        - generic [aria-hidden] [ref=f1e320]: 
+        - generic [ref=f1e321]: Routine
+      - tab [ref=f1e328] [cursor=pointer]:
+        - generic [aria-hidden] [ref=f1e323]: 
+        - generic [ref=f1e324]: You
+  - dialog [ref=f1e330]:
+    - heading "Bottom sheet" [level=2] [ref=f1e331]
+    - generic [ref=f1e336]:
+      - heading "Make time for a nap" [level=1] [ref=f1e337]
+      - button "Cancel nap editing" [ref=f1e338] [cursor=pointer]:
+        - generic [aria-hidden] [ref=f1e339]: 

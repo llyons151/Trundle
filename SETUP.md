@@ -1,5 +1,10 @@
 # Trundle — setup notes
 
+Product source of truth: [GAME_PLAN.md](GAME_PLAN.md). The app is currently a visual
+prototype; native blocking, scheduling, and the morning step gate are not connected.
+The technical notes below are earlier implementation leads, not verified SDK 57
+guarantees. Check current official documentation before implementing native services.
+
 ## How iOS blocking works
 Apple's Screen Time API, three frameworks:
 - `FamilyControls` — permission prompt and the app picker (`FamilyActivityPicker`).
@@ -41,6 +46,18 @@ the extensions.
   its plugin).
 - Don't open `localhost` links on the phone — scan the QR code from `npx expo start`.
 
-## Open decisions
-- First audience (students / ADHD / gym crowd / parents) → sets pet tone, default
-  goals, marketing. See `IDEAS.md`.
+## Native work for the current plan
+
+- Keep scheduled and always-blocked app selections distinct. Waking Trundle must
+  only release scheduled restrictions.
+- Persist the bedtime/morning schedule and wake state; native enforcement cannot
+  depend on the dashboard remaining open.
+- Evaluate native step-count access for the 200-step morning ritual, including
+  historical steps since the morning start, permissions, device support, and
+  background execution. Do not assume a foreground live counter handles this.
+- Verify how reaching the step target can update shields when the app is closed.
+  If opening Trundle is necessary, document that limitation in the experience.
+- Test on a real iPhone across restarts, midnight, schedule edits, time-zone changes,
+  permission changes, and overlapping restrictions.
+- Resolve manual sleep, bypass, and accessibility flows from the game plan before
+  implementing their enforcement rules.

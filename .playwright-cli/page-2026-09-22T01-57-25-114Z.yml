@@ -1,0 +1,33 @@
+- generic [ref=e187]:
+  - generic [ref=e188]:
+    - button "Back" [ref=e189] [cursor=pointer]
+    - button "Explore first" [ref=e191] [cursor=pointer]
+  - generic [ref=e193]:
+    - generic [ref=e194]:
+      - generic [ref=e195]: Step 2 of 5
+      - generic [ref=e196]: EARLY PREVIEW
+    - progressbar "Setup steps completed" [ref=e197]
+  - generic [ref=e203]:
+    - heading "When shall we rest?" [active] [level=1] [ref=e204]
+    - generic [ref=e205]: Choose a bedtime and a morning start that feel right for you.
+  - generic [ref=e206]:
+    - generic [ref=e207]:
+      - button "Edit bedtime, 10:00 PM" [ref=e209] [cursor=pointer]:
+        - generic [aria-hidden] [ref=e210]: 
+        - generic [ref=e211]:
+          - generic [ref=e212]: Bedtime
+          - generic [ref=e213]: 10:00 PM
+        - generic [aria-hidden] [ref=e214]: 
+      - button "Edit morning start, 7:00 AM" [ref=e216] [cursor=pointer]:
+        - generic [aria-hidden] [ref=e217]: 
+        - generic [ref=e218]:
+          - generic [ref=e219]: Morning starts
+          - generic [ref=e220]: 7:00 AM
+        - generic [aria-hidden] [ref=e221]: 
+    - generic [ref=e222]:
+      - generic [ref=e223]: 9h set aside, every day
+      - generic [ref=e224]: In the full routine, bedtime apps stay blocked after 7:00 AM until you finish your morning walk.
+    - generic [ref=e225]: Use times that fit your day. Morning is when steps start counting, not an alarm or an automatic unlock.
+  - generic [ref=e226]:
+    - button "Choose bedtime apps" [ref=e227] [cursor=pointer]
+    - generic [ref=e229]: Your choices stay on this device. Change them anytime.

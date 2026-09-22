@@ -1,0 +1,92 @@
+[     388ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:8081/index.ts.bundle?platform=web&dev=true&hot=false&lazy=true&transform.engine=hermes&transform.routerRoot=app&unstable_transformProfile=hermes-stable:1498
+[     614ms] [LOG] Running application "main" with appParams:
+ {rootTag: #root, hydrate: undefined} 
+Development-level warnings: ON.
+Performance optimizations: OFF. @ http://localhost:8081/index.ts.bundle?platform=web&dev=true&hot=false&lazy=true&transform.engine=hermes&transform.routerRoot=app&unstable_transformProfile=hermes-stable:1498
+[     719ms] [WARNING] props.pointerEvents is deprecated. Use style.pointerEvents @ http://localhost:8081/index.ts.bundle?platform=web&dev=true&hot=false&lazy=true&transform.engine=hermes&transform.routerRoot=app&unstable_transformProfile=hermes-stable:1498
+[ 1091723ms] Metro has encountered an error: While trying to resolve module `@react-native-async-storage/async-storage` from file `/home/mokey/Documents/Projects/Trundle/src/state/preferences.ts`, the package `/home/mokey/Documents/Projects/Trundle/node_modules/@react-native-async-storage/async-storage/package.json` was successfully found. However, this package itself specifies a `main` module field that could not be resolved (`/home/mokey/Documents/Projects/Trundle/node_modules/@react-native-async-storage/async-storage/lib/module/index.js`. Indeed, none of these files exist:
+
+  * /home/mokey/Documents/Projects/Trundle/node_modules/@react-native-async-storage/async-storage/lib/module/index.js(.web.ts|.ts|.web.tsx|.tsx|.web.mjs|.mjs|.web.js|.js|.web.jsx|.jsx|.web.json|.json|.web.cjs|.cjs|.web.scss|.scss|.web.sass|.sass|.web.css|.css)
+  * /home/mokey/Documents/Projects/Trundle/node_modules/@react-native-async-storage/async-storage/lib/module/index.js/index(.web.ts|.ts|.web.tsx|.tsx|.web.mjs|.mjs|.web.js|.js|.web.jsx|.jsx|.web.json|.json|.web.cjs|.cjs|.web.scss|.scss|.web.sass|.sass|.web.css|.css): /home/mokey/Documents/Projects/Trundle/node_modules/metro/src/node-haste/DependencyGraph.js (278:17)
+
+  276 |         }
+  277 |         if (error instanceof _metroResolver.InvalidPackageError) {
+> 278 |           throw new _metroCore.PackageResolutionError({
+      |                 ^
+  279 |             packageError: error,
+  280 |             originModulePath,
+  281 |             targetModuleName: to,
+[ 1123468ms] Metro has encountered an error: While trying to resolve module `@react-native-async-storage/async-storage` from file `/home/mokey/Documents/Projects/Trundle/src/state/preferences.ts`, the package `/home/mokey/Documents/Projects/Trundle/node_modules/@react-native-async-storage/async-storage/package.json` was successfully found. However, this package itself specifies a `main` module field that could not be resolved (`/home/mokey/Documents/Projects/Trundle/node_modules/@react-native-async-storage/async-storage/lib/module/index.js`. Indeed, none of these files exist:
+
+  * /home/mokey/Documents/Projects/Trundle/node_modules/@react-native-async-storage/async-storage/lib/module/index.js(.web.ts|.ts|.web.tsx|.tsx|.web.mjs|.mjs|.web.js|.js|.web.jsx|.jsx|.web.json|.json|.web.cjs|.cjs|.web.scss|.scss|.web.sass|.sass|.web.css|.css)
+  * /home/mokey/Documents/Projects/Trundle/node_modules/@react-native-async-storage/async-storage/lib/module/index.js/index(.web.ts|.ts|.web.tsx|.tsx|.web.mjs|.mjs|.web.js|.js|.web.jsx|.jsx|.web.json|.json|.web.cjs|.cjs|.web.scss|.scss|.web.sass|.sass|.web.css|.css): /home/mokey/Documents/Projects/Trundle/node_modules/metro/src/node-haste/DependencyGraph.js (278:17)
+
+  276 |         }
+  277 |         if (error instanceof _metroResolver.InvalidPackageError) {
+> 278 |           throw new _metroCore.PackageResolutionError({
+      |                 ^
+  279 |             packageError: error,
+  280 |             originModulePath,
+  281 |             targetModuleName: to,
+[ 1169190ms] Metro has encountered an error: While trying to resolve module `@react-native-async-storage/async-storage` from file `/home/mokey/Documents/Projects/Trundle/src/state/preferences.ts`, the package `/home/mokey/Documents/Projects/Trundle/node_modules/@react-native-async-storage/async-storage/package.json` was successfully found. However, this package itself specifies a `main` module field that could not be resolved (`/home/mokey/Documents/Projects/Trundle/node_modules/@react-native-async-storage/async-storage/lib/module/index.js`. Indeed, none of these files exist:
+
+  * /home/mokey/Documents/Projects/Trundle/node_modules/@react-native-async-storage/async-storage/lib/module/index.js(.web.ts|.ts|.web.tsx|.tsx|.web.mjs|.mjs|.web.js|.js|.web.jsx|.jsx|.web.json|.json|.web.cjs|.cjs|.web.scss|.scss|.web.sass|.sass|.web.css|.css)
+  * /home/mokey/Documents/Projects/Trundle/node_modules/@react-native-async-storage/async-storage/lib/module/index.js/index(.web.ts|.ts|.web.tsx|.tsx|.web.mjs|.mjs|.web.js|.js|.web.jsx|.jsx|.web.json|.json|.web.cjs|.cjs|.web.scss|.scss|.web.sass|.sass|.web.css|.css): /home/mokey/Documents/Projects/Trundle/node_modules/metro/src/node-haste/DependencyGraph.js (278:17)
+
+  276 |         }
+  277 |         if (error instanceof _metroResolver.InvalidPackageError) {
+> 278 |           throw new _metroCore.PackageResolutionError({
+      |                 ^
+  279 |             packageError: error,
+  280 |             originModulePath,
+  281 |             targetModuleName: to,
+[ 1182781ms] Metro has encountered an error: While trying to resolve module `@react-native-async-storage/async-storage` from file `/home/mokey/Documents/Projects/Trundle/src/state/preferences.ts`, the package `/home/mokey/Documents/Projects/Trundle/node_modules/@react-native-async-storage/async-storage/package.json` was successfully found. However, this package itself specifies a `main` module field that could not be resolved (`/home/mokey/Documents/Projects/Trundle/node_modules/@react-native-async-storage/async-storage/lib/module/index.js`. Indeed, none of these files exist:
+
+  * /home/mokey/Documents/Projects/Trundle/node_modules/@react-native-async-storage/async-storage/lib/module/index.js(.web.ts|.ts|.web.tsx|.tsx|.web.mjs|.mjs|.web.js|.js|.web.jsx|.jsx|.web.json|.json|.web.cjs|.cjs|.web.scss|.scss|.web.sass|.sass|.web.css|.css)
+  * /home/mokey/Documents/Projects/Trundle/node_modules/@react-native-async-storage/async-storage/lib/module/index.js/index(.web.ts|.ts|.web.tsx|.tsx|.web.mjs|.mjs|.web.js|.js|.web.jsx|.jsx|.web.json|.json|.web.cjs|.cjs|.web.scss|.scss|.web.sass|.sass|.web.css|.css): /home/mokey/Documents/Projects/Trundle/node_modules/metro/src/node-haste/DependencyGraph.js (278:17)
+
+  276 |         }
+  277 |         if (error instanceof _metroResolver.InvalidPackageError) {
+> 278 |           throw new _metroCore.PackageResolutionError({
+      |                 ^
+  279 |             packageError: error,
+  280 |             originModulePath,
+  281 |             targetModuleName: to,
+[ 1183767ms] Metro has encountered an error: While trying to resolve module `@react-native-async-storage/async-storage` from file `/home/mokey/Documents/Projects/Trundle/src/state/preferences.ts`, the package `/home/mokey/Documents/Projects/Trundle/node_modules/@react-native-async-storage/async-storage/package.json` was successfully found. However, this package itself specifies a `main` module field that could not be resolved (`/home/mokey/Documents/Projects/Trundle/node_modules/@react-native-async-storage/async-storage/lib/module/index.js`. Indeed, none of these files exist:
+
+  * /home/mokey/Documents/Projects/Trundle/node_modules/@react-native-async-storage/async-storage/lib/module/index.js(.web.ts|.ts|.web.tsx|.tsx|.web.mjs|.mjs|.web.js|.js|.web.jsx|.jsx|.web.json|.json|.web.cjs|.cjs|.web.scss|.scss|.web.sass|.sass|.web.css|.css)
+  * /home/mokey/Documents/Projects/Trundle/node_modules/@react-native-async-storage/async-storage/lib/module/index.js/index(.web.ts|.ts|.web.tsx|.tsx|.web.mjs|.mjs|.web.js|.js|.web.jsx|.jsx|.web.json|.json|.web.cjs|.cjs|.web.scss|.scss|.web.sass|.sass|.web.css|.css): /home/mokey/Documents/Projects/Trundle/node_modules/metro/src/node-haste/DependencyGraph.js (278:17)
+
+  276 |         }
+  277 |         if (error instanceof _metroResolver.InvalidPackageError) {
+> 278 |           throw new _metroCore.PackageResolutionError({
+      |                 ^
+  279 |             packageError: error,
+  280 |             originModulePath,
+  281 |             targetModuleName: to,
+[ 1197266ms] Metro has encountered an error: While trying to resolve module `@react-native-async-storage/async-storage` from file `/home/mokey/Documents/Projects/Trundle/src/state/preferences.ts`, the package `/home/mokey/Documents/Projects/Trundle/node_modules/@react-native-async-storage/async-storage/package.json` was successfully found. However, this package itself specifies a `main` module field that could not be resolved (`/home/mokey/Documents/Projects/Trundle/node_modules/@react-native-async-storage/async-storage/lib/module/index.js`. Indeed, none of these files exist:
+
+  * /home/mokey/Documents/Projects/Trundle/node_modules/@react-native-async-storage/async-storage/lib/module/index.js(.web.ts|.ts|.web.tsx|.tsx|.web.mjs|.mjs|.web.js|.js|.web.jsx|.jsx|.web.json|.json|.web.cjs|.cjs|.web.scss|.scss|.web.sass|.sass|.web.css|.css)
+  * /home/mokey/Documents/Projects/Trundle/node_modules/@react-native-async-storage/async-storage/lib/module/index.js/index(.web.ts|.ts|.web.tsx|.tsx|.web.mjs|.mjs|.web.js|.js|.web.jsx|.jsx|.web.json|.json|.web.cjs|.cjs|.web.scss|.scss|.web.sass|.sass|.web.css|.css): /home/mokey/Documents/Projects/Trundle/node_modules/metro/src/node-haste/DependencyGraph.js (278:17)
+
+  276 |         }
+  277 |         if (error instanceof _metroResolver.InvalidPackageError) {
+> 278 |           throw new _metroCore.PackageResolutionError({
+      |                 ^
+  279 |             packageError: error,
+  280 |             originModulePath,
+  281 |             targetModuleName: to,
+[ 1268635ms] Metro has encountered an error: While trying to resolve module `@react-native-async-storage/async-storage` from file `/home/mokey/Documents/Projects/Trundle/src/state/preferences.ts`, the package `/home/mokey/Documents/Projects/Trundle/node_modules/@react-native-async-storage/async-storage/package.json` was successfully found. However, this package itself specifies a `main` module field that could not be resolved (`/home/mokey/Documents/Projects/Trundle/node_modules/@react-native-async-storage/async-storage/lib/module/index.js`. Indeed, none of these files exist:
+
+  * /home/mokey/Documents/Projects/Trundle/node_modules/@react-native-async-storage/async-storage/lib/module/index.js(.web.ts|.ts|.web.tsx|.tsx|.web.mjs|.mjs|.web.js|.js|.web.jsx|.jsx|.web.json|.json|.web.cjs|.cjs|.web.scss|.scss|.web.sass|.sass|.web.css|.css)
+  * /home/mokey/Documents/Projects/Trundle/node_modules/@react-native-async-storage/async-storage/lib/module/index.js/index(.web.ts|.ts|.web.tsx|.tsx|.web.mjs|.mjs|.web.js|.js|.web.jsx|.jsx|.web.json|.json|.web.cjs|.cjs|.web.scss|.scss|.web.sass|.sass|.web.css|.css): /home/mokey/Documents/Projects/Trundle/node_modules/metro/src/node-haste/DependencyGraph.js (278:17)
+
+  276 |         }
+  277 |         if (error instanceof _metroResolver.InvalidPackageError) {
+> 278 |           throw new _metroCore.PackageResolutionError({
+      |                 ^
+  279 |             packageError: error,
+  280 |             originModulePath,
+  281 |             targetModuleName: to,
+[ 1276433ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:8081/index.ts.bundle?platform=web&dev=true&hot=false&lazy=true&transform.engine=hermes&transform.routerRoot=app&unstable_transformProfile=hermes-stable:0
+[ 1276433ms] [ERROR] Refused to execute script from 'http://localhost:8081/index.ts.bundle?platform=web&dev=true&hot=false&lazy=true&transform.engine=hermes&transform.routerRoot=app&unstable_transformProfile=hermes-stable' because its MIME type ('application/json') is not executable, and strict MIME type checking is enabled. @ http://localhost:8081/:0

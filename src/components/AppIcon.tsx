@@ -1,8 +1,9 @@
-import { Image, View, type ImageSourcePropType } from 'react-native';
+import { View } from 'react-native';
+import { BundledImage } from './BundledImage';
 import type { AppId } from '../state/apps';
 
 // Original App Store artwork, bundled for offline use. See assets/app-icons/sources.json.
-const icons: Record<AppId, ImageSourcePropType> = {
+const icons: Record<AppId, number> = {
   instagram: require('../../assets/app-icons/instagram.jpg'),
   tiktok: require('../../assets/app-icons/tiktok.jpg'),
   youtube: require('../../assets/app-icons/youtube.jpg'),
@@ -21,7 +22,7 @@ export function AppIcon({ id, size = 48 }: { id: AppId; size?: number }) {
   // Crop the App Store artwork's baked-in outer highlight inside our rounded mask.
   const inset = size * 0.04;
   return <View style={{ width: size, height: size, borderRadius: size * 0.2237, borderCurve: 'continuous', overflow: 'hidden' }}>
-    <Image source={icons[id]} accessible={false} resizeMode="cover"
+    <BundledImage source={icons[id]} accessible={false} contentFit="cover"
       style={{ width: size + inset * 2, height: size + inset * 2, left: -inset, top: -inset }} />
   </View>;
 }

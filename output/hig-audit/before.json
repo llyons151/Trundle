@@ -1,0 +1,118 @@
+{
+  "schemaVersion": 2,
+  "toolVersion": "2.0.3",
+  "higSnapshot": "2025-02-02",
+  "lowDensity": true,
+  "config": {
+    "path": null,
+    "warnings": []
+  },
+  "baseline": {
+    "path": null,
+    "absorbed": 0,
+    "stale": 0
+  },
+  "concerns": [],
+  "frameworks": [
+    "react-native"
+  ],
+  "files": {
+    "code": 26,
+    "style": 0,
+    "config": 3
+  },
+  "severities": {
+    "critical": 0,
+    "serious": 0,
+    "moderate": 0
+  },
+  "totals": {
+    "concerns": 0,
+    "positives": 62,
+    "patterns": 9
+  },
+  "failOn": null,
+  "gateTripped": false,
+  "categories": [
+    {
+      "name": "Foundations",
+      "skill": "hig-foundations",
+      "detections": 59,
+      "concerns": 0,
+      "positives": 59,
+      "patterns": 0,
+      "severities": {
+        "critical": 0,
+        "serious": 0,
+        "moderate": 0
+      },
+      "files": [
+        "App.tsx",
+        "src/components/Brand.tsx",
+        "src/components/IOSSwitch.tsx",
+        "src/components/TabBar.tsx",
+        "src/components/Trundle.tsx",
+        "src/components/app-ui.tsx",
+        "src/components/detail-sheet.tsx",
+        "src/components/icon.tsx",
+        "src/screens/AppsScreen.tsx",
+        "src/screens/HomeScreen.tsx",
+        "src/screens/ProfileScreen.tsx",
+        "src/screens/RoutineScreen.tsx"
+      ]
+    },
+    {
+      "name": "Controls",
+      "skill": "hig-components-controls",
+      "detections": 5,
+      "concerns": 0,
+      "positives": 0,
+      "patterns": 5,
+      "severities": {
+        "critical": 0,
+        "serious": 0,
+        "moderate": 0
+      },
+      "files": [
+        "App.tsx",
+        "src/components/IOSSwitch.tsx",
+        "src/screens/ProfileScreen.tsx",
+        "src/screens/RoutineScreen.tsx"
+      ]
+    },
+    {
+      "name": "Interaction Patterns",
+      "skill": "hig-patterns",
+      "detections": 4,
+      "concerns": 0,
+      "positives": 0,
+      "patterns": 4,
+      "severities": {
+        "critical": 0,
+        "serious": 0,
+        "moderate": 0
+      },
+      "files": [
+        "src/components/TabBar.tsx",
+        "src/components/Trundle.tsx"
+      ]
+    },
+    {
+      "name": "Input Methods",
+      "skill": "hig-inputs",
+      "detections": 3,
+      "concerns": 0,
+      "positives": 3,
+      "patterns": 0,
+      "severities": {
+        "critical": 0,
+        "serious": 0,
+        "moderate": 0
+      },
+      "files": [
+        "src/screens/AppsScreen.tsx",
+        "src/screens/ProfileScreen.tsx"
+      ]
+    }
+  ]
+}
