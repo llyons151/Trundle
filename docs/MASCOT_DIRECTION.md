@@ -115,3 +115,68 @@ Earlier brainstormed concepts, with the species left open:
 - **Mascots chosen only because they fit an app feature** (for example, a mole
   that hears your footsteps): clever on paper, but the character and personality
   are what make a mascot catch on.
+
+## Art style and how he appears in the app
+
+Added September 24, 2026, after the "Nocturne" visual direction was chosen
+(docs/COLOR_RESEARCH.md, section 5): a monochrome interface where full-bleed
+scene art carries all the color.
+
+### Style: painted storybook
+
+- **Shapes:** simple and bold, so the silhouette reads at app-icon size. This
+  keeps the "simplified like Duolingo's owl" rule above.
+- **Rendering:** painterly inside those shapes: gouache or oil texture, soft
+  light and visible brushwork.
+- **References:** *The Wild Robot* (DreamWorks, 2024), *Wolfwalkers*
+  (Cartoon Saloon), Jon Klassen's picture books.
+- **Why not flat vector:** it looks cheap next to painterly scenes and brings
+  back the "vibe coded" look.
+- **Why not photoreal or visibly AI-generated:** photoreal can't be animated or
+  given sass. Visible AI art gets called out on TikTok, and it can't keep him
+  consistent from pose to pose.
+- **Illustrator:** hire a human. AI is fine for moodboards only.
+
+### Staging
+
+- **One setting, three lights.** His den or bed nook is always the same place;
+  only the light changes: warm lamplight at night, window dawn in the morning,
+  bright daylight during the day. The mask position (down, halfway, pushed up)
+  and his pose show the state.
+- **The sleep mask is the one recurring color.** The interface has no accent
+  color, so the mask is the brand color inside the art. Pick a muted, painterly
+  hue together with the illustrator.
+- **He is the scene, not a sticker.** On Home, the full-bleed hero image *is*
+  Trundle in his den. Settings and lists stay plain monochrome with no mascot.
+- **His lines are the headlines,** set in the italic serif display face. The
+  typography is his voice.
+
+### Surfaces
+
+| Surface | How he appears |
+|---|---|
+| Home (night/morning/day) | Full-bleed painted scene, with state loops (asleep, stirring, walking, awake) |
+| Blocked-app shield | **Only a small icon image**: iOS `ShieldConfiguration` supports a background color or blur, an icon, a title, a subtitle and buttons, but not full-bleed art. Use a painted head as the icon and put his line in the title. |
+| Share cards / TikTok | Full-bleed poster versions of the shield moment (these can be as rich as the mockup) |
+| App icon | Painted face with the mask, on a dark background |
+| Onboarding, widgets, notifications | Head crops and short loops |
+
+### Animation
+
+The PNG sequences and short video loops below are well-understood options.
+Neither has been verified against this project's Expo SDK yet.
+
+- **Rive:** can deform painted raster parts with a state machine that maps to
+  asleep, stirring, walking and awake. Check that the Rive React Native runtime
+  supports the project's Expo SDK version before committing.
+- **Pre-rendered video or WebP loops per state:** the simplest option, and it
+  keeps the painting's full quality.
+- Ask the illustrator for layered source files either way.
+
+### Illustrator brief checklist
+
+1. A turnaround sheet: front, 3/4 view and profile, plus an icon-size silhouette test.
+2. Expression sheet: asleep, groggy, betrayed-by-sunlight, unimpressed, and grudgingly fond.
+3. The den scene in three lighting states that match the scene palettes.
+4. The mask in its down, halfway and pushed-up positions.
+5. Layered files for animation.

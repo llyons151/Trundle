@@ -1,140 +1,181 @@
-# Trundle — current game plan
+# Trundle: game plan
 
-Updated September 21, 2026. This is the source of truth for product direction.
-It supersedes earlier brainstorms about proving arbitrary goals, earning short
-unlock windows, and a pet that deteriorates with screen time.
+Updated September 24, 2026. This is the source of truth for product direction. It
+replaces the September 21 plan, which is archived at
+[docs/archive/GAME_PLAN_2026-09-21.md](docs/archive/GAME_PLAN_2026-09-21.md). The
+reasoning behind it is in [docs/IDEA_SCORECARD.md](docs/IDEA_SCORECARD.md) and
+[docs/VALIDATION_RESEARCH.md](docs/VALIDATION_RESEARCH.md).
 
-## The product
+## The product in one line
 
-Put your phone down. Let Trundle rest. Trundle is a sleepy raccoon companion you make time to care for through shared bedtimes and scheduled naps. He goes to sleep at
-your chosen bedtime and blocks selected distracting apps. In the morning, walk
-200 steps to wake him and unlock those apps for the day. A separate always-blocked
-list stays blocked even while he is awake.
+**Your apps go to sleep at bedtime and don't wake up until you get out of bed.**
 
-The user controls their schedule and app choices. Normal blocking happens
-automatically; walking is a morning ritual, not a currency spent on each unlock.
-Only selected apps are blocked, not the whole phone.
+Trundle is a paid iOS app for people who scroll in bed at both ends of the night.
+At bedtime it blocks the apps the user chose. In the morning they stay blocked
+until the user walks 200 steps. A sassy, tired raccoon voice runs the whole thing.
+He's strict about the situation and never shames the user.
 
-## Core daily loop
+## Why this, and why now
 
-1. Choose a bedtime, a morning start time, and the apps that follow this schedule.
-2. At bedtime, Trundle falls asleep and the scheduled apps block automatically.
-3. At the chosen morning start time, the wake-up step counter begins. Scheduled
-   apps remain blocked while Trundle is waking up.
-4. Walk 200 steps. Count eligible steps from the morning start time, including steps
-   taken before opening Trundle; opening the app should not start the count.
-5. At the target, Trundle wakes and scheduled apps unlock until the next bedtime.
-6. Apps on the always-blocked list remain blocked throughout every state.
+- **The problem is big.** Pew (Sept 2026): 62% of 18–29s say their phone hurts
+  their sleep, and only 25% of people who tried to cut back succeeded.
+- **The bedtime lock is table stakes.** Opal advertises it ("Sleep Time 10PM–8AM
+  Block All"). **The morning is the wedge.** Opal's morning ends at a clock time,
+  even if you're still in bed. Trundle's ends when you get up. Morning-task apps
+  are a proven market: Alarmy has 82M downloads, and Early went from launch to
+  about $50K a month in four months.
+- **Other indies are circling.** Groggy (Sept 16, 2026) and BedLock (April 2026)
+  have the same idea and 0 ratings. Speed, distribution, voice and reliability
+  decide the winner.
+- **It fits the founder.** Short-form video is how this category grows, and a hard
+  paywall makes paid creators profitable.
 
-The step count resets for each new morning. Steps from the previous day or before
-the morning start time do not carry over. Reopening the app must not reset progress.
-If the target is not reached, scheduled apps remain blocked. Bedtime takes precedence:
-completing steps during the night must not unlock the apps.
+**What we compete on:** the morning hook, the voice, and never failing silently.
+**Not:** blocking features, stats, or sleep tracking.
 
-200 steps is the initial default to test, not a validated ideal threshold.
+## Core loop
 
-## Naps
+1. During onboarding the user picks the apps that sleep at night, a bedtime and a
+   morning start time. **Tonight's lock is scheduled before onboarding ends.**
+2. At bedtime, Trundle falls asleep and the selected apps are blocked.
+3. At the morning start time the step count begins. The apps stay blocked.
+4. The user walks 200 steps and the apps wake up until the next bedtime.
+5. An always-blocked list stays blocked in every state. If an app is on both
+   lists, the always-blocked rule wins.
 
-- Schedule daily naps with a start and end time. Naps end automatically without a
-  step requirement; the 200-step walk remains the morning ritual.
-- Use “Tuck him in for a nap” for an immediate 15-, 30-, or 60-minute rest.
-- Daily naps cannot overlap each other or bedtime. Bedtime takes precedence over
-  an immediate nap; it never unlocks overnight apps when that nap timer expires.
-- Naps use the same selected app list as bedtime. The always-blocked list remains
-  independent. Native enforcement is still pending.
-- Keep the tone affectionate and unpressured: sleepy eyes, tucked limbs, quiet
-  breathing, and a peaceful wake-up. No guilt or punishment for needing the phone.
+Rules carried over from the previous plan:
+- Steps count from the morning start time, including steps taken before the app
+  is opened. Opening the app doesn't start the count.
+- The count resets each morning. Reopening the app never resets progress.
+- Bedtime takes precedence: walking at night never unlocks apps.
+- 200 is a default to test, not a validated number. The target is adjustable.
+- The user controls the schedule and both app lists at all times.
 
-## User control
+## Humane exits (required for v1)
 
-- Users choose the normal bedtime and morning start time.
-- Users manage scheduled and always-blocked app lists separately. If an app belongs
-  to both, the always-blocked rule wins.
-- “Always blocked” means independent of Trundle's daily routine, not an irreversible
-  restriction. The user can manage that list explicitly.
-- Support putting Trundle to bed early for a deliberate break. Before implementing
-  this flow, decide how an early/manual block ends and whether it joins the next
-  overnight schedule; do not assume another 200-step unlock.
-- Plan for an adjustable step target, an accessible non-walking alternative, and an
-  intentional emergency bypass. Exact interactions and bypass duration are still
-  open. Waking Trundle or bypassing a scheduled block must not silently clear the
-  always-blocked list.
+- **Passes:** a few scarce passes a month for sick days, travel or a baby asleep
+  in the room, written in his voice. Using one unlocks the morning without
+  walking. Exact count and duration are to be tuned.
+- **Emergency unlock:** always available, deliberate, and never clears the
+  always-blocked list silently.
+- **Accessible alternative:** a non-walking way to wake him (to be designed), for
+  users who can't walk 200 steps.
+- No money stakes, penalties, streak shaming or "neglect" states.
 
-## Dashboard
+## Reliability is a feature
 
-The dashboard should answer: Is Trundle asleep or awake? What is blocked? What
-happens next?
+- Build the steps on CoreMotion (`CMPedometer`), counted live in the app while he
+  narrates. **Don't use HealthKit** for the gate: it lags and can't be read while
+  the phone is locked. Add light anti-shake checks.
+- The dependable unlock is a tap on the shield or opening the app to check steps.
+  **Don't promise an automatic unlock** until it has been shown to work on a
+  device.
+- Chain DeviceActivity schedules in short intervals (under about 45 minutes)
+  rather than one long schedule. Run a nightly self-check that shields applied.
+- Detect when Screen Time access has been revoked or protection is off, and say so
+  plainly. Never imply protection is active when it isn't.
 
-- **Night:** sleeping Trundle, “Trundle is asleep,” the morning start time, and a
-  summary of blocked apps.
-- **Morning:** “Walk 200 steps to wake Trundle,” clear progress such as “84 / 200,”
-  and the apps that will unlock. Trundle stirs, stretches, then stands as progress
-  increases.
-- **Day:** awake Trundle, the next bedtime, the status of both app lists, and the
-  option to put him to bed early once its behavior is defined.
-- Keep the dark, spacious dashboard direction, with Trundle as the centerpiece.
-  His state should communicate the blocking state.
-- Screen-time charts and routine history are secondary. “Time reclaimed,” virtual
-  distance, and the lighthouse journey are not the main dashboard or core loop.
-- Do not display sample statistics as real tracking, or imply protection is active
-  before native blocking is connected.
+## Look and voice
 
-## Character and animation
+How to keep the brand from reading as generated:
+[docs/BRAND_PRINCIPLES.md](docs/BRAND_PRINCIPLES.md).
 
-**Mascot change (September 23, 2026):** Trundle is becoming a tired, sassy raccoon
-with a sleep mask. See [docs/MASCOT_DIRECTION.md](docs/MASCOT_DIRECTION.md). The rebuild
-starts with the raccoon; the old rock art is archived at the `rock-prototype` tag.
+- **Visual direction: "Nocturne"** ([docs/COLOR_RESEARCH.md](docs/COLOR_RESEARCH.md),
+  section 5).
+  - A monochrome interface with white pill buttons and frosted chips.
+  - A heavy italic serif for his lines. No brand accent color.
+  - Color comes from imagery. The references are the user's three screenshots
+    (the art-events app, the travel app, Opal).
+- **The voice is the mascot.** v1 has no illustrated art: his lines, set big, carry
+  the personality. Later options, none needed for launch: photographing a
+  customized plush raccoon, or commissioned art. Don't ship raw AI-generated
+  mascot art.
+- **Where he shows up:** the block screen (a small icon plus his line as the
+  title; iOS doesn't allow full-screen art there), the morning walk, the home
+  state, notifications, and the morning share card.
+- **Never glow** (CLAUDE.md). Never troll-like, and never icy blue (see the LoL
+  Trundle conflict).
+- **Name: Trundle** (decided September 24, 2026; Bandit dropped). Still run a
+  USPTO class 9 check and a social handle check before launch
+  ([docs/IDEA_SCORECARD.md](docs/IDEA_SCORECARD.md)).
+- **Voice rules and line bank:** [docs/VOICE.md](docs/VOICE.md).
 
-Prioritize sleeping, stirring/stretching, walking, and awake idle states. Animation
-should make the daily routine understandable. Trundle does not die, lose progress,
-crack, or lose his moss as punishment for app use or a bypass.
+## Money
 
-## Implementation order
+- **Hard paywall at the end of onboarding:** $29.99–34.99 a year and a monthly
+  plan, with a short trial. Plain renewal terms (App Store guideline 3.1.2), with
+  no fake countdowns or hidden prices.
+- A lifetime plan is an experiment for later. Keep a freemium fallback ready if
+  word of mouth is weak (Opal's revenue grew after it went freemium).
+- **Onboarding shape:** a short quiz → one number built from the user's own
+  answers → pick apps and times → tonight's lock scheduled → paywall.
 
-1. Define and persist the routine state, schedule, both app lists, and wake progress.
-   Resolve manual sleep, accessibility, and bypass behavior before those flows ship.
-2. Build the state-driven dashboard and setup/settings flows. Clearly label any
-   simulated states while native services are unavailable.
-3. Validate native iOS blocking and step counting on a real device: permissions,
-   scheduled transitions while the app is closed, counting from the morning start,
-   and applying an unlock after the target. Verify background limitations rather
-   than promising immediate automatic unlocking before it is demonstrated.
-4. Connect the interface to those services and handle denied/revoked permissions,
-   missing step data, app restarts, missed transitions, time-zone changes, daylight
-   saving changes, and schedule edits. Surface failures honestly.
-5. Test the daily loop over several days, including bedtime, mornings without
-   opening the app, incomplete goals, always-blocked precedence, and recovery paths.
-6. Refine animation and tune the default target based on use.
+## Build order
 
-## Research
+**Step 0: now**
+- Finish Apple Developer Program enrollment. The team ID error is still open.
+- Register the App ID, the three extension IDs and the App Group, then request
+  Family Controls (Distribution) for each. Follow
+  [docs/ENTITLEMENT_SETUP.md](docs/ENTITLEMENT_SETUP.md).
+- Set `ios.bundleIdentifier` in `app.json`.
+- Dev is on Linux with no confirmed Mac, so native extensions are built with EAS
+  Build.
 
-Market, competitor, iOS-feasibility, monetization and validation research lives in
-[docs/VALIDATION_RESEARCH.md](docs/VALIDATION_RESEARCH.md) (September 23, 2026).
-It informs decisions; this game plan stays the source of truth. Key constraints from
-it: request the Family Controls distribution entitlement for the app and every
-extension early; the dependable morning unlock is a shield tap that checks
-CMPedometer steps, not a guaranteed automatic unlock; prove D30 "blocking still
-active" retention before spending launch distribution.
+**Step 1: device spike (about 2 weeks, before any real UI).** On a real iPhone,
+prove:
+1. Blocks apply at bedtime and hold for 3+ nights with the app closed.
+2. The morning step count unlocks at 200, from the shield tap or the app.
+3. Revocation is detected.
 
-## Not part of the current plan
+If any of these fail, stop and redesign.
 
-- Repeated walking to purchase 10–15-minute app-access windows.
-- AI/photo verification of arbitrary goals or an AI gatekeeper.
-- Feeding a pet to unlock apps, neglect/punishment states, or bypass penalties.
-- Squads, leaderboards, money stakes, NFC unlocks, and a cosmetic economy.
-- Virtual distance earned from estimated time saved as the primary progression.
-- A committed subscription price, hard paywall, or launch monetization model.
+**Step 2: v1**
+- Onboarding quiz and paywall.
+- Night, morning and day home states.
+- Morning walk screen with a live count and his lines.
+- Custom shield text.
+- Always-blocked list.
+- Passes, emergency unlock and the accessible alternative.
+- Reliability checks and honest status.
+- Morning share card ("Bed 11:41. Up 7:02. 213 steps. Still disappointed.").
+- Settings.
 
-Optional future features must support this routine, not quietly replace it.
+**Step 3: v1.1, only after real users**
+- A real alarm (AlarmKit) to lead with the morning.
+- Streak widget and a bedtime Live Activity.
+- Buddy/couples mode: a partner gets a message if bedtime breaks; no money moves.
+- Naps, both scheduled and "tuck him in now".
+- Put him to bed early.
+- An opt-in "went to bed earlier" dataset for a published result later.
 
-## Current implementation status
+## Marketing (runs alongside the build, starting now)
 
-**Rebuilding from scratch (September 24, 2026).** The repository has no app code.
-The earlier Expo prototype (rock mascot, state-driven dashboard, bedtime and nap
-preferences, both app lists, and the 14-page onboarding preview) is preserved at the
-git tag `rock-prototype`. Browse it with `git show rock-prototype:<path>` or restore
-a file with `git checkout rock-prototype -- <path>`. Reuse its logic only where it
-still fits this plan; do not carry over the rock art.
+- **Before the app exists:** 20–30 concept videos across angles, linking to a
+  waitlist.
+  - The hook to test first: "I have to walk 200 steps before TikTok works."
+  - Signal to look for: "what app is this?" comments and sign-ups.
+- **At launch:** daily founder videos across 2–3 accounts, plus paid niche
+  creators at $2–3 CPM.
+  - Measure payers per 1K views, not views.
+  - $10K a month takes roughly 20–25M views a year.
 
-The research in `docs/` still applies. Onboarding, HIG and validation findings hold
-for the rebuild; their file paths refer to the `rock-prototype` tag.
+## Gates
+
+A TestFlight group of 100–300 users should show:
+- **D30:** at least 20% still have blocking active.
+- Fewer than 1 in 50 nights with a missed block.
+- Roughly 30% or more of trials turning into paid subscriptions.
+
+Pass, then launch hard. Fail, then fix it or stop, **before** spending the
+audience. Expectations: most new apps stay under $1K a month; a strong result is
+$10–25K a month by month 12 ([docs/IDEA_SCORECARD.md](docs/IDEA_SCORECARD.md)).
+
+## Not part of the plan
+
+- Money stakes or escrow, punishments, guilt mechanics, or a pet that suffers.
+- Timed earned unlocks (walk to buy 10–15 minutes of access) or AI/photo
+  verification of goals.
+- Stats dashboards, sleep scores, soundscapes, or sleep tracking.
+- Android, squads or leaderboards, a cosmetic economy, NFC.
+- Illustrated mascot art for v1.
+- Weekly pricing.

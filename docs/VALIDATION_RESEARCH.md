@@ -33,7 +33,7 @@ for complaint patterns.
    - 70% of US adults under 30 say they spend too much time on their phones.
    - Only 1 in 4 of those who tried to cut back say it went very well.
    - Half of US adults use a screen in bed every day.
-2. **The category is crowded, but this exact combination is unclaimed.** We found no app that pairs a scheduled bedtime lock with a step-based morning unlock and a companion character. Walk-to-unlock apps exist, but they are small, generic, priced weekly and poorly reviewed.
+2. **The category is crowded, but this exact combination is unclaimed.** We found no app that pairs a scheduled bedtime lock with a step-based morning unlock and a companion character. Walk-to-unlock apps exist, but they are small, generic, priced weekly and poorly reviewed. **Correction (September 24):** Opal already ships a bedtime lock *and* a morning lock (Opal Sleep, January 2026). Only the step-based unlock and the character are unclaimed. See section 14.
 3. **The edge is "the gentlest lock that actually holds."** Competitors fall into three groups: strict and cold (Brick, Opal Deep Focus), soft and bypassable (one sec, Screen Time), or cute with no enforcement (Finch, Forest).
 4. **The biggest risk is technical, not market.** Three problems:
    - Apple approval of the Family Controls entitlement.
@@ -473,3 +473,102 @@ $100K+ is possible but not the base case.
 - The one sec 37% reduction, described as research on friction.
 - The NSF consensus that content, not light, is the problem.
 - Allcott's 31% self-control estimate.
+
+## 13. Hard paywall analysis
+
+Added September 24, 2026. The user wants a paid app with a hard paywall. This
+section reuses the benchmarks in sections 7 and 8; no new sources were added.
+GAME_PLAN.md currently lists "hard paywall" under "Not part of the current plan",
+so it needs updating if this is adopted.
+
+**The numbers favor a hard paywall:**
+
+| Metric | Hard paywall | Freemium |
+|---|---|---|
+| Downloads that pay by day 35 | 10.7% | 2.1% |
+| Revenue per install at day 60 | $3.09 | $0.38 |
+
+- At about $3 per 1K views for niche creators, a hard paywall makes paid creator
+  distribution profitable, and freemium doesn't.
+- Quittr, the closest analog (a blocker-style app for a niche), used a quiz, a hard
+  paywall and paid creators to reach about 25% download-to-paid. [EST]
+
+**Why the category still has an opening:**
+
+- Most blockers are freemium or one-time hardware, and they are framed around
+  all-day productivity.
+- The paid winners (Quittr, Cal AI, Unrot) won on **niche identity, quiz
+  onboarding and distribution**, not on features or mascots.
+
+**Opportunities, ranked [OPINION]:**
+
+1. **Own "revenge bedtime procrastination."** It's a named, TikTok-native identity
+   problem. Sleep apps (Calm, Rise) don't block, and blockers don't own the night.
+2. **Nights only means less reactance.** Blocking only during a window users agree
+   with should hold better than all-day blocks. That is structural retention, which
+   is what paid renewals need.
+3. **Reliability.** Silently failing blocks are the category's top complaint. Blocks
+   that never fail win the reviews.
+4. **The walk-to-unlock niche has no leader.** The apps in it are small, poorly
+   reviewed and priced weekly.
+5. **Fair pricing as a trust signal.** Annual pricing with a trial, and no weekly
+   plans. Weekly pricing draws complaints in this niche (StepTok).
+
+**Onboarding shape (the Quittr pattern, adapted):**
+
+1. A quiz: what time you actually fall asleep, and the apps that keep you up.
+2. A personal cost: hours lost per week, based only on the user's own answers.
+   Don't invent statistics.
+3. Set bedtime and pick apps: the user invests effort before the paywall.
+4. Hard paywall with a trial that covers several real nights and mornings.
+
+**Risks:**
+
+- Opal could add steps.
+- Creator CPMs rise as more apps copy this playbook.
+- About 25% annual renewal creates a month-12 cliff.
+- The Family Controls entitlement and device reliability remain the gating
+  technical risks (section 5).
+
+## 14. Correction: Opal already does sleep
+
+Added September 24, 2026. The competitor table in section 3 missed this.
+
+**What Opal Sleep does** (launched January 30, 2026, iOS only, **off by default**):
+
+- **Sleep Assist:**
+  - Off
+  - Wind Down: "make it harder to use apps… but you're still in control"
+  - Full Assist: blocks all apps at bedtime except allowed ones; "the only way to
+    exit is to use your Emergency Pass"
+- **Morning Assist:**
+  - Off
+  - Slow Uplift: reminders during the first 30 minutes after waking
+  - Full Assist: blocks all apps for **one hour** after waking. Exit is by
+    Emergency Pass only.
+- Also includes soundscapes, guided meditation, bedtime stories, and an Opal Score
+  that combines Sleep, Focus and Rest.
+- The Emergency Pass is buried at Profile > Settings > FAQs > Advanced Features.
+- Pricing (App Store listing): $4.99–$9.99/week, $19.99/month, $49.99–$99.99/year.
+  Rated 4.7 from 88K ratings.
+
+Sources: [Opal help: Sleep Mode](https://opalapp.com/help/how-do-i-use-sleep-mode),
+[Introducing Sleep](https://opalapp.com/blog/introducing-sleep),
+[App Store](https://apps.apple.com/us/app/opal-screen-time-control/id1497465230).
+
+**What is still different about Trundle [OPINION]:**
+
+| | Opal Sleep | Trundle |
+|---|---|---|
+| Place in the product | One feature, off by default, inside an all-day focus app | The whole product |
+| Morning unlock | Wait an hour, or use the Emergency Pass | Get out of bed: 200 steps |
+| What it fixes | Screen time | Lying in bed scrolling, at both ends of the night |
+| Tone | Clean, premium, neutral | A sassy voice people screenshot |
+| Price | Up to $99.99/yr | Room for about $29.99–39.99/yr |
+| Marketing | Focus and productivity | Revenge bedtime procrastination |
+
+**Honest read:** the feature gap is now narrow. Opal could copy a step unlock in a
+sprint. What stays defensible is the same list as section 4: niche positioning,
+founder distribution, voice, price and reliability. The concept-video test in
+section 9 is now the key experiment: do "I have to walk 200 steps to open TikTok"
+videos get "what app is this?" comments from people who haven't found Opal Sleep?
