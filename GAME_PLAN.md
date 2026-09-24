@@ -81,8 +81,10 @@ happens next?
 
 ## Character and animation
 
-Keep the existing faceted grey rock, moss, sprout, simple face, and stubby stone
-limbs. The current character can rest, stand, and walk.
+**Mascot change (September 23, 2026):** Trundle is becoming a tired, sassy raccoon
+with a sleep mask. See [docs/MASCOT_DIRECTION.md](docs/MASCOT_DIRECTION.md). Until
+the new art exists, the app keeps the current faceted grey rock, which can rest,
+stand, and walk.
 
 Prioritize sleeping, stirring/stretching, walking, and awake idle states. Animation
 should make the daily routine understandable. Trundle does not die, lose progress,
@@ -104,6 +106,16 @@ crack, or lose his moss as punishment for app use or a bypass.
 5. Test the daily loop over several days, including bedtime, mornings without
    opening the app, incomplete goals, always-blocked precedence, and recovery paths.
 6. Refine animation and tune the default target based on use.
+
+## Research
+
+Market, competitor, iOS-feasibility, monetization and validation research lives in
+[docs/VALIDATION_RESEARCH.md](docs/VALIDATION_RESEARCH.md) (September 23, 2026).
+It informs decisions; this game plan stays the source of truth. Key constraints from
+it: request the Family Controls distribution entitlement for the app and every
+extension early; the dependable morning unlock is a shield tap that checks
+CMPedometer steps, not a guaranteed automatic unlock; prove D30 "blocking still
+active" retention before spending launch distribution.
 
 ## Not part of the current plan
 

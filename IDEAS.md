@@ -27,4 +27,6 @@ See the game plan for scope, unresolved decisions, and implementation order.
 
 Audience, monetization, and optional progression remain undecided. Earlier revenue
 rankings, competitor claims, prices, and technical assumptions are not requirements
-or verified research.
+or verified research. Sourced research from September 23, 2026 — competitors, demand,
+positioning, iOS feasibility, pricing benchmarks, an MRR model and a gated validation
+plan — lives in [docs/VALIDATION_RESEARCH.md](docs/VALIDATION_RESEARCH.md).
