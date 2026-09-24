@@ -1,7 +1,8 @@
 # Trundle — setup notes
 
-Product source of truth: [GAME_PLAN.md](GAME_PLAN.md). The app is currently a visual
-prototype; native blocking, scheduling, and the morning step gate are not connected.
+Product source of truth: [GAME_PLAN.md](GAME_PLAN.md). The app is being rebuilt from
+scratch; there is no app code yet. The earlier prototype is at the git tag
+`rock-prototype`.
 The technical notes below are earlier implementation leads, not verified SDK 57
 guarantees. Check current official documentation before implementing native services.
 
@@ -27,13 +28,13 @@ Limits to design around:
 ## Build route
 Development machine is Linux; Xcode only runs on macOS.
 
-An Expo (React Native, TypeScript) project has been scaffolded in this folder, so the
+The rebuild will use Expo (React Native, TypeScript), scaffolded fresh on SDK 57, so the
 working route is:
 
 - **Expo + `react-native-device-activity` + EAS Build.** EAS compiles on cloud Macs, so
   it works from Linux. Needs a custom dev client (Expo Go can't load the Screen Time
-  native code). Extension problems have to be debugged without Xcode. Library's current
-  state not yet checked.
+  native code). Extension problems have to be debugged without Xcode. See the iOS feasibility section of
+  [docs/VALIDATION_RESEARCH.md](docs/VALIDATION_RESEARCH.md) for its current state.
 
 Fallback if that gets painful: a used Mac mini (~$300–500) and native Swift/SwiftUI for
 the extensions.

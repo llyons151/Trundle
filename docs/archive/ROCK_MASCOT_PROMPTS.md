@@ -1,5 +1,7 @@
 # Trundle — mascot direction and image prompts
 
+> **Superseded** by [MASCOT_DIRECTION.md](../MASCOT_DIRECTION.md) (raccoon). Kept for history; referenced art lives at the git tag `rock-prototype`.
+
 Product source of truth: [GAME_PLAN.md](GAME_PLAN.md).
 
 ## Established character

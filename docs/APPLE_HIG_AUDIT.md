@@ -1,5 +1,7 @@
 # Trundle: interface audit and refinement
 
+> **Archived context:** this describes the rock-mascot prototype removed on September 24, 2026. File paths refer to the git tag `rock-prototype`. The findings still inform the rebuild.
+
 September 21, 2026. Scope: Home, Apps, Routine, Profile, shared controls, sheets,
 navigation, character motion, preference storage, app configuration, and bundled
 assets. Includes source review of the nap work arriving from a separate session;

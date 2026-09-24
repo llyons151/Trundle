@@ -1,5 +1,7 @@
 # Longer onboarding for Trundle: Opal research and implementation
 
+> **Archived context:** this describes the rock-mascot prototype removed on September 24, 2026. File paths refer to the git tag `rock-prototype`. The findings still inform the rebuild.
+
 Researched September 21, 2026. This document supersedes the **five-page recommendation** in ONBOARDING_RESEARCH.md. The earlier accessibility, permission, storage, and native-service limitations still apply.
 
 ## Decision

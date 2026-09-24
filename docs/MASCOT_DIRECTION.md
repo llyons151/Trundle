@@ -1,8 +1,8 @@
 # Mascot direction
 
 Decided September 23, 2026. Replaces the faceted grey rock as Trundle's mascot.
-The art brief and final design are still to come; the current rock art stays in
-the app until the new character is drawn.
+The art brief and final design are still to come. The app was wiped for a
+from-scratch rebuild on September 24, 2026, so no rock art remains in use.
 
 ## Decision: a raccoon
 

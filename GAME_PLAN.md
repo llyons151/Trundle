@@ -6,7 +6,7 @@ unlock windows, and a pet that deteriorates with screen time.
 
 ## The product
 
-Put your phone down. Let Trundle rest. Trundle is a sleepy rock companion you make time to care for through shared bedtimes and scheduled naps. He goes to sleep at
+Put your phone down. Let Trundle rest. Trundle is a sleepy raccoon companion you make time to care for through shared bedtimes and scheduled naps. He goes to sleep at
 your chosen bedtime and blocks selected distracting apps. In the morning, walk
 200 steps to wake him and unlock those apps for the day. A separate always-blocked
 list stays blocked even while he is awake.
@@ -82,9 +82,8 @@ happens next?
 ## Character and animation
 
 **Mascot change (September 23, 2026):** Trundle is becoming a tired, sassy raccoon
-with a sleep mask. See [docs/MASCOT_DIRECTION.md](docs/MASCOT_DIRECTION.md). Until
-the new art exists, the app keeps the current faceted grey rock, which can rest,
-stand, and walk.
+with a sleep mask. See [docs/MASCOT_DIRECTION.md](docs/MASCOT_DIRECTION.md). The rebuild
+starts with the raccoon; the old rock art is archived at the `rock-prototype` tag.
 
 Prioritize sleeping, stirring/stretching, walking, and awake idle states. Animation
 should make the daily routine understandable. Trundle does not die, lose progress,
@@ -130,20 +129,12 @@ Optional future features must support this routine, not quietly replace it.
 
 ## Current implementation status
 
-The repository contains an Expo preview with a state-driven resting character,
-bedtime preferences, daily nap editing, immediate nap timers, separate app lists,
-and profile UI. Preferences and nap deadlines persist locally. The dashboard
-recomputes sleep state from local time, including when returning to the app.
-The current Moss & Stone palette is preserved.
-Native app blocking and the morning step gate are not connected. Daytime is shown
-as an awake preview, not as evidence of completing a morning walk or unlocking apps.
+**Rebuilding from scratch (September 24, 2026).** The repository has no app code.
+The earlier Expo prototype (rock mascot, state-driven dashboard, bedtime and nap
+preferences, both app lists, and the 14-page onboarding preview) is preserved at the
+git tag `rock-prototype`. Browse it with `git show rock-prototype:<path>` or restore
+a file with `git checkout rock-prototype -- <path>`. Reuse its logic only where it
+still fits this plan; do not carry over the rock art.
 
-First launch now includes a 14-page, non-scrolling onboarding preview: personal
-goals and scrolling habits, a tailored explanation, bedtime and morning choices,
-a morning demo, separate example app lists, access education, an evening ritual,
-a personal plan, and review. The saved evening ritual also appears on Home.
-Setup drafts persist and can be resumed after exploring. Saving commits the routine
-and both app lists without claiming native protection. Research and the validation
-plan live in [docs/OPAL_ONBOARDING_RESEARCH.md](docs/OPAL_ONBOARDING_RESEARCH.md),
-which supersedes the earlier five-page recommendation. This is a conversion-test
-candidate; no paid offer or production conversion experiment is active.
+The research in `docs/` still applies. Onboarding, HIG and validation findings hold
+for the rebuild; their file paths refer to the `rock-prototype` tag.

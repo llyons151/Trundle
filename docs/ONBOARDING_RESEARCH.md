@@ -1,5 +1,7 @@
 # Trundle onboarding: research, decisions, and validation plan
 
+> **Archived context:** this describes the rock-mascot prototype removed on September 24, 2026. File paths refer to the git tag `rock-prototype`. The findings still inform the rebuild.
+
 Research date: September 21, 2026. Historical baseline: five-screen local preview.
 
 **Updated recommendation and implementation:** [Opal research and the 14-page flow](OPAL_ONBOARDING_RESEARCH.md) supersede the screen-count recommendation below. This original review emphasized usability over subscription conversion; its original five-screen claims and checks are retained as historical context.
