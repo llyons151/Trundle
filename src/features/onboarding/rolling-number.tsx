@@ -29,14 +29,15 @@ type Props = {
 };
 
 /**
- * Opal-style reveal: numbers roll up like a slot reel and land on yours, with its
- * neighbours dimmed above and below. A tick per step as it slows, a thud when it lands.
+ * Opal-style reveal: numbers roll up through a one-row window, like an odometer, and
+ * land on yours. Only the current number shows, so the landed value stands alone.
+ * A tick per step as it slows, a thud when it lands.
  */
 export function RollingNumber({ value, format, onLanded, rowHeight = 66, fontSize = 60 }: Props) {
   const reduced = useReducedMotion();
   const steps = Math.max(0, Math.round(value * 2));
-  // One row per half step, plus one past the value so there's a dim number below it.
-  const rows = useMemo(() => Array.from({ length: steps + 2 }, (_, i) => i / 2), [steps]);
+  // One row per half step, from zero up to the value.
+  const rows = useMemo(() => Array.from({ length: steps + 1 }, (_, i) => i / 2), [steps]);
   const target = steps;
   const position = useSharedValue(reduced ? target : 0);
 
@@ -68,11 +69,11 @@ export function RollingNumber({ value, format, onLanded, rowHeight = 66, fontSiz
   }, [reduced, steps, target, position, onLanded]);
 
   const reelStyle = useAnimatedStyle(() => ({
-    transform: [{ translateY: rowHeight - position.value * rowHeight }],
+    transform: [{ translateY: -position.value * rowHeight }],
   }));
 
   return (
-    <View style={[styles.window, { height: rowHeight * 3 }]} accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
+    <View style={[styles.window, { height: rowHeight }]} accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
       <Animated.View style={reelStyle}>
         {rows.map((row, i) => (
           <Row key={row} index={i} position={position} height={rowHeight}>
@@ -103,7 +104,7 @@ function Row({
   const style = useAnimatedStyle(() => {
     const distance = Math.abs(index - position.value);
     return {
-      opacity: interpolate(distance, [0, 1, 2], [1, 0.2, 0], 'clamp'),
+      opacity: interpolate(distance, [0, 1, 2], [1, 0.35, 0], 'clamp'),
       transform: [{ scale: interpolate(distance, [0, 1], [1, 0.86], 'clamp') }],
     };
   });

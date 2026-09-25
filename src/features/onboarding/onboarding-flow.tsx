@@ -1,8 +1,7 @@
 import { useRouter } from 'expo-router';
 import { SymbolView } from 'expo-symbols';
-import { useEffect, useMemo, useState, type ReactNode } from 'react';
+import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import {
-  AccessibilityInfo,
   Modal,
   Pressable,
   Share,
@@ -52,7 +51,6 @@ import {
   formatWhen,
   isInsideBedtime,
   lifetimeSentence,
-  morningSentence,
   yearSentence,
   weeklyAmount,
   type Estimate,
@@ -79,6 +77,7 @@ import {
   Voice,
 } from './ui';
 import { AgeWheel, TimeWheel } from './time-wheel';
+import { TomorrowDemo } from './tomorrow-demo';
 
 const ADVANCE_AFTER_CHOICE_MS = 280;
 // Four presets: one row under the time wheel.
@@ -87,14 +86,16 @@ const WAKE_PRESETS = [6 * 60, 7 * 60, 7 * 60 + 30, 8 * 60];
 // Night-shift schedules: sleep in the morning, up in the afternoon.
 const SHIFT_BEDTIME_PRESETS = [7 * 60, 8 * 60, 9 * 60, 10 * 60];
 const SHIFT_WAKE_PRESETS = [14 * 60, 15 * 60, 16 * 60, 17 * 60];
-const STEP_GOAL = 200;
 
 /** Steps that can be edited from the "Tonight's lock is ready" summary. */
 const EDITABLE: StepId[] = ['bedtime', 'wake', 'apps'];
 
+/** Screens that move on by themselves. Back steps over them. */
+const AUTO_ADVANCE: StepId[] = ['math'];
+
 /** Screens that close the flow in the same moonlit scene it opens with. */
 // Quiet moments start their content below the moon in the sky photo.
-const MOON_FEATURE: StepId[] = ['intro', 'math', 'armed', 'first-morning', 'done', 'under-13', 'declined'];
+const MOON_FEATURE: StepId[] = ['intro', 'armed', 'first-morning', 'done', 'under-13', 'declined'];
 
 /** Text entrance per page (see motion.tsx). Anything not listed uses Word Drift. */
 const MOTION: Partial<Record<StepId, TextMotion>> = {
@@ -157,6 +158,8 @@ export function OnboardingFlow({ initialStep }: { initialStep?: string }) {
   const [simulated, setSimulated] = useState<Simulated | null>(null);
   // Set while editing a choice from the summary, so Continue returns there.
   const [returnTo, setReturnTo] = useState<StepId | null>(null);
+  // The answers before that edit, so Back cancels it instead of keeping half a change.
+  const [beforeEdit, setBeforeEdit] = useState<Answers | null>(null);
 
   const step = history[history.length - 1];
   const numbers = useMemo(
@@ -180,31 +183,47 @@ export function OnboardingFlow({ initialStep }: { initialStep?: string }) {
       // Pop back to the summary instead of stacking another copy of it.
       setHistory((stack) => stack.slice(0, stack.lastIndexOf(returnTo) + 1));
       setReturnTo(null);
+      setBeforeEdit(null);
       return;
     }
     go(nextStep(step));
   };
   const edit = (to: StepId) => {
     setReturnTo(step);
+    setBeforeEdit(answers);
     go(to);
   };
   // The age gate can't be re-answered with Back.
   const back = history.length > 1 && step !== 'under-13'
     ? () => {
-        if (returnTo && EDITABLE.includes(step)) setReturnTo(null);
-        setHistory((stack) => stack.slice(0, -1));
+        cancelAdvance();
+        if (returnTo && EDITABLE.includes(step)) {
+          if (beforeEdit) setAnswers(beforeEdit);
+          setReturnTo(null);
+          setBeforeEdit(null);
+        }
+        // Skip screens that advance on their own, or Back would bounce straight forward again.
+        setHistory((stack) => {
+          let to = stack.length - 1;
+          while (to > 1 && AUTO_ADVANCE.includes(stack[to - 1])) to -= 1;
+          return stack.slice(0, to);
+        });
       }
     : undefined;
   const exit = () => (router.canGoBack() ? router.back() : router.replace('/'));
   const set = <K extends keyof Answers>(key: K, value: Answers[K]) =>
     setAnswers((current) => ({ ...current, [key]: value }));
-  // A second tap during the short advance delay must not skip a screen.
-  const [advancing, setAdvancing] = useState(false);
+  // A second tap during the short advance delay must not skip a screen, and Back cancels it.
+  const advanceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const cancelAdvance = () => {
+    if (advanceTimer.current) clearTimeout(advanceTimer.current);
+    advanceTimer.current = null;
+  };
+  useEffect(() => cancelAdvance, []);
   const advanceOnce = (to: () => void) => {
-    if (advancing) return;
-    setAdvancing(true);
-    setTimeout(() => {
-      setAdvancing(false);
+    if (advanceTimer.current) return;
+    advanceTimer.current = setTimeout(() => {
+      advanceTimer.current = null;
       to();
     }, ADVANCE_AFTER_CHOICE_MS);
   };
@@ -358,7 +377,7 @@ function renderStep(ctx: StepContext): { body: ReactNode; footer?: ReactNode } {
       return {
         body: (
           <View style={styles.top}>
-            <Voice text="A few questions. Then I do math on your nights." size={36} />
+            <Voice text="A few questions. Then I do math on your nights." size={34} />
             <View style={styles.gap16} />
             <Body>About two minutes of questions. Your answers stay on your phone.</Body>
           </View>
@@ -456,9 +475,6 @@ function renderStep(ctx: StepContext): { body: ReactNode; footer?: ReactNode } {
               </Text>
             </Reveal>
             <Body style={styles.statText}>of U.S. adults under 30 with a smartphone say it hurts how much sleep they get.</Body>
-            <Reveal>
-              <Text style={styles.source}>Pew Research Center, September 2026</Text>
-            </Reveal>
             <View style={styles.gap32} />
             <Voice text={NIGHTS_ECHO[answers.nights ?? ''] ?? 'Not just you, then.'} size={28} delay={600} sub />
           </View>
@@ -472,6 +488,7 @@ function renderStep(ctx: StepContext): { body: ReactNode; footer?: ReactNode } {
           'How old are you?',
           'Sleep needs change with age. So does how much time is left to spend.',
           <AgeWheel value={answers.age ?? AGE_DEFAULT} onChange={(age) => set('age', age)} min={AGE_MIN} max={AGE_MAX} />,
+          true,
         ),
         footer: (
           <PrimaryButton
@@ -490,7 +507,7 @@ function renderStep(ctx: StepContext): { body: ReactNode; footer?: ReactNode } {
       return {
         body: (
           <View style={styles.center}>
-            <Voice text="Thirteen and up. Those are the rules." size={40} header />
+            <Voice text="Thirteen and up. Those are the rules." size={34} header />
             <View style={styles.gap16} />
             <Body>Trundle isn’t for under-13s. Go to bed, though.</Body>
           </View>
@@ -535,7 +552,7 @@ function renderStep(ctx: StepContext): { body: ReactNode; footer?: ReactNode } {
         body: <RevealScreen numbers={numbers} />,
         footer: (
           <>
-            <PrimaryButton label={numbers.lightUser ? 'Keep it that way' : 'Okay. Put them to sleep.'} onPress={next} />
+            <PrimaryButton label={numbers.lightUser ? 'Keep it that way' : 'Let’s fix this'} onPress={next} />
             <TextButton
               label="Share this"
               onPress={() => {
@@ -549,7 +566,7 @@ function renderStep(ctx: StepContext): { body: ReactNode; footer?: ReactNode } {
 
     case 'tomorrow':
       return {
-        body: <TomorrowDemo when={`${wakeDay}, ${wake}`} />,
+        body: <TomorrowDemo when={`${wakeDay}, ${wake}`} clock={wake.replace(/\s?[AP]M$/i, '')} />,
         footer: <PrimaryButton label="Set it up" onPress={next} />,
       };
 
@@ -623,7 +640,7 @@ function renderStep(ctx: StepContext): { body: ReactNode; footer?: ReactNode } {
       return {
         body: (
           <View style={styles.top}>
-            <Voice text="Tonight’s lock is ready." size={36} header />
+            <Title>Tonight’s lock is ready.</Title>
             <View style={styles.plan}>
               <PlanRow when={formatClock(answers.bedtime)} what={`${apps} go to sleep.`} onChange={() => edit('bedtime')} />
               <PlanRow when={wake} what="200 steps and they wake up." onChange={() => edit('wake')} />
@@ -642,7 +659,7 @@ function renderStep(ctx: StepContext): { body: ReactNode; footer?: ReactNode } {
         body: (
           <View style={styles.center}>
             <Eyebrow>The deal</Eyebrow>
-            <Voice text={`Phone down at ${bed}. Up for 200 steps.`} size={40} />
+            <Title style={styles.pledge}>{`Phone down at ${bed}. Up for 200\u00A0steps.`}</Title>
             <View style={styles.gap16} />
             <Body>
               {apps} sleep until you’ve walked. Passes cover sick days and travel. Change anything later.
@@ -659,7 +676,7 @@ function renderStep(ctx: StepContext): { body: ReactNode; footer?: ReactNode } {
       return {
         body: (
           <View style={styles.top}>
-            <Voice text={headline} size={36} header />
+            <Voice text={headline} size={34} header />
             <View style={styles.gap16} />
             <Body>{ALARM_ECHO[answers.alarm ?? ''] ?? 'I guard them at night. You do the walking.'}</Body>
             <View style={styles.plan}>
@@ -684,7 +701,7 @@ function renderStep(ctx: StepContext): { body: ReactNode; footer?: ReactNode } {
       return {
         body: (
           <View style={styles.center}>
-            <Voice text="Fair." size={48} />
+            <Voice text="Fair." size={34} />
             <View style={styles.gap16} />
             <Body>Your setup is saved. Nothing is locked, and nothing will be unless you start.</Body>
           </View>
@@ -701,7 +718,7 @@ function renderStep(ctx: StepContext): { body: ReactNode; footer?: ReactNode } {
       return {
         body: (
           <View style={styles.center}>
-            <Voice text={lateNight ? 'Armed. Starting now. Put it down.' : `Armed. See you at ${bed}.`} size={38} header />
+            <Voice text={lateNight ? 'Armed. Starting now. Put it down.' : `Armed. See you at ${bed}.`} size={34} header />
             <View style={styles.gap16} />
             <Body style={styles.onImage}>
               {answers.plan === 'annual' && PRICES.trialEligible
@@ -730,7 +747,7 @@ function renderStep(ctx: StepContext): { body: ReactNode; footer?: ReactNode } {
       return {
         body: (
           <View style={styles.center}>
-            <Voice text={`${wakeDay}, ${wake}.`} size={36} header />
+            <Title>{`${wakeDay}, ${wake}.`}</Title>
             <View style={styles.plan}>
               <PlanRow when="Steps" what={`Count from ${wake}. Bathroom, kitchen, it all counts.`} />
               <PlanRow when="At 200" what="Open a sleeping app and tap Check steps. Or just open me." />
@@ -746,7 +763,7 @@ function renderStep(ctx: StepContext): { body: ReactNode; footer?: ReactNode } {
       return {
         body: (
           <View style={styles.center}>
-            <Voice text={lateNight ? 'That’s it. Go to sleep.' : `That’s it. Bed at ${bed}.`} size={38} header />
+            <Voice text={lateNight ? 'That’s it. Go to sleep.' : `That’s it. Bed at ${bed}.`} size={34} header />
             <View style={styles.gap16} />
             <Voice text="I’ll be asleep. Don’t wake me." size={22} delay={900} sub />
           </View>
@@ -757,7 +774,7 @@ function renderStep(ctx: StepContext): { body: ReactNode; footer?: ReactNode } {
 }
 
 /** Title at the top, answers anchored low where thumbs are. */
-function question(title: string, sub: string | undefined, options: ReactNode) {
+function question(title: string, sub: string | undefined, options: ReactNode, centered = false) {
   return {
     body: (
       <View style={styles.question}>
@@ -765,7 +782,7 @@ function question(title: string, sub: string | undefined, options: ReactNode) {
           <Title>{title}</Title>
           {sub ? <Body style={styles.sub}>{sub}</Body> : null}
         </View>
-        <View style={styles.optionsWrap}>{options}</View>
+        <View style={centered ? styles.optionsCentered : styles.optionsWrap}>{options}</View>
       </View>
     ),
   };
@@ -873,7 +890,6 @@ function plansStep(
             set('plansOpen', false);
             purchase();
           }}
-          link={link}
         />
       </View>
     ),
@@ -949,12 +965,11 @@ function RevealScreen({ numbers }: { numbers: Estimate }) {
   const squares = hourFit ? numbers.yearlyHours : Math.max(1, numbers.yearlyDays);
   const fit = hourFit ?? fitSquares(squares, area.width, gridHeight);
   const lifetime = lifetimeSentence(numbers.lifetimeDays);
-  const morning = morningSentence(numbers.morningWeeklyMinutes);
 
   if (numbers.lightUser) {
     return (
       <View style={styles.center}>
-        <Voice text="You’re barely on it." size={40} />
+        <Voice text="You’re barely on it." size={34} />
         <View style={styles.gap16} />
         <Body>
           About {weeklyAmount(numbers.weeklyMinutes)} a week on your phone in bed. So I’ll mostly handle mornings.
@@ -990,7 +1005,6 @@ function RevealScreen({ numbers }: { numbers: Estimate }) {
         />
       </View>
       <Body style={styles.revealSub}>…a week on your phone in bed.</Body>
-      {morning ? <Body style={styles.revealMorning}>{morning}</Body> : null}
 
       <View style={styles.gridArea} onLayout={onArea}>
         {landed && fit ? (
@@ -1000,116 +1014,17 @@ function RevealScreen({ numbers }: { numbers: Estimate }) {
               <RevealGrid squares={squares} fit={fit} onFilled={() => setFilled(true)} />
             </View>
             <FadeWhen visible={filled}>
-              <Text style={styles.gridCaption}>Each box is 1 {unit}.</Text>
+              <Text style={styles.gridCaption}>One year. Each box is 1 {unit}.</Text>
             </FadeWhen>
           </>
         ) : null}
       </View>
 
       <FadeWhen visible={filled}>
+        {/* The year line always matches the boxes; the lifetime line is a separate, smaller beat. */}
         <Text style={styles.payoff}>{yearSentence(squares, unit)}</Text>
-        {lifetime ? <Text style={styles.payoff}>{lifetime}</Text> : null}
+        {lifetime ? <Text style={styles.payoffLifetime}>{lifetime}</Text> : null}
       </FadeWhen>
-    </View>
-  );
-}
-
-const WALK_TO_190_MS = 2600;
-const LAST_STEPS_MS = 110;
-
-/** The product in six seconds: the morning shield, then 0 → 200 steps with his lines. */
-function TomorrowDemo({ when }: { when: string }) {
-  const reduced = useReducedMotion();
-  const compact = useCompact();
-  const [steps, setSteps] = useState(reduced ? STEP_GOAL : 0);
-
-  useEffect(() => {
-    const announce = () =>
-      AccessibilityInfo.announceForAccessibility('200 of 200 steps. Your apps are awake. I’m up. Don’t talk to me yet.');
-    if (reduced) {
-      haptic.done();
-      announce();
-      return;
-    }
-    const timers: ReturnType<typeof setTimeout>[] = [];
-    const start = 1200;
-    for (let s = 5; s <= 190; s += 5) {
-      const t = s / 190;
-      timers.push(
-        setTimeout(() => {
-          setSteps(s);
-          if (s % 20 === 0) haptic.tick();
-        }, start + Math.round(t * WALK_TO_190_MS)),
-      );
-    }
-    // The last ten steps land one at a time. This is the moment people film.
-    for (let s = 191; s <= STEP_GOAL; s += 1) {
-      timers.push(
-        setTimeout(() => {
-          setSteps(s);
-          if (s === STEP_GOAL) {
-            haptic.done();
-            announce();
-          } else {
-            haptic.thud();
-          }
-        }, start + WALK_TO_190_MS + (s - 190) * LAST_STEPS_MS),
-      );
-    }
-    return () => timers.forEach(clearTimeout);
-  }, [reduced]);
-
-  const awake = steps >= STEP_GOAL;
-  // "Fine. *Fine.*": the whole line is already italic, so the emphasis is an underline.
-  const line = awake ? (
-    'I’m up. Don’t talk to me yet.'
-  ) : steps >= 160 ? (
-    <>
-      Fine. <Text style={styles.emphasis}>Fine.</Text>
-    </>
-  ) : steps >= 80 ? (
-    'I can hear you walking. I’m ignoring it.'
-  ) : (
-    'No.'
-  );
-
-  return (
-    <View style={styles.top}>
-      <Eyebrow>{when}</Eyebrow>
-      <Reveal style={[styles.shield, compact && styles.shieldCompact]}>
-        <View style={styles.shieldIcon}>
-          <SymbolView
-            name={
-              awake
-                ? { ios: 'sun.max.fill', android: 'light_mode', web: 'light_mode' }
-                : { ios: 'moon.zzz.fill', android: 'bedtime', web: 'bedtime' }
-            }
-            size={22}
-            tintColor={Nocturne.text}
-          />
-        </View>
-        <Text style={styles.shieldTitle}>{awake ? 'Your apps are awake.' : 'Shh. I’m sleeping. So are they.'}</Text>
-        <Text style={styles.shieldSub}>{awake ? 'Go on, then.' : 'Your apps are asleep until 200 steps.'}</Text>
-        {/* Teaches the real unlock: tap the block screen's button once you've walked. The shield can't count live. */}
-        <View style={[styles.shieldButton, awake && styles.shieldButtonReady]}>
-          <Text style={[styles.shieldButtonLabel, awake && styles.shieldButtonLabelReady]}>
-            {awake ? 'Wake them up' : 'Check steps'}
-          </Text>
-        </View>
-      </Reveal>
-      <Reveal style={[styles.walk, compact && styles.walkCompact]}>
-        <Text style={styles.walkLabel}>Your walk, counted in the app</Text>
-        <Text style={styles.walkCount} maxFontSizeMultiplier={1.3} accessibilityLabel={`${steps} of 200 steps`}>
-          {steps}
-          <Text style={styles.walkGoal}> / 200</Text>
-        </Text>
-        <View style={styles.walkTrack}>
-          <View style={[styles.walkFill, { width: `${(steps / STEP_GOAL) * 100}%` }]} />
-        </View>
-        <Text style={styles.walkLine} accessibilityLiveRegion="polite">
-          {line}
-        </Text>
-      </Reveal>
     </View>
   );
 }
@@ -1242,15 +1157,20 @@ function PlansSheet({
   onPlan,
   onClose,
   onBuy,
-  link,
 }: {
   open: boolean;
   plan: Answers['plan'];
   onPlan: (plan: Answers['plan']) => void;
   onClose: () => void;
   onBuy: () => void;
-  link: (label: string, message: string) => ReactNode;
 }) {
+  // Its preview notes open inside the sheet: a second Modal would open behind it.
+  const [note, setNote] = useState<string | null>(null);
+  const link = (label: string, message: string) => (
+    <Text accessibilityRole="link" style={styles.link} onPress={() => setNote(message)}>
+      {label}
+    </Text>
+  );
   const trial = PRICES.trialEligible;
   const yearly = money(PRICES.annual);
   const monthly = money(PRICES.monthly);
@@ -1289,6 +1209,11 @@ function PlansSheet({
           {link('Privacy', 'Your Privacy Policy opens here.')}
         </Text>
       </View>
+      {note ? (
+        <View style={StyleSheet.absoluteFill}>
+          <PromptCard message={note} onContinue={() => setNote(null)} />
+        </View>
+      ) : null}
     </Modal>
   );
 }
@@ -1335,14 +1260,20 @@ function PlanOption({
 function SimulatedPrompt({ prompt, onContinue }: { prompt: Simulated | null; onContinue: () => void }) {
   return (
     <Modal visible={prompt !== null} transparent animationType="fade" onRequestClose={onContinue}>
-      <View style={styles.modalScrim}>
-        <View style={styles.modalCard}>
-          <Text style={styles.modalLabel}>PREVIEW</Text>
-          <Text style={styles.modalText}>{prompt?.message}</Text>
-          <PrimaryButton label="Continue" onPress={onContinue} />
-        </View>
-      </View>
+      <PromptCard message={prompt?.message ?? ''} onContinue={onContinue} />
     </Modal>
+  );
+}
+
+function PromptCard({ message, onContinue }: { message: string; onContinue: () => void }) {
+  return (
+    <View style={styles.modalScrim}>
+      <View style={styles.modalCard}>
+        <Text style={styles.modalLabel}>PREVIEW</Text>
+        <Text style={styles.modalText}>{message}</Text>
+        <PrimaryButton label="Continue" onPress={onContinue} />
+      </View>
+    </View>
   );
 }
 
@@ -1358,6 +1289,7 @@ const styles = StyleSheet.create({
   question: { flex: 1, justifyContent: 'space-between', paddingTop: 20, gap: 28 },
   questionHead: {},
   optionsWrap: { paddingBottom: 8 },
+  optionsCentered: { flex: 1, justifyContent: 'center' },
   timeWrap: { marginTop: 28 },
   warning: { marginTop: 28, textAlign: 'center', color: Nocturne.text },
   beats: { marginTop: 32, gap: 26 },
@@ -1368,7 +1300,6 @@ const styles = StyleSheet.create({
   statNumber: { ...NUMBER_FONT, color: Nocturne.accent ?? Nocturne.text, fontSize: 108, lineHeight: 112, letterSpacing: -1 },
   revealUnit: { color: Nocturne.text, fontSize: 24, fontWeight: '600' },
   statText: { color: Nocturne.text, fontSize: 20, lineHeight: 27, marginTop: 8 },
-  source: { color: Nocturne.text2, fontSize: 13, marginTop: 12 },
   mathList: { marginTop: 32, gap: 16 },
   mathRow: { flexDirection: 'row', alignItems: 'center', gap: 12 },
   faded: { opacity: 0.35 },
@@ -1376,54 +1307,13 @@ const styles = StyleSheet.create({
   mathDotDone: { backgroundColor: Nocturne.text, borderColor: Nocturne.text },
   mathLabel: { color: Nocturne.text, fontSize: 17 },
   revealWrap: { flex: 1, paddingTop: 4 },
-  shieldButton: {
-    marginTop: 8,
-    borderRadius: 999,
-    paddingHorizontal: 18,
-    minHeight: 40,
-    justifyContent: 'center',
-    backgroundColor: Nocturne.raised,
-  },
   revealLead: { textAlign: 'center', color: Nocturne.text, fontSize: 18, lineHeight: 25, marginBottom: 4 },
   revealSub: { marginTop: 2, textAlign: 'center' },
-  revealMorning: { marginTop: 6, textAlign: 'center', color: Nocturne.text, fontWeight: '600' },
   paywallVoice: { marginTop: 6, marginHorizontal: 24 },
   gridArea: { flex: 1, justifyContent: 'center', marginVertical: 16, minHeight: 80 },
   gridCaption: { color: Nocturne.text2, fontSize: 15, lineHeight: 20, marginTop: 12, textAlign: 'center' },
   strong: { color: Nocturne.text, fontWeight: '600' },
   hiddenBlock: { opacity: 0 },
-  shield: {
-    marginTop: 8,
-    borderRadius: 28,
-    backgroundColor: Nocturne.surface,
-    paddingVertical: 28,
-    paddingHorizontal: 22,
-    alignItems: 'center',
-    gap: 10,
-  },
-  shieldIcon: {
-    width: 48,
-    height: 48,
-    borderRadius: 12,
-    backgroundColor: Nocturne.raised,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 4,
-  },
-  shieldTitle: { ...DisplayFont, color: Nocturne.text, fontSize: 24, lineHeight: 28, textAlign: 'center' },
-  shieldSub: { color: Nocturne.text2, fontSize: 15, textAlign: 'center' },
-  walk: { marginTop: 28, marginBottom: 20, gap: 12 },
-  walkCount: {
-    ...NUMBER_FONT,
-    color: Nocturne.accent ?? Nocturne.text,
-    fontSize: 72,
-    lineHeight: 76,
-    fontVariant: ['tabular-nums'],
-  },
-  walkGoal: { color: Nocturne.text2, fontSize: 24, fontWeight: '500', fontStyle: 'normal' },
-  walkTrack: { height: 6, borderRadius: 3, backgroundColor: Nocturne.track, overflow: 'hidden' },
-  walkFill: { height: '100%', backgroundColor: Nocturne.text },
-  walkLine: { ...DisplayFont, color: Nocturne.text, fontSize: 22, lineHeight: 26, minHeight: 52 },
   appGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 10, marginTop: 24, marginBottom: 20, justifyContent: 'space-between' },
   plan: { marginVertical: 28, gap: 14 },
   planRow: { flexDirection: 'row', gap: 14, alignItems: 'baseline' },
@@ -1432,14 +1322,10 @@ const styles = StyleSheet.create({
   change: { color: Nocturne.text2, fontSize: 14, fontWeight: '600', textDecorationLine: 'underline' },
   reassure: { color: Nocturne.text, fontSize: 15, lineHeight: 21, fontWeight: '500' },
   shiftRow: { marginTop: 28, flexDirection: 'row', justifyContent: 'center', marginBottom: 12 },
-  emphasis: { textDecorationLine: 'underline' },
-  shieldCompact: { paddingVertical: 16, gap: 6 },
-  walkCompact: { marginTop: 14, marginBottom: 8, gap: 8 },
-  walkLabel: { color: Nocturne.text2, fontSize: 12, fontWeight: '600', letterSpacing: 1.2, textTransform: 'uppercase' },
+  // The user's side of the deal, so sans like every other non-Trundle headline.
+  pledge: { fontSize: 32, lineHeight: 37 },
+  payoffLifetime: { color: Nocturne.text2, fontSize: 17, lineHeight: 22, marginTop: 6, textAlign: 'center' },
   payoff: { ...NUMBER_FONT, color: Nocturne.accent ?? Nocturne.text, fontSize: 26, lineHeight: 32, letterSpacing: 0.2, textAlign: 'center' },
-  shieldButtonReady: { backgroundColor: Nocturne.cta },
-  shieldButtonLabel: { color: Nocturne.text2, fontSize: 15, fontWeight: '600', fontVariant: ['tabular-nums'] },
-  shieldButtonLabelReady: { color: Nocturne.onCta },
   nextApple: {
     marginTop: 28,
     marginBottom: 20,

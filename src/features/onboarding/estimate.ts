@@ -91,18 +91,11 @@ export function yearSentence(count: number, unit: 'hour' | 'day'): string {
   return `That’s ${count.toLocaleString('en-US')} ${unit}${count === 1 ? '' : 's'} a year.`;
 }
 
-/** "Over 5 years." / nothing under a year. */
+/** "That’s over 5 years of your life, gone." / nothing under a year. */
 export function lifetimeSentence(lifetimeDays: number): string {
   const years = Math.floor(lifetimeDays / 365);
   if (years < 1) return '';
-  return `Over ${years === 1 ? 'a year' : `${years} years`}.`;
-}
-
-/** "2 of them before you’re even up." Morning hours, rounded down to halves; empty under half an hour. */
-export function morningSentence(morningWeeklyMinutes: number): string {
-  const hours = Math.floor(morningWeeklyMinutes / 30) / 2;
-  if (hours < 0.5) return '';
-  return `${formatHalves(hours)} of them before you’re even up.`;
+  return `That’s over ${years === 1 ? 'a year' : `${years} years`} of your life, gone.`;
 }
 
 /** 7.5 → "7½", 0.5 → "½", 8 → "8". */
@@ -140,12 +133,12 @@ export function formatWhen(minutes: number): string {
   return formatClock(normalized);
 }
 
-/** 1410 → "11:30 PM". */
+/** 1410 → "11:30 PM", with a no-break space so the time never wraps away from AM/PM. */
 export function formatClock(minutes: number): string {
   const normalized = ((minutes % MINUTES_PER_DAY) + MINUTES_PER_DAY) % MINUTES_PER_DAY;
   const hours24 = Math.floor(normalized / 60);
   const mins = normalized % 60;
   const suffix = hours24 < 12 ? 'AM' : 'PM';
   const hours12 = hours24 % 12 === 0 ? 12 : hours24 % 12;
-  return `${hours12}:${mins.toString().padStart(2, '0')} ${suffix}`;
+  return `${hours12}:${mins.toString().padStart(2, '0')}\u00A0${suffix}`;
 }

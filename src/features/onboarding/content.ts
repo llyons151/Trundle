@@ -165,7 +165,7 @@ export const TRIED_ECHO: Record<string, { line: string; body: string }> = {
   },
   blocker: {
     line: 'Clocks don’t check if you’re up. I do.',
-    body: 'Most blockers switch off at a set time, even if you’re still in bed. Mine switch off after 200 steps.',
+    body: 'Most blockers switch off at a set time, even if you’re still in bed. Your apps stay asleep until you’ve walked 200 steps.',
   },
   willpower: {
     line: 'Willpower goes to bed before you do.',
@@ -205,7 +205,7 @@ export const LIGHT_OFFER_HEADLINE = 'Mornings, then. Mine too.';
 export const NIGHTS_ECHO: Record<string, string> = {
   'one-more': 'Twelve more. I counted.',
   'cant-sleep': 'Scrolling won’t help. Ask me.',
-  'lose-track': 'Time does that after 11.',
+  'lose-track': '11 p.m. becomes 2 a.m. I’ve seen it.',
   all: 'All of it. Noted.',
 };
 

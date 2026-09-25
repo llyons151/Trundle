@@ -126,7 +126,8 @@ export const PALETTES: Record<PaletteName, Palette> = {
     edge: moonWhite(0.16),
     cta: '#F2F8FC',
     onCta: '#0B1428',
-    square: '#DDF0F8',
+    // Muted so a year of squares doesn't outshine the number above it.
+    square: '#7F93B5',
     accent: '#CFE6F7',
   },
 };

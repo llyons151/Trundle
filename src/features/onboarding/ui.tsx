@@ -144,20 +144,30 @@ export function Voice({
   );
 }
 
+const FOOTER_DELAY_MS = 450;
+
 /** Footer buttons fade up shortly after the page's first line starts, without waiting for it to finish. */
 export function FooterEnter({ children }: PropsWithChildren) {
   const reduced = useReducedMotion();
+  // Still invisible until it fades in, so a double tap on the last page's button can't land here.
+  const [live, setLive] = useState(reduced);
+  useEffect(() => {
+    if (live) return;
+    const id = setTimeout(() => setLive(true), FOOTER_DELAY_MS);
+    return () => clearTimeout(id);
+  }, [live]);
   return (
     <Animated.View
       style={[
         styles.footerStack,
+        { pointerEvents: live ? 'auto' : 'none' },
         !reduced && {
           animationName: {
             from: { opacity: 0, transform: [{ translateY: 8 }] },
             to: { opacity: 1, transform: [{ translateY: 0 }] },
           },
           animationDuration: '420ms',
-          animationDelay: '450ms',
+          animationDelay: `${FOOTER_DELAY_MS}ms`,
           animationTimingFunction: 'ease-out',
           animationFillMode: 'backwards',
         },
