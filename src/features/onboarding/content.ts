@@ -10,6 +10,8 @@ export type Answers = {
   nights?: string;
   nightMinutes?: number;
   nightsPerWeek?: number;
+  /** The nights picked on the day circles, Monday = 0. Their count is `nightsPerWeek`. */
+  scrollDays?: number[];
   bedtime: number;
   wake: number;
   morningMinutes?: number;
@@ -20,11 +22,11 @@ export type Answers = {
   tried?: string;
   timeBack?: string;
   apps: string[];
-  plan: 'annual' | 'monthly';
+  plan: 'annual' | 'monthly' | 'lifetime';
   /** Works nights: the schedule is a block window, not a sleep window. */
   shift?: boolean;
-  /** The "See other plans" sheet on the paywall. */
-  plansOpen?: boolean;
+  /** "Remind me before the trial ends" on the paywall. On by default: the reminder is a promise. */
+  remindTrial: boolean;
 };
 
 export const initialAnswers: Answers = {
@@ -32,6 +34,7 @@ export const initialAnswers: Answers = {
   wake: 7 * 60,
   apps: [],
   plan: 'annual',
+  remindTrial: true,
 };
 
 export const STEPS = [
@@ -41,8 +44,6 @@ export const STEPS = [
   'nights',
   'night-minutes',
   'nights-per-week',
-  'bedtime',
-  'wake',
   'morning-minutes',
   'stat',
   'age',
@@ -52,6 +53,8 @@ export const STEPS = [
   'time-back',
   'math',
   'reveal',
+  'bedtime',
+  'wake',
   'tomorrow',
   'screen-time',
   'apps',
@@ -62,7 +65,6 @@ export const STEPS = [
   'plans',
   'armed',
   'first-morning',
-  'done',
 ] as const;
 
 export type StepId = (typeof STEPS)[number] | 'declined' | 'under-13';
@@ -76,8 +78,6 @@ export const PROGRESS_STEPS: StepId[] = [
   'nights',
   'night-minutes',
   'nights-per-week',
-  'bedtime',
-  'wake',
   'morning-minutes',
   'stat',
   'age',
@@ -87,6 +87,8 @@ export const PROGRESS_STEPS: StepId[] = [
   'time-back',
   'math',
   'reveal',
+  'bedtime',
+  'wake',
   'tomorrow',
   'screen-time',
   'apps',
@@ -110,12 +112,16 @@ export const NIGHT_MINUTES: Choice<number>[] = [
   { label: '2+ hours', value: 150 },
 ];
 
-export const NIGHTS_PER_WEEK: Choice<number>[] = [
-  { label: '1–2 nights', value: 1.5 },
-  { label: '3–4 nights', value: 3.5 },
-  { label: '5–6 nights', value: 5.5 },
-  { label: 'Every night', value: 7 },
-];
+/**
+ * His line on the math loader, echoing "What happens most nights?". Deadpan, and never
+ * a health claim: "can't sleep" gets sympathy, not advice.
+ */
+export const NIGHTS_ECHO: Record<string, string> = {
+  'one-more': '“One more video.” Counting all of them.',
+  'cant-sleep': 'Can’t sleep, you said. Same. Counting anyway.',
+  'lose-track': 'You lose track of time. I don’t. Counting.',
+  all: 'All of it, you said. Counting all of it.',
+};
 
 export const MORNING_MINUTES: Choice<number>[] = [
   { label: 'Under 5 minutes', value: 3 },
@@ -201,25 +207,14 @@ export const OFFER_HEADLINES: Record<string, string> = {
 /** For people who barely use their phone in bed: the pitch is mornings, not a cost. */
 export const LIGHT_OFFER_HEADLINE = 'Mornings, then. Mine too.';
 
-/** His reaction on the statistic screen, echoing "what happens most nights?" */
-export const NIGHTS_ECHO: Record<string, string> = {
-  'one-more': 'Twelve more. I counted.',
-  'cant-sleep': 'Scrolling won’t help. Ask me.',
-  'lose-track': '11 p.m. becomes 2 a.m. I’ve seen it.',
-  all: 'All of it. Noted.',
+/** His reaction on the statistic screen, echoing "how long are you on your phone before you get up?" */
+export const MORNING_ECHO: Record<number, string> = {
+  3: 'Under five? We’ll see tomorrow.',
+  10: 'You said ten minutes. I said nothing.',
+  20: 'You said twenty minutes. I said nothing.',
+  45: 'You said forty-five minutes. I said nothing.',
+  75: 'You said an hour. I said nothing. Loudly.',
 };
-
-// Preview stand-ins for Apple's app picker, which needs the Family Controls entitlement.
-export const PREVIEW_APPS = [
-  'TikTok',
-  'Instagram',
-  'YouTube',
-  'X',
-  'Reddit',
-  'Snapchat',
-  'Netflix',
-  'Games',
-];
 
 /**
  * Preview prices. In the real app these come from StoreKit (localized display prices),
@@ -228,11 +223,13 @@ export const PREVIEW_APPS = [
 export const PRICES = {
   annual: 39.99,
   monthly: 9.99,
+  /** One-time purchase, no trial. In line with Jomo ($99.99) and AppBlock ($89.99). */
+  lifetime: 99.99,
   trialDays: 7,
   trialEligible: true,
 } as const;
 
 export const money = (value: number) => `$${value.toFixed(2)}`;
 
-/** "Save 58%": the yearly plan against twelve months of the monthly plan. */
+/** "Save 66%": the annual plan against twelve months of the monthly plan. */
 export const annualSavings = () => Math.floor((1 - PRICES.annual / (PRICES.monthly * 12)) * 100);

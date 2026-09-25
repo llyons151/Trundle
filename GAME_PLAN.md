@@ -103,12 +103,14 @@ How to keep the brand from reading as generated:
 
 ## Money
 
-- **Hard paywall at the end of onboarding:** $39.99 a year with a 7-day free trial
-  is the default and the only plan shown up front. $9.99 a month (no trial) sits
-  behind a "See other plans" link, so users have to switch on purpose. Plain renewal terms (App Store guideline 3.1.2), with
-  no fake countdowns or hidden prices.
-- A lifetime plan is an experiment for later. Keep a freemium fallback ready if
-  word of mouth is weak (Opal's revenue grew after it went freemium).
+- **Hard paywall at the end of onboarding:** three plans on one page (changed
+  2026-09-25 from the user's references): Lifetime $99.99 once, **Annual $39.99 with
+  a 7-day free trial, selected by default** and shown with its per-month price
+  ($3.33/month), and Monthly $9.99 (no trial). Plain renewal terms (App Store
+  guideline 3.1.2): the billed amount is the biggest price on each card. No fake
+  countdowns, struck-through prices or hidden prices.
+- Keep a freemium fallback ready if word of mouth is weak (Opal's revenue grew after
+  it went freemium).
 - **Onboarding shape:** about 25 screens (details in
   [docs/ONBOARDING_CONVERSION.md](docs/ONBOARDING_CONVERSION.md)):
   1. A 7-question quiz.

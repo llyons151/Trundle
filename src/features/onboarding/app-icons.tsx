@@ -1,3 +1,4 @@
+import { SymbolView } from 'expo-symbols';
 import { StyleSheet, View } from 'react-native';
 import Svg, { Defs, G, LinearGradient, Path, RadialGradient, Rect, Stop } from 'react-native-svg';
 
@@ -159,6 +160,29 @@ export function SystemIcon({ name, size }: { name: SystemName; size: number }) {
       <View style={[StyleSheet.absoluteFill, { alignItems: 'center', justifyContent: 'center' }]}>
         {app.glyph === 'safari' ? <SafariDial size={size * 0.8} /> : <Glyph name={app.glyph} size={size * 0.62} />}
       </View>
+    </View>
+  );
+}
+
+/** A picked app's icon: its brand tile, or a plain tile for categories like "Games". */
+export function AppTile({ name, size }: { name: string; size: number }) {
+  if (name in BRANDS) return <BrandIcon name={name as BrandName} size={size} />;
+  return (
+    <View
+      style={{
+        width: size,
+        height: size,
+        borderRadius: size * CORNER,
+        backgroundColor: '#2C2C2E',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
+      <SymbolView
+        name={{ ios: 'gamecontroller.fill', android: 'sports_esports', web: 'sports_esports' }}
+        size={size * 0.52}
+        tintColor="#FFFFFF"
+      />
     </View>
   );
 }

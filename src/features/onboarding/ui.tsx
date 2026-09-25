@@ -1,5 +1,5 @@
 import { SymbolView } from 'expo-symbols';
-import { useEffect, useRef, useState, type PropsWithChildren, type ReactNode } from 'react';
+import { createContext, useContext, useEffect, useRef, useState, type PropsWithChildren, type ReactNode } from 'react';
 import {
   AccessibilityInfo,
   Platform,
@@ -99,14 +99,24 @@ export function Eyebrow({ children }: PropsWithChildren) {
   );
 }
 
+/**
+ * True while a page sits on the risen quiz moon. Text centres there, like the moon's
+ * list questions, and gray text turns white so it reads on the moon's blue.
+ */
+const OnMoon = createContext(false);
+export const MoonSurface = OnMoon.Provider;
+export const useOnMoon = () => useContext(OnMoon);
+
 export function Title({ children, style }: { children: string; style?: StyleProp<TextStyle> }) {
-  return <WordsIn text={children} style={[styles.title, style]} header />;
+  const moon = useOnMoon();
+  return <WordsIn text={children} style={[styles.title, moon && styles.centered, style]} header />;
 }
 
 export function Body({ children, style }: PropsWithChildren<{ style?: StyleProp<TextStyle> }>) {
+  const moon = useOnMoon();
   return (
     <Reveal>
-      <Text style={[styles.body2, style]}>{children}</Text>
+      <Text style={[styles.body2, moon && styles.bodyOnMoon, style]}>{children}</Text>
     </Reveal>
   );
 }
@@ -118,7 +128,7 @@ export function Voice({
   delay = 0,
   header,
   sub,
-  center,
+  center: centerProp,
 }: {
   text: string;
   size?: number;
@@ -131,6 +141,7 @@ export function Voice({
   /** Centered text. Only for sub lines, which render as one text run. */
   center?: boolean;
 }) {
+  const center = useOnMoon() || centerProp;
   return (
     <WordsIn
       key={text}
@@ -215,11 +226,15 @@ export function Options<T>({
   options,
   value,
   onChoose,
+  tone = 'sky',
 }: {
   options: { label: string; value: T }[];
   value: T | undefined;
   onChoose: (value: T) => void;
+  /** 'moon': black pills sitting on the risen quiz moon. */
+  tone?: 'sky' | 'moon';
 }) {
+  const moon = tone === 'moon';
   return (
     <View style={styles.options} accessibilityRole="radiogroup">
       {options.map((option) => {
@@ -233,9 +248,22 @@ export function Options<T>({
               }}
               accessibilityRole="radio"
               accessibilityState={{ checked: selected }}
-              style={({ pressed }) => [styles.option, selected && styles.optionSelected, pressed && styles.pressed]}
+              style={({ pressed }) => [
+                styles.option,
+                moon && styles.optionMoon,
+                selected && (moon ? styles.optionMoonSelected : styles.optionSelected),
+                pressed && styles.pressed,
+              ]}
             >
-              <Text style={[styles.optionLabel, selected && styles.optionLabelSelected]}>{option.label}</Text>
+              <Text
+                style={[
+                  styles.optionLabel,
+                  moon && styles.optionLabelMoon,
+                  selected && (moon ? styles.optionLabelMoonSelected : styles.optionLabelSelected),
+                ]}
+              >
+                {option.label}
+              </Text>
             </Pressable>
           </Reveal>
         );
@@ -444,6 +472,8 @@ export const styles = StyleSheet.create({
   },
   title: { color: Nocturne.text, fontSize: 28, lineHeight: 33, fontWeight: '700', letterSpacing: -0.4 },
   body2: { color: Nocturne.text2, fontSize: 16, lineHeight: 23 },
+  bodyOnMoon: { color: Nocturne.text, textAlign: 'center' },
+  centered: { textAlign: 'center' },
   voice: { ...DisplayFont, color: Nocturne.text, letterSpacing: -0.3 },
   footerStack: { gap: 10 },
   cta: {
@@ -475,6 +505,11 @@ export const styles = StyleSheet.create({
   optionSelected: { backgroundColor: Nocturne.cta, borderColor: Nocturne.cta },
   optionLabel: { color: Nocturne.text, fontSize: 17, fontWeight: '500' },
   optionLabelSelected: { color: Nocturne.onCta },
+  // On the quiz moon: black pills, centred like the rest of the moon page; picked turns moon-white.
+  optionMoon: { backgroundColor: '#000000', borderColor: '#000000', minHeight: 54, paddingVertical: 14, borderRadius: 27, alignItems: 'center' },
+  optionMoonSelected: { backgroundColor: '#FFFFFF', borderColor: '#FFFFFF' },
+  optionLabelMoon: { color: '#FFFFFF', textAlign: 'center' },
+  optionLabelMoonSelected: { color: '#000000' },
   chipSelected: { backgroundColor: Nocturne.cta },
   chipLabelSelected: { color: Nocturne.onCta },
   appChip: {

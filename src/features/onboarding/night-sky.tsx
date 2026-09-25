@@ -1,6 +1,7 @@
 import { Image } from 'expo-image';
 import { useEffect } from 'react';
 import { StyleSheet, useWindowDimensions, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Animated, {
   Easing,
   interpolate,
@@ -69,30 +70,56 @@ function risingMoon(width: number, height: number) {
   return { left: (width - size) / 2, top: height - size * 0.36, size };
 }
 
-/**
- * raccoon-back.png: his silhouette sitting with his back to us, small and centred in the
- * bottom of the moon, softened to sit behind the same frost. He rides the moon, so when
- * it settles low he drops off-screen with it. Placement is in moon diameters from the
- * disc's top-left corner.
- */
-const RACCOON = { x: 0.3872, y: 0.7953, w: 0.181, h: 0.2024 };
-
 /** The opener's moon: big, centred in the upper part of the screen, above the text. */
 function heroMoon(width: number, height: number) {
   const size = Math.min(width * 0.72, height * 0.34);
   return { left: (width - size) / 2, top: height * 0.32 - size / 2, size };
 }
 
+/** How long the moon takes to rise into, or sink out of, the quiz. */
+export const QUIZ_RISE_MS = 900;
+
+/** Height of the onboarding top bar (back button, progress, Exit); see Shell. */
+const TOP_BAR = 50;
+
+/** Clear sky kept above the quiz moon's curve. */
+const QUIZ_HEADROOM = 56;
+
+/**
+ * Where the quiz moon's top edge sits: clear of the top bar,
+ * about a quarter of the way down, like Headspace's "What's on your mind?" screen.
+ */
+export function quizArcTop(height: number, insetTop: number) {
+  return Math.max(insetTop + TOP_BAR + QUIZ_HEADROOM + 16, height * 0.26);
+}
+
+/** The quiz moon: far wider than the screen, so its top reads as a gentle curve. */
+function quizMoon(width: number, height: number, insetTop: number) {
+  const size = width * 2.6;
+  // The frosted disc's edge is soft; start the disc a little above the arc so the arc lands there.
+  return { left: (width - size) / 2, top: quizArcTop(height, insetTop) - 12, size };
+}
+
+/** Where content on the quiz moon starts, measured from the top of the onboarding body. */
+export function quizContentTop(height: number, insetTop: number) {
+  return quizArcTop(height, insetTop) - insetTop - TOP_BAR + 40;
+}
+
 /**
  * One sky and one moon for all of onboarding. On the opener the moon is big and centred;
  * when the user moves on it flies to its resting place (MOON_REST), resizing as it
  * goes, and stays there for every later screen. Going back to the opener plays it in reverse.
+ * On quiz questions (`quiz`) it rises until its curve fills the bottom of the screen and
+ * the options sit on it.
  */
-export function NightSky({ opening = false }: { opening?: boolean }) {
+export function NightSky({ opening = false, quiz = false }: { opening?: boolean; quiz?: boolean }) {
   const { width, height } = useWindowDimensions();
+  const insets = useSafeAreaInsets();
   const reduced = useReducedMotion();
   // 0 = the opener's big moon, 1 = settled into the sky.
   const progress = useSharedValue(opening ? 0 : 1);
+  // 0 = wherever `progress` puts it, 1 = risen for the quiz.
+  const risen = useSharedValue(quiz ? 1 : 0);
 
   useEffect(() => {
     const target = opening ? 0 : 1;
@@ -101,43 +128,45 @@ export function NightSky({ opening = false }: { opening?: boolean }) {
       : withTiming(target, { duration: FLIGHT_MS, easing: Easing.bezier(0.65, 0, 0.35, 1) });
   }, [opening, reduced, progress]);
 
+  useEffect(() => {
+    const target = quiz ? 1 : 0;
+    risen.value = reduced
+      ? target
+      : withTiming(target, { duration: QUIZ_RISE_MS, easing: Easing.bezier(0.65, 0, 0.35, 1) });
+  }, [quiz, reduced, risen]);
+
   const from = heroMoon(width, height);
   const to = MOON_REST === 'bottom' ? risingMoon(width, height) : bakedMoon(width, height);
+  const up = quizMoon(width, height, insets.top);
+
+  /** The moon's disc right now: opener → resting place, then resting place → quiz. */
+  const disc = (p: number, q: number) => {
+    'worklet';
+    const size = interpolate(p, [0, 1], [from.size, to.size]);
+    const left = interpolate(p, [0, 1], [from.left, to.left]);
+    const top = interpolate(p, [0, 1], [from.top, to.top]);
+    return {
+      size: interpolate(q, [0, 1], [size, up.size]),
+      left: interpolate(q, [0, 1], [left, up.left]),
+      top: interpolate(q, [0, 1], [top, up.top]),
+    };
+  };
 
   const moonStyle = useAnimatedStyle(() => {
-    const p = progress.value;
-    const size = interpolate(p, [0, 1], [from.size, to.size]);
-    const inset = (size * (FROST_PAD - 1)) / 2;
-    return {
-      left: interpolate(p, [0, 1], [from.left, to.left]) - inset,
-      top: interpolate(p, [0, 1], [from.top, to.top]) - inset,
-      width: size * FROST_PAD,
-      height: size * FROST_PAD,
-    };
+    const d = disc(progress.value, risen.value);
+    const inset = (d.size * (FROST_PAD - 1)) / 2;
+    return { left: d.left - inset, top: d.top - inset, width: d.size * FROST_PAD, height: d.size * FROST_PAD };
   });
 
   const glowStyle = useAnimatedStyle(() => {
-    const p = progress.value;
-    const size = interpolate(p, [0, 1], [from.size, to.size]);
-    const inset = (size * (GLOW_PAD - 1)) / 2;
+    const d = disc(progress.value, risen.value);
+    const inset = (d.size * (GLOW_PAD - 1)) / 2;
     return {
-      left: interpolate(p, [0, 1], [from.left, to.left]) - inset,
-      top: interpolate(p, [0, 1], [from.top, to.top]) - inset,
-      width: size * GLOW_PAD,
-      height: size * GLOW_PAD,
-      opacity: p,
-    };
-  });
-
-  // He rides the moon everywhere it goes, scaling with it.
-  const raccoonStyle = useAnimatedStyle(() => {
-    const p = progress.value;
-    const size = interpolate(p, [0, 1], [from.size, to.size]);
-    return {
-      left: interpolate(p, [0, 1], [from.left, to.left]) + RACCOON.x * size,
-      top: interpolate(p, [0, 1], [from.top, to.top]) + RACCOON.y * size,
-      width: RACCOON.w * size,
-      height: RACCOON.h * size,
+      left: d.left - inset,
+      top: d.top - inset,
+      width: d.size * GLOW_PAD,
+      height: d.size * GLOW_PAD,
+      opacity: progress.value,
     };
   });
 
@@ -163,14 +192,6 @@ export function NightSky({ opening = false }: { opening?: boolean }) {
       <Animated.View style={[styles.moon, moonStyle]}>
         <Image
           source={require('../../../assets/onboarding/moon-frosted.png')}
-          style={StyleSheet.absoluteFill}
-          contentFit="contain"
-          accessible={false}
-        />
-      </Animated.View>
-      <Animated.View style={[styles.moon, raccoonStyle]}>
-        <Image
-          source={require('../../../assets/onboarding/raccoon-back.png')}
           style={StyleSheet.absoluteFill}
           contentFit="contain"
           accessible={false}

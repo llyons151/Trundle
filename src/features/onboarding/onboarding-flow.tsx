@@ -3,8 +3,10 @@ import { SymbolView } from 'expo-symbols';
 import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import {
   Modal,
+  Platform,
   Pressable,
   Share,
+  Switch,
   StyleSheet,
   Text,
   useWindowDimensions,
@@ -12,7 +14,7 @@ import {
   type LayoutChangeEvent,
 } from 'react-native';
 import Animated, { useReducedMotion } from 'react-native-reanimated';
-import Svg, { Defs, LinearGradient, Rect, Stop } from 'react-native-svg';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { DisplayFont, Nocturne } from '@/constants/nocturne';
 
@@ -28,9 +30,8 @@ import {
   NIGHT_MINUTES,
   NIGHTS,
   NIGHTS_ECHO,
-  NIGHTS_PER_WEEK,
+  MORNING_ECHO,
   OFFER_HEADLINES,
-  PREVIEW_APPS,
   PRICES,
   annualSavings,
   money,
@@ -56,7 +57,7 @@ import {
   type Estimate,
 } from './estimate';
 import * as haptic from './haptics';
-import { FLIGHT_MS, moonBottom, NightSky } from './night-sky';
+import { FLIGHT_MS, moonBottom, NightSky, QUIZ_RISE_MS, quizContentTop } from './night-sky';
 import { NUMBER_FONT, RollingNumber } from './rolling-number';
 import { Reveal, type TextMotion } from './motion';
 import { useCompact } from './layout';
@@ -67,6 +68,7 @@ import {
   Eyebrow,
   FooterEnter,
   HoldButton,
+  MoonSurface,
   Options,
   PreviewNote,
   PrimaryButton,
@@ -77,6 +79,11 @@ import {
   Voice,
 } from './ui';
 import { AgeWheel, TimeWheel } from './time-wheel';
+import { AppleAlertPicture } from './apple-alert';
+import { AppPickerSheet, AppsCard } from './app-picker';
+import { DayPicker } from './day-picker';
+import { ScheduleCard } from './schedule-card';
+import { StepTestBody, StepTestFooter, useStepTest } from './step-test';
 import { TomorrowDemo } from './tomorrow-demo';
 
 const ADVANCE_AFTER_CHOICE_MS = 280;
@@ -93,9 +100,18 @@ const EDITABLE: StepId[] = ['bedtime', 'wake', 'apps'];
 /** Screens that move on by themselves. Back steps over them. */
 const AUTO_ADVANCE: StepId[] = ['math'];
 
+/** The two paywall pages. Exit from either goes to `declined` instead of closing. */
+const PAYWALL: StepId[] = ['offer', 'plans'];
+
 /** Screens that close the flow in the same moonlit scene it opens with. */
 // Quiet moments start their content below the moon in the sky photo.
-const MOON_FEATURE: StepId[] = ['intro', 'armed', 'first-morning', 'done', 'under-13', 'declined'];
+const MOON_FEATURE: StepId[] = ['intro', 'under-13', 'declined'];
+
+/**
+ * The quiz happens on the risen moon: it rises once at the first question and stays up
+ * through the last, so it doesn't bob between screens, then sinks for the math.
+ */
+const MOON_QUIZ: StepId[] = STEPS.slice(STEPS.indexOf('nights'), STEPS.indexOf('time-back') + 1);
 
 /** Text entrance per page (see motion.tsx). Anything not listed uses Word Drift. */
 const MOTION: Partial<Record<StepId, TextMotion>> = {
@@ -110,6 +126,7 @@ const PREVIEW_ANSWERS: Partial<Answers> = {
   nightMinutes: 45,
   morningMinutes: 20,
   nightsPerWeek: 7,
+  scrollDays: [0, 1, 2, 3, 4, 5, 6],
   age: 22,
   alarm: 'groggy',
   tried: 'screen-time',
@@ -148,7 +165,8 @@ function appSummary(apps: string[]): string {
 }
 
 export function OnboardingFlow({ initialStep }: { initialStep?: string }) {
-  const { width } = useWindowDimensions();
+  const { width, height } = useWindowDimensions();
+  const insets = useSafeAreaInsets();
   const router = useRouter();
   const [history, setHistory] = useState<StepId[]>([isStep(initialStep) ? initialStep : 'hello']);
   const [answers, setAnswers] = useState<Answers>(() => ({
@@ -211,6 +229,11 @@ export function OnboardingFlow({ initialStep }: { initialStep?: string }) {
       }
     : undefined;
   const exit = () => (router.canGoBack() ? router.back() : router.replace('/'));
+  // Leaving the paywall lands on one honest "Fair." screen, once. A second exit really exits.
+  const leave =
+    PAYWALL.includes(step) && !history.includes('declined')
+      ? () => go('declined')
+      : exit;
   const set = <K extends keyof Answers>(key: K, value: Answers[K]) =>
     setAnswers((current) => ({ ...current, [key]: value }));
   // A second tap during the short advance delay must not skip a screen, and Back cancels it.
@@ -232,24 +255,35 @@ export function OnboardingFlow({ initialStep }: { initialStep?: string }) {
     advanceOnce(next);
   };
   const simulate = (message: string, then: () => void) => setSimulated({ message, then });
+  const [pickerOpen, setPickerOpen] = useState(false);
 
-  // While the moon moves to or from the opener, the page waits so text enters once it lands.
+  // While the moon moves (to or from the opener, or into and out of the quiz), the page
+  // waits so text enters once it lands.
   const reducedMotion = useReducedMotion();
   const opening = step === 'hello';
-  const [moonWasOpening, setMoonWasOpening] = useState(opening);
-  const [moonMoving, setMoonMoving] = useState(false);
-  if (moonWasOpening !== opening) {
-    setMoonWasOpening(opening);
-    if (!reducedMotion) setMoonMoving(true);
+  const quiz = MOON_QUIZ.includes(step);
+  const moonPlace = opening ? 'opener' : quiz ? 'quiz' : 'rest';
+  const [lastMoonPlace, setLastMoonPlace] = useState(moonPlace);
+  const [moonMoving, setMoonMoving] = useState(0);
+  if (lastMoonPlace !== moonPlace) {
+    setLastMoonPlace(moonPlace);
+    const flying = moonPlace === 'opener' || lastMoonPlace === 'opener';
+    if (!reducedMotion) setMoonMoving(flying ? FLIGHT_MS : QUIZ_RISE_MS);
   }
   useEffect(() => {
     if (!moonMoving) return;
-    const timer = setTimeout(() => setMoonMoving(false), FLIGHT_MS);
+    const timer = setTimeout(() => setMoonMoving(0), moonMoving);
     return () => clearTimeout(timer);
   }, [moonMoving, step]);
 
   const lateNight = isInsideBedtime(answers.bedtime, answers.wake);
   const compact = useCompact();
+  // Lives here so the counter survives the page re-rendering; leaving the page stops it.
+  const stepTest = useStepTest({ simulate });
+  const stopStepTest = stepTest.stop;
+  useEffect(() => {
+    if (step !== 'motion') stopStepTest();
+  }, [step, stopStepTest]);
   const screen = renderStep({
     step,
     answers,
@@ -265,22 +299,39 @@ export function OnboardingFlow({ initialStep }: { initialStep?: string }) {
     lateNight,
     compact,
     editing: returnTo !== null,
+    stepTest,
+    openPicker: () => setPickerOpen(true),
   });
 
   return (
     <View style={styles.root}>
-      <NightSky opening={opening} />
-      <Shell progress={progressFor(step)} onBack={back} onExit={exit} footer={screen.footer && !moonMoving ? <FooterEnter key={`${step}-${history.length}`}>{screen.footer}</FooterEnter> : undefined}
+      <NightSky opening={opening} quiz={quiz} />
+      <Shell progress={progressFor(step)} onBack={back} onExit={leave} footer={screen.footer && !moonMoving ? <FooterEnter key={`${step}-${history.length}`}>{screen.footer}</FooterEnter> : undefined}
       >
         {moonMoving ? null : (
           <StepEnter key={`${step}-${history.length}`} motion={MOTION[step] ?? 'drift'}>
             {/* Featured-moon screens start below the moon so text never runs across it. */}
-            <View style={[styles.fill, MOON_FEATURE.includes(step) && { paddingTop: moonBottom(width) - 40 }]}>
-              {screen.body}
+            <View
+              style={[
+                styles.fill,
+                MOON_FEATURE.includes(step) && { paddingTop: moonBottom(width) - 40 },
+                quiz && { paddingTop: quizContentTop(height, insets.top) },
+              ]}
+            >
+              <MoonSurface value={quiz}>{screen.body}</MoonSurface>
             </View>
           </StepEnter>
         )}
       </Shell>
+      <AppPickerSheet
+        open={pickerOpen}
+        apps={answers.apps}
+        onClose={() => setPickerOpen(false)}
+        onDone={(picked) => {
+          set('apps', picked);
+          setPickerOpen(false);
+        }}
+      />
       <SimulatedPrompt
         prompt={simulated}
         onContinue={() => {
@@ -310,6 +361,9 @@ type StepContext = {
   /** Onboarding is happening inside the bedtime window, e.g. at 12:40 AM. */
   lateNight: boolean;
   editing: boolean;
+  stepTest: ReturnType<typeof useStepTest>;
+  /** Opens the stand-in for Apple's app picker. */
+  openPicker: () => void;
 };
 
 /**
@@ -327,7 +381,7 @@ function helloOpener(now = new Date()): { head: string; sub: string } {
 }
 
 function renderStep(ctx: StepContext): { body: ReactNode; footer?: ReactNode } {
-  const { step, answers, numbers, set, choose, next, go, edit, exit, simulate, purchased, lateNight, compact, editing } = ctx;
+  const { step, answers, numbers, set, choose, next, go, edit, exit, simulate, purchased, lateNight, compact, editing, stepTest, openPicker } = ctx;
   const bed = formatWhen(answers.bedtime);
   const wake = formatClock(answers.wake);
   // "This morning" when it's already the small hours; "Later today" for afternoon wake-ups.
@@ -386,24 +440,43 @@ function renderStep(ctx: StepContext): { body: ReactNode; footer?: ReactNode } {
       };
 
     case 'nights':
-      return question('What happens most nights?', undefined, (
-        <Options options={NIGHTS} value={answers.nights} onChoose={choose('nights')} />
+      return moonQuestion('What happens most nights?', undefined, (
+        <Options options={NIGHTS} value={answers.nights} onChoose={choose('nights')} tone="moon" />
       ));
 
     case 'night-minutes':
-      return question('After you get into bed, how long are you on your phone?', 'A rough guess is fine.', (
-        <Options options={NIGHT_MINUTES} value={answers.nightMinutes} onChoose={choose('nightMinutes')} />
+      return moonQuestion('After you get into bed, how long are you on your phone?', 'A rough guess is fine.', (
+        <Options options={NIGHT_MINUTES} value={answers.nightMinutes} onChoose={choose('nightMinutes')} tone="moon" />
       ));
 
-    case 'nights-per-week':
-      return question('How many nights a week?', undefined, (
-        <Options options={NIGHTS_PER_WEEK} value={answers.nightsPerWeek} onChoose={choose('nightsPerWeek')} />
-      ));
+    case 'nights-per-week': {
+      const days = answers.scrollDays ?? [];
+      return {
+        ...question(
+          'Which nights does that happen?',
+          'Tap every one that counts.',
+          <DayPicker
+            value={days}
+            onChange={(picked) => {
+              set('scrollDays', picked);
+              set('nightsPerWeek', picked.length);
+            }}
+          />,
+        ),
+        footer: (
+          <PrimaryButton
+            label={days.length === 0 ? 'Tap at least one' : 'Continue'}
+            disabled={days.length === 0}
+            onPress={next}
+          />
+        ),
+      };
+    }
 
     case 'bedtime':
       return {
         body: (
-          <View style={styles.top}>
+          <View style={styles.fill}>
             <Title>When do you get into bed?</Title>
             <Body style={styles.sub}>Getting in. Not falling asleep. Those are different.</Body>
             <View style={styles.timeWrap}>
@@ -440,7 +513,7 @@ function renderStep(ctx: StepContext): { body: ReactNode; footer?: ReactNode } {
     case 'wake':
       return {
         body: (
-          <View style={styles.top}>
+          <View style={styles.fill}>
             <Title>When does your alarm go off?</Title>
             <Body style={styles.sub}>The first one. Steps start counting from here.</Body>
             <View style={styles.timeWrap}>
@@ -461,8 +534,8 @@ function renderStep(ctx: StepContext): { body: ReactNode; footer?: ReactNode } {
       };
 
     case 'morning-minutes':
-      return question('In the morning, how long are you on your phone before you get up?', 'Counting from the first alarm.', (
-        <Options options={MORNING_MINUTES} value={answers.morningMinutes} onChoose={choose('morningMinutes')} />
+      return moonQuestion('In the morning, how long are you on your phone before you get up?', 'Counting from the first alarm.', (
+        <Options options={MORNING_MINUTES} value={answers.morningMinutes} onChoose={choose('morningMinutes')} tone="moon" />
       ));
 
     case 'stat':
@@ -471,12 +544,12 @@ function renderStep(ctx: StepContext): { body: ReactNode; footer?: ReactNode } {
           <View style={styles.center}>
             <Reveal>
               <Text style={styles.statNumber} maxFontSizeMultiplier={1.3}>
-                62%
+                85%
               </Text>
             </Reveal>
-            <Body style={styles.statText}>of U.S. adults under 30 with a smartphone say it hurts how much sleep they get.</Body>
+            <Body style={styles.statText}>of U.S. adults check their phone within 10 minutes of waking.</Body>
             <View style={styles.gap32} />
-            <Voice text={NIGHTS_ECHO[answers.nights ?? ''] ?? 'Not just you, then.'} size={28} delay={600} sub />
+            <Voice text={MORNING_ECHO[answers.morningMinutes ?? -1] ?? 'Not just you, then.'} size={28} delay={600} sub />
           </View>
         ),
         footer: <PrimaryButton label="Continue" onPress={next} />,
@@ -486,7 +559,7 @@ function renderStep(ctx: StepContext): { body: ReactNode; footer?: ReactNode } {
       return {
         ...question(
           'How old are you?',
-          'Sleep needs change with age. So does how much time is left to spend.',
+          'Sleep needs change with age.',
           <AgeWheel value={answers.age ?? AGE_DEFAULT} onChange={(age) => set('age', age)} min={AGE_MIN} max={AGE_MAX} />,
           true,
         ),
@@ -516,13 +589,13 @@ function renderStep(ctx: StepContext): { body: ReactNode; footer?: ReactNode } {
       };
 
     case 'alarm':
-      return question('How do you feel when your alarm goes off?', undefined, (
-        <Options options={ALARM} value={answers.alarm} onChoose={choose('alarm')} />
+      return moonQuestion('How do you feel when your alarm goes off?', undefined, (
+        <Options options={ALARM} value={answers.alarm} onChoose={choose('alarm')} tone="moon" />
       ));
 
     case 'tried':
-      return question('What have you tried?', 'Pick the one that lasted longest.', (
-        <Options options={TRIED} value={answers.tried} onChoose={choose('tried')} />
+      return moonQuestion('What have you tried?', 'Pick the one that lasted longest.', (
+        <Options options={TRIED} value={answers.tried} onChoose={choose('tried')} tone="moon" />
       ));
 
     case 'tried-echo': {
@@ -540,12 +613,12 @@ function renderStep(ctx: StepContext): { body: ReactNode; footer?: ReactNode } {
     }
 
     case 'time-back':
-      return question('Say you got those minutes back. What would you do with them?', undefined, (
-        <Options options={TIME_BACK} value={answers.timeBack} onChoose={choose('timeBack')} />
+      return moonQuestion('Say you got those minutes back. What would you do with them?', undefined, (
+        <Options options={TIME_BACK} value={answers.timeBack} onChoose={choose('timeBack')} tone="moon" />
       ));
 
     case 'math':
-      return { body: <MathScreen onDone={next} /> };
+      return { body: <MathScreen line={NIGHTS_ECHO[answers.nights ?? ''] ?? 'Counting. Don’t watch me.'} onDone={next} /> };
 
     case 'reveal':
       return {
@@ -577,8 +650,13 @@ function renderStep(ctx: StepContext): { body: ReactNode; footer?: ReactNode } {
             <Voice text="I need Screen Time access." size={34} header />
             <View style={styles.gap16} />
             <Body>It’s how I put apps to sleep. What you use stays on your phone. I never see it.</Body>
-            <NextFromApple text="Allow Screen Time access. You can change it later in Settings." />
-            <Voice text="Apple’s box is next. It’s boring. So am I." size={22} delay={600} sub />
+            <AppleAlertPicture
+              title="“Trundle” Would Like to Access Screen Time"
+              message="Providing “Trundle” access to Screen Time may allow it to see your activity data, restrict content, and limit the usage of apps and websites."
+              buttons={['Continue', 'Don’t Allow']}
+              point={0}
+            />
+            {compact ? null : <Voice text="Apple’s box is boring. So am I." size={22} delay={600} sub />}
           </View>
         ),
         footer: (
@@ -591,49 +669,31 @@ function renderStep(ctx: StepContext): { body: ReactNode; footer?: ReactNode } {
         ),
       };
 
-    case 'apps':
+    case 'apps': {
+      const picked = answers.apps.length > 0;
       return {
         body: (
           <View style={styles.top}>
             <Title>Which apps keep you up?</Title>
             <Body style={styles.sub}>They sleep at bedtime and wake after your walk. Calls and texts aren’t touched.</Body>
-            <View style={styles.appGrid}>
-              {PREVIEW_APPS.map((app) => (
-                <Chip
-                  key={app}
-                  label={app}
-                  selected={answers.apps.includes(app)}
-                  onPress={() =>
-                    set('apps', answers.apps.includes(app) ? answers.apps.filter((a) => a !== app) : [...answers.apps, app])
-                  }
-                />
-              ))}
+            <View style={styles.appsCard}>
+              <AppsCard apps={answers.apps} onOpen={openPicker} maxRows={compact ? 4 : 6} />
             </View>
-            <PreviewNote>The real app uses Apple’s picker, with the apps actually on your phone.</PreviewNote>
           </View>
         ),
         footer: (
           <PrimaryButton
-            label={answers.apps.length === 0 ? 'Pick at least one' : editing ? 'Save' : `Put ${answers.apps.length} to sleep`}
-            disabled={answers.apps.length === 0}
-            onPress={next}
+            label={!picked ? 'Add apps' : editing ? 'Save' : `Put ${answers.apps.length} to sleep`}
+            onPress={picked ? next : openPicker}
           />
         ),
       };
+    }
 
     case 'motion':
       return {
-        body: (
-          <View style={styles.center}>
-            <Voice text="Motion & Fitness, for the steps." size={34} header />
-            <View style={styles.gap16} />
-            <Body>I count 200 steps each morning. That’s all I use it for.</Body>
-            <NextFromApple text="Allow Motion & Fitness access. You can change it later in Settings." />
-          </View>
-        ),
-        footer: (
-          <PrimaryButton label="Continue" onPress={() => simulate('iOS asks for Motion & Fitness access here.', next)} />
-        ),
+        body: <StepTestBody phase={stepTest.phase} steps={stepTest.steps} faked={stepTest.faked} lateNight={lateNight} />,
+        footer: <StepTestFooter phase={stepTest.phase} start={stepTest.start} skip={stepTest.stop} next={next} />,
       };
 
     case 'ready':
@@ -641,11 +701,13 @@ function renderStep(ctx: StepContext): { body: ReactNode; footer?: ReactNode } {
         body: (
           <View style={styles.top}>
             <Title>Tonight’s lock is ready.</Title>
-            <View style={styles.plan}>
-              <PlanRow when={formatClock(answers.bedtime)} what={`${apps} go to sleep.`} onChange={() => edit('bedtime')} />
-              <PlanRow when={wake} what="200 steps and they wake up." onChange={() => edit('wake')} />
-              <PlanRow when="Apps" what={`${answers.apps.length} picked.`} onChange={() => edit('apps')} />
-            </View>
+            <ScheduleCard
+              bedtime={answers.bedtime}
+              wake={answers.wake}
+              apps={answers.apps}
+              compact={compact}
+              onChange={edit}
+            />
             <Body>{lateNight ? `It’s already past ${bed}. I start the second you’re in.` : 'It isn’t on yet.'}</Body>
             <View style={styles.gap16} />
             <Voice text="I’m ready. Emotionally, less so." size={22} delay={700} sub />
@@ -695,7 +757,7 @@ function renderStep(ctx: StepContext): { body: ReactNode; footer?: ReactNode } {
     }
 
     case 'plans':
-      return plansStep(answers, set, purchased, simulate, lateNight, compact);
+      return plansStep(answers, set, purchased, simulate, compact, bed);
 
     case 'declined':
       return {
@@ -721,7 +783,7 @@ function renderStep(ctx: StepContext): { body: ReactNode; footer?: ReactNode } {
             <Voice text={lateNight ? 'Armed. Starting now. Put it down.' : `Armed. See you at ${bed}.`} size={34} header />
             <View style={styles.gap16} />
             <Body style={styles.onImage}>
-              {answers.plan === 'annual' && PRICES.trialEligible
+              {answers.plan === 'annual' && PRICES.trialEligible && answers.remindTrial
                 ? 'A heads-up before bedtime. And a warning two days before your trial bills, if you let me send notifications.'
                 : 'A heads-up before bedtime. That’s it. I’m not chatty.'}
             </Body>
@@ -744,6 +806,7 @@ function renderStep(ctx: StepContext): { body: ReactNode; footer?: ReactNode } {
       };
 
     case 'first-morning':
+      // The last screen: what tomorrow looks like, then bed.
       return {
         body: (
           <View style={styles.center}>
@@ -753,24 +816,33 @@ function renderStep(ctx: StepContext): { body: ReactNode; footer?: ReactNode } {
               <PlanRow when="At 200" what="Open a sleeping app and tap Check steps. Or just open me." />
               <PlanRow when="Bad day" what="Use a pass. No walking." />
             </View>
-            <Voice text="I’ll be grumpy. Ignore it." size={22} delay={700} sub />
-          </View>
-        ),
-        footer: <PrimaryButton label="Got it" onPress={next} />,
-      };
-
-    case 'done':
-      return {
-        body: (
-          <View style={styles.center}>
-            <Voice text={lateNight ? 'That’s it. Go to sleep.' : `That’s it. Bed at ${bed}.`} size={34} header />
-            <View style={styles.gap16} />
-            <Voice text="I’ll be asleep. Don’t wake me." size={22} delay={900} sub />
+            <Voice text={lateNight ? 'That’s it. Go to sleep.' : `That’s it. Bed at ${bed}.`} size={28} delay={700} header />
+            <View style={styles.gap8} />
+            <Voice text="I’ll be asleep. Don’t wake me." size={22} delay={1300} sub />
           </View>
         ),
         footer: <PrimaryButton label="Finish preview" onPress={exit} />,
       };
   }
+}
+
+/**
+ * A list question on the risen moon, after Headspace's "What's on your mind?": centred
+ * title and hint at the top of the moon's surface, black option pills anchored at the
+ * bottom where thumbs are.
+ */
+function moonQuestion(title: string, sub: string | undefined, options: ReactNode) {
+  return {
+    body: (
+      <View style={styles.moonQuestion}>
+        <View>
+          <Title style={styles.moonTitle}>{title}</Title>
+          {sub ? <Body style={[styles.sub, styles.moonSub]}>{sub}</Body> : null}
+        </View>
+        {options}
+      </View>
+    ),
+  };
 }
 
 /** Title at the top, answers anchored low where thumbs are. */
@@ -789,123 +861,130 @@ function question(title: string, sub: string | undefined, options: ReactNode, ce
 }
 
 /**
- * The paywall, copied from Blinkist's "How your free trial works" screen: the only paywall
- * with a published A/B result (+23% trial starts, -55% complaints), which Opal and Cal AI
- * both adopted. Yearly with a free trial is the only plan shown; monthly sits behind
- * "See other plans". Restyled to Nocturne. The trial toggle Apple now rejects is left out.
+ * The paywall, after the user's two references: a dark card paywall (title, checklist,
+ * radio plan rows) with the plant app's plan list (Lifetime, Annual, Monthly, reminder
+ * toggle). Annual is selected by default and shows its per-month price. Apple 3.1.2: the
+ * billed amount stays the biggest price on each card, and per-month sits under it.
+ * No struck-through "was" prices: there was never a higher price to strike.
  */
 function plansStep(
   answers: Answers,
   set: StepContext['set'],
   purchase: () => void,
   simulate: StepContext['simulate'],
-  lateNight: boolean,
   compact: boolean,
+  bed: string,
 ): { body: ReactNode; footer: ReactNode } {
+  // One line in the checklist: the first app by name, the rest as a count.
+  const [first, ...rest] = answers.apps;
+  const apps = !first ? 'Your apps' : rest.length ? `${first} and ${rest.length} more` : first;
   const trial = PRICES.trialEligible;
-  const yearly = money(PRICES.annual);
-  const perMonth = money(PRICES.annual / 12);
+  const annual = money(PRICES.annual);
+  const monthly = money(PRICES.monthly);
+  const lifetime = money(PRICES.lifetime);
+  const plan = answers.plan;
+  const trialPlan = plan === 'annual' && trial;
   const link = (label: string, message: string) => (
     <Text accessibilityRole="link" style={styles.link} onPress={() => simulate(message, () => {})}>
       {label}
     </Text>
   );
+  const cta = {
+    annual: trial
+      ? { title: `Start ${PRICES.trialDays}-day free trial`, sub: 'No payment due now · cancel anytime' }
+      : { title: `Subscribe for ${annual}/year`, sub: 'Cancel anytime in Settings' },
+    monthly: { title: `Subscribe for ${monthly}/month`, sub: 'Billed today · cancel anytime' },
+    lifetime: { title: `Buy lifetime for ${lifetime}`, sub: 'One payment · no subscription' },
+  }[plan];
+  const summary = {
+    annual: trial
+      ? `Free until ${dateFromToday(PRICES.trialDays)}, then ${annual}/year.`
+      : `${annual}/year. Cancel anytime.`,
+    monthly: `${monthly} today, then monthly. Cancel anytime.`,
+    lifetime: `${lifetime} once. Nothing renews.`,
+  }[plan];
+  const terms = {
+    annual: `${trial ? `${PRICES.trialDays} days free, then ${annual}/year from ${dateFromToday(PRICES.trialDays)}` : `${annual}/year`}. Auto-renews unless cancelled at least 24 hours before renewal.`,
+    monthly: `${monthly}/month. Auto-renews unless cancelled at least 24 hours before renewal.`,
+    lifetime: `${lifetime} once. Not a subscription, nothing renews.`,
+  }[plan];
   return {
     body: (
-      <View style={styles.paywall}>
+      <View style={[styles.paywall, compact && styles.paywallCompact]}>
         <Reveal>
           <Text style={[styles.paywallTitle, compact && styles.paywallTitleCompact]} accessibilityRole="header">
-            {trial ? 'How your free trial works' : 'How Trundle works'}
+            {trial ? 'Try Trundle free' : 'Pick a plan'}
           </Text>
         </Reveal>
-        <View style={styles.paywallVoice}>
-          <Voice
-            text={trial ? 'Seven nights free. I’ll sleep through most of them.' : 'Fine. I’ll get up for this.'}
-            size={compact ? 18 : 20}
-            delay={500}
-            sub
-            center
+        {compact ? null : (
+          <View style={styles.paywallVoice}>
+            <Voice
+              text={trial ? 'Seven nights free. I’ll sleep through most of them.' : 'Fine. I’ll get up for this.'}
+              size={20}
+              delay={500}
+              sub
+              center
+            />
+          </View>
+        )}
+        <View style={[styles.checks, compact && styles.checksCompact]}>
+          <Check text={`${apps} sleep at ${bed}`} />
+          <Check text="Awake again after 200 morning steps" />
+          <Check text="Passes for sick days and travel" />
+        </View>
+        <View accessibilityRole="radiogroup" style={styles.planCards}>
+          <PlanCard
+            selected={plan === 'lifetime'}
+            onPress={() => set('plan', 'lifetime')}
+            title="Lifetime"
+            price={`${lifetime} once`}
+            detail="Pay once. Yours forever."
+            compact={compact}
+          />
+          <PlanCard
+            selected={plan === 'annual'}
+            onPress={() => set('plan', 'annual')}
+            title="Annual"
+            price={`${money(PRICES.annual / 12)}/month`}
+            detail={`(${money(PRICES.annual)}/year)${trial ? ` · ${PRICES.trialDays} days free` : ''}`}
+            badge={`Save ${annualSavings()}%`}
+            compact={compact}
+          />
+          <PlanCard
+            selected={plan === 'monthly'}
+            onPress={() => set('plan', 'monthly')}
+            title="Monthly"
+            price={`${monthly}/month`}
+            detail="No free trial"
+            compact={compact}
           />
         </View>
-
-        <TrialTimeline
-          compact={compact}
-          rows={[
-            {
-              icon: 'lock',
-              title: 'Today',
-              text: lateNight
-                ? 'Your apps go to sleep now. 200 steps wake them in the morning.'
-                : 'Your apps go to sleep tonight. 200 steps wake them tomorrow.',
-            },
-            ...(trial
-              ? [
-                  {
-                    icon: 'bell' as const,
-                    title: `Day ${PRICES.trialDays - 2}`,
-                    text: 'We’ll remind you with a notification that your trial is ending.',
-                  },
-                  {
-                    icon: 'star' as const,
-                    title: `Day ${PRICES.trialDays}`,
-                    text: `You’ll be charged on ${dateFromToday(PRICES.trialDays)}, cancel anytime before.`,
-                  },
-                ]
-              : [{ icon: 'star' as const, title: 'Every year', text: 'Renews until you cancel in Settings.' }]),
-          ]}
-        />
-
-        <Reveal>
-          <Text style={styles.priceLine}>
-            {trial ? `Unlimited free access for ${PRICES.trialDays} days, then ` : ''}
-            <Text style={styles.priceStrong}>{yearly} per year</Text>.{' '}
-            <Text style={styles.pricePerMonth}>({perMonth}/month)</Text>
-          </Text>
-        </Reveal>
-
-        <Pressable
-          onPress={() => set('plansOpen', true)}
-          accessibilityRole="button"
-          style={styles.otherPlans}
-        >
-          <Text style={styles.otherPlansLabel}>See other plans</Text>
-        </Pressable>
-
-        {/* Blinkist's "How can I cancel?" card sits below the fold; pages here never scroll, so it's one line. */}
-        <Reveal>
-          <Text style={styles.cancelLine}>
-            <Text style={styles.strong}>Cancel anytime:</Text> Settings, your name, Subscriptions. About 15 seconds.
-          </Text>
-        </Reveal>
-
-        <PlansSheet
-          open={answers.plansOpen === true}
-          plan={answers.plan}
-          onPlan={(plan) => set('plan', plan)}
-          onClose={() => {
-            set('plansOpen', false);
-            set('plan', 'annual');
-          }}
-          onBuy={() => {
-            set('plansOpen', false);
-            purchase();
-          }}
-        />
+        {/* One plain sentence about what happens next, at reading size rather than in the fine print. */}
+        <Text style={styles.planSummary}>{summary}</Text>
+        {/* Only the trial has an end to be reminded about. Keeps its height so the page doesn't jump. */}
+        <View style={[styles.remindRow, !trialPlan && styles.hiddenBlock, { pointerEvents: trialPlan ? 'auto' : 'none' }]}>
+          <Text style={styles.remindLabel}>Remind me 2 days before it ends</Text>
+          <Switch
+            value={answers.remindTrial}
+            onValueChange={(on) => {
+              haptic.tap();
+              set('remindTrial', on);
+            }}
+            trackColor={{ false: Nocturne.track, true: Nocturne.cta }}
+            thumbColor={answers.remindTrial ? Nocturne.onCta : Nocturne.text}
+            ios_backgroundColor={Nocturne.track}
+            // react-native-web colors the "on" thumb teal unless told otherwise.
+            {...(Platform.OS === 'web' ? ({ activeThumbColor: Nocturne.onCta } as object) : {})}
+            accessibilityLabel="Remind me 2 days before the trial ends"
+          />
+        </View>
       </View>
     ),
     footer: (
       <>
-        <TwoLineCta
-          title={trial ? 'Start my free trial' : `Subscribe for ${yearly}/year`}
-          sub={trial ? 'No payment due now · cancel anytime' : 'Cancel anytime in Settings'}
-          onPress={() => {
-            set('plan', 'annual');
-            purchase();
-          }}
-        />
+        <TwoLineCta title={cta.title} sub={cta.sub} onPress={purchase} />
         <Text style={styles.paywallFine}>
-          {trial ? `${PRICES.trialDays} days free, then ` : ''}
-          {yearly}/year. Auto-renews unless cancelled at least 24 hours before renewal. Preview: nothing is charged.{' '}
+          {terms} Preview: nothing is charged.{' '}
           {link('Restore', 'Restore Purchases runs here, for anyone who already subscribed.')} ·{' '}
           {link('Terms', 'Your Terms of Use open here.')} · {link('Privacy', 'Your Privacy Policy opens here.')}
         </Text>
@@ -914,8 +993,20 @@ function plansStep(
   };
 }
 
-function MathScreen({ onDone }: { onDone: () => void }) {
-  const lines = ['Nights in bed with your phone', 'Mornings before you get up', 'Your schedule'];
+function Check({ text }: { text: string }) {
+  return (
+    <View style={styles.checkRow}>
+      <SymbolView name={{ ios: 'checkmark.circle.fill', android: 'check_circle', web: 'check_circle' }} size={20} tintColor={Nocturne.text} />
+      <Text style={styles.checkText} numberOfLines={2}>
+        {text}
+      </Text>
+    </View>
+  );
+}
+
+function MathScreen({ line, onDone }: { line: string; onDone: () => void }) {
+  // Only what the number is made of: bedtime and wake come after it, in setup.
+  const lines = ['Nights in bed with your phone', 'Mornings before you get up', 'Nights a week'];
   const [shown, setShown] = useState(0);
 
   useEffect(() => {
@@ -933,7 +1024,7 @@ function MathScreen({ onDone }: { onDone: () => void }) {
 
   return (
     <View style={styles.center}>
-      <Voice text="Counting. Don’t watch me." size={34} header />
+      <Voice text={line} size={34} header />
       <View style={styles.mathList}>
         {lines.map((line, i) => (
           <Reveal key={line} style={[styles.mathRow, i >= shown && styles.faded]}>
@@ -1029,16 +1120,6 @@ function RevealScreen({ numbers }: { numbers: Estimate }) {
   );
 }
 
-/** A flat, non-interactive note of what Apple asks next. Not a copy of the system alert. */
-function NextFromApple({ text }: { text: string }) {
-  return (
-    <Reveal style={styles.nextApple}>
-      <Text style={styles.nextAppleLabel}>NEXT, FROM APPLE</Text>
-      <Text style={styles.nextAppleText}>{text}</Text>
-    </Reveal>
-  );
-}
-
 function FadeWhen({ visible, children }: { visible: boolean; children: ReactNode }) {
   const reduced = useReducedMotion();
   if (!visible) return <View style={styles.hiddenBlock}>{children}</View>;
@@ -1079,56 +1160,6 @@ function PlanRow({ when, what, onChange }: { when: string; what: string; onChang
   );
 }
 
-type TimelineIcon = 'lock' | 'bell' | 'star';
-
-const TIMELINE_SYMBOLS = {
-  lock: { ios: 'lock.fill', android: 'lock', web: 'lock' },
-  bell: { ios: 'bell.fill', android: 'notifications', web: 'notifications' },
-  star: { ios: 'star.fill', android: 'star', web: 'star' },
-} as const;
-
-/** Blinkist's timeline: one continuous bar with icons, fading out after the last step. */
-function TrialTimeline({
-  rows,
-  compact,
-}: {
-  rows: { icon: TimelineIcon; title: string; text: string }[];
-  compact?: boolean;
-}) {
-  return (
-    <View style={[styles.trialTimeline, compact && styles.trialTimelineCompact]}>
-      {rows.map((row, i) => {
-        const last = i === rows.length - 1;
-        return (
-          <Reveal key={row.title} style={styles.trialRow}>
-            <View style={[styles.trialBar, i === 0 && styles.trialBarFirst, last && styles.trialBarLast]}>
-              {last ? (
-                <Svg width="100%" height="100%" style={StyleSheet.absoluteFill}>
-                  <Defs>
-                    <LinearGradient id="trialFade" x1="0" y1="0" x2="0" y2="1">
-                      <Stop offset="0" stopColor={Nocturne.cta} stopOpacity={1} />
-                      <Stop offset="0.45" stopColor={Nocturne.cta} stopOpacity={1} />
-                      <Stop offset="1" stopColor={Nocturne.cta} stopOpacity={0} />
-                    </LinearGradient>
-                  </Defs>
-                  <Rect width="100%" height="100%" fill="url(#trialFade)" />
-                </Svg>
-              ) : null}
-              <View style={styles.trialIcon}>
-                <SymbolView name={TIMELINE_SYMBOLS[row.icon]} size={12} tintColor={Nocturne.onCta} />
-              </View>
-            </View>
-            <View style={[styles.trialBody, compact && styles.trialBodyCompact]}>
-              <Text style={[styles.trialTitle, compact && styles.trialTitleCompact]}>{row.title}</Text>
-              <Text style={[styles.trialText, compact && styles.trialTextCompact]}>{row.text}</Text>
-            </View>
-          </Reveal>
-        );
-      })}
-    </View>
-  );
-}
-
 /** Blinkist's pinned button: the action on top, the reassurance underneath, in one pill. */
 function TwoLineCta({ title, sub, onPress }: { title: string; sub: string; onPress: () => void }) {
   return (
@@ -1147,89 +1178,23 @@ function TwoLineCta({ title, sub, onPress }: { title: string; sub: string; onPre
   );
 }
 
-/**
- * "See other plans": a bottom sheet with the yearly plan still selected and monthly
- * underneath, the way Calm hides its monthly plan. Choosing a plan is not a trial toggle.
- */
-function PlansSheet({
-  open,
-  plan,
-  onPlan,
-  onClose,
-  onBuy,
-}: {
-  open: boolean;
-  plan: Answers['plan'];
-  onPlan: (plan: Answers['plan']) => void;
-  onClose: () => void;
-  onBuy: () => void;
-}) {
-  // Its preview notes open inside the sheet: a second Modal would open behind it.
-  const [note, setNote] = useState<string | null>(null);
-  const link = (label: string, message: string) => (
-    <Text accessibilityRole="link" style={styles.link} onPress={() => setNote(message)}>
-      {label}
-    </Text>
-  );
-  const trial = PRICES.trialEligible;
-  const yearly = money(PRICES.annual);
-  const monthly = money(PRICES.monthly);
-  const annual = plan === 'annual';
-  return (
-    <Modal visible={open} transparent animationType="slide" onRequestClose={onClose}>
-      <Pressable style={styles.sheetScrim} onPress={onClose} accessibilityLabel="Close plans" />
-      <View style={styles.sheet}>
-        <View style={styles.sheetHandle} />
-        <Text style={styles.sheetTitle} accessibilityRole="header">
-          All plans
-        </Text>
-        <View accessibilityRole="radiogroup" style={styles.sheetRows}>
-          <PlanOption
-            selected={annual}
-            onPress={() => onPlan('annual')}
-            title="Yearly"
-            detail={trial ? `${PRICES.trialDays} days free, then ${yearly}/year` : `${yearly}/year`}
-            badge={`Save ${annualSavings()}%`}
-          />
-          <PlanOption
-            selected={!annual}
-            onPress={() => onPlan('monthly')}
-            title="Monthly"
-            detail={`${monthly}/month · no free trial`}
-          />
-        </View>
-        <TwoLineCta
-          title={annual ? (trial ? 'Start my free trial' : `Subscribe for ${yearly}/year`) : `Subscribe for ${monthly}/month`}
-          sub={annual && trial ? 'No payment due now · cancel anytime' : 'Billed today · cancel anytime'}
-          onPress={onBuy}
-        />
-        <Text style={styles.paywallFine}>
-          {annual ? `${trial ? `${PRICES.trialDays} days free, then ` : ''}${yearly}/year` : `${monthly}/month`}. Auto-renews
-          unless cancelled at least 24 hours before renewal. {link('Terms', 'Your Terms of Use open here.')} ·{' '}
-          {link('Privacy', 'Your Privacy Policy opens here.')}
-        </Text>
-      </View>
-      {note ? (
-        <View style={StyleSheet.absoluteFill}>
-          <PromptCard message={note} onContinue={() => setNote(null)} />
-        </View>
-      ) : null}
-    </Modal>
-  );
-}
-
-function PlanOption({
+/** One plan on the paywall: radio, name and badge on top, billed price, then the detail line. */
+function PlanCard({
   selected,
   onPress,
   title,
+  price,
   detail,
   badge,
+  compact,
 }: {
   selected: boolean;
   onPress: () => void;
   title: string;
+  price: string;
   detail: string;
   badge?: string;
+  compact?: boolean;
 }) {
   return (
     <Pressable
@@ -1239,20 +1204,24 @@ function PlanOption({
       }}
       accessibilityRole="radio"
       accessibilityState={{ checked: selected }}
-      style={[styles.planOption, selected && styles.planOptionSelected]}
+      accessibilityLabel={`${title}, ${price}. ${detail}${badge ? `. ${badge.replace('%', ' percent')}` : ''}`}
+      style={[styles.planOption, compact && styles.planOptionCompact, selected && styles.planOptionSelected]}
     >
       <View style={[styles.radio, selected && styles.radioOn]}>
         {selected ? <View style={styles.radioDot} /> : null}
       </View>
       <View style={styles.fill}>
-        <Text style={styles.planOptionTitle}>{title}</Text>
+        <View style={styles.planOptionTop}>
+          <Text style={styles.planOptionTitle}>{title}</Text>
+          {badge ? (
+            <View style={styles.badge}>
+              <Text style={styles.badgeText}>{badge}</Text>
+            </View>
+          ) : null}
+        </View>
+        <Text style={styles.planOptionPrice}>{price}</Text>
         <Text style={styles.planOptionDetail}>{detail}</Text>
       </View>
-      {badge ? (
-        <View style={styles.badge} accessible accessibilityLabel={badge.replace('%', ' percent')}>
-          <Text style={styles.badgeText}>{badge}</Text>
-        </View>
-      ) : null}
     </Pressable>
   );
 }
@@ -1283,6 +1252,7 @@ const styles = StyleSheet.create({
   top: { flex: 1, paddingTop: 20 },
   center: { flex: 1, justifyContent: 'center' },
   bottomStack: { flex: 1, justifyContent: 'flex-end', paddingBottom: 24 },
+  gap8: { height: 8 },
   gap16: { height: 16 },
   gap32: { height: 32 },
   sub: { marginTop: 10 },
@@ -1290,16 +1260,21 @@ const styles = StyleSheet.create({
   questionHead: {},
   optionsWrap: { paddingBottom: 8 },
   optionsCentered: { flex: 1, justifyContent: 'center' },
-  timeWrap: { marginTop: 28 },
+  moonQuestion: { flex: 1, justifyContent: 'space-between', gap: 22, paddingBottom: 8 },
+  moonTitle: { textAlign: 'center', fontSize: 24, lineHeight: 29 },
+  moonSub: { textAlign: 'center', color: Nocturne.text },
+  // Bedtime and wake sit under the quiz moon's curve, so they run tight.
+  timeWrap: { marginTop: 16 },
   warning: { marginTop: 28, textAlign: 'center', color: Nocturne.text },
   beats: { marginTop: 32, gap: 26 },
   beat: { gap: 6 },
   beatLabel: { color: Nocturne.text2, fontSize: 12, fontWeight: '600', letterSpacing: 1.4, textTransform: 'uppercase' },
   beatText: { ...DisplayFont, color: Nocturne.text, fontSize: 26, lineHeight: 30 },
   // Numbers use the serif upright. Italic serif always means Trundle is talking.
-  statNumber: { ...NUMBER_FONT, color: Nocturne.accent ?? Nocturne.text, fontSize: 108, lineHeight: 112, letterSpacing: -1 },
+  // The stat sits on the quiz moon, centred like the rest of the moon pages.
+  statNumber: { ...NUMBER_FONT, color: Nocturne.accent ?? Nocturne.text, fontSize: 108, lineHeight: 112, letterSpacing: -1, textAlign: 'center' },
   revealUnit: { color: Nocturne.text, fontSize: 24, fontWeight: '600' },
-  statText: { color: Nocturne.text, fontSize: 20, lineHeight: 27, marginTop: 8 },
+  statText: { color: Nocturne.text, fontSize: 20, lineHeight: 27, marginTop: 8, textAlign: 'center' },
   mathList: { marginTop: 32, gap: 16 },
   mathRow: { flexDirection: 'row', alignItems: 'center', gap: 12 },
   faded: { opacity: 0.35 },
@@ -1312,31 +1287,19 @@ const styles = StyleSheet.create({
   paywallVoice: { marginTop: 6, marginHorizontal: 24 },
   gridArea: { flex: 1, justifyContent: 'center', marginVertical: 16, minHeight: 80 },
   gridCaption: { color: Nocturne.text2, fontSize: 15, lineHeight: 20, marginTop: 12, textAlign: 'center' },
-  strong: { color: Nocturne.text, fontWeight: '600' },
   hiddenBlock: { opacity: 0 },
-  appGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 10, marginTop: 24, marginBottom: 20, justifyContent: 'space-between' },
+  appsCard: { marginTop: 28 },
   plan: { marginVertical: 28, gap: 14 },
   planRow: { flexDirection: 'row', gap: 14, alignItems: 'baseline' },
   planWhen: { width: 78, color: Nocturne.text2, fontSize: 14, fontWeight: '600', fontVariant: ['tabular-nums'] },
   planWhat: { flex: 1, color: Nocturne.text, fontSize: 17, lineHeight: 23 },
   change: { color: Nocturne.text2, fontSize: 14, fontWeight: '600', textDecorationLine: 'underline' },
   reassure: { color: Nocturne.text, fontSize: 15, lineHeight: 21, fontWeight: '500' },
-  shiftRow: { marginTop: 28, flexDirection: 'row', justifyContent: 'center', marginBottom: 12 },
+  shiftRow: { marginTop: 14, flexDirection: 'row', justifyContent: 'center', marginBottom: 12 },
   // The user's side of the deal, so sans like every other non-Trundle headline.
   pledge: { fontSize: 32, lineHeight: 37 },
   payoffLifetime: { color: Nocturne.text2, fontSize: 17, lineHeight: 22, marginTop: 6, textAlign: 'center' },
   payoff: { ...NUMBER_FONT, color: Nocturne.accent ?? Nocturne.text, fontSize: 26, lineHeight: 32, letterSpacing: 0.2, textAlign: 'center' },
-  nextApple: {
-    marginTop: 28,
-    marginBottom: 20,
-    borderRadius: 16,
-    borderWidth: 1,
-    borderColor: Nocturne.edge,
-    padding: 16,
-    gap: 6,
-  },
-  nextAppleLabel: { color: Nocturne.text2, fontSize: 11, fontWeight: '700', letterSpacing: 1.2 },
-  nextAppleText: { color: Nocturne.text, fontSize: 15, lineHeight: 21 },
   maker: { color: Nocturne.text2, fontSize: 13, lineHeight: 18, marginTop: 8, marginBottom: 14 },
   onImage: { color: Nocturne.text },
   plansHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', gap: 12 },
@@ -1352,7 +1315,7 @@ const styles = StyleSheet.create({
   timelineBody: { flex: 1, paddingVertical: 8 },
   timelineLabel: { color: Nocturne.text, fontSize: 15, fontWeight: '600' },
   timelineText: { color: Nocturne.text2, fontSize: 14, lineHeight: 19, marginTop: 2 },
-  planCards: { gap: 10, marginTop: 18, marginBottom: 14 },
+  planCards: { gap: 10, marginTop: 18, marginBottom: 12 },
   planCard: {
     borderRadius: 18,
     padding: 16,
@@ -1372,7 +1335,10 @@ const styles = StyleSheet.create({
   link: { color: Nocturne.text, textDecorationLine: 'underline' },
   moonScrim: { backgroundColor: `${Nocturne.bg}8C` },
   moonScrimDim: { backgroundColor: `${Nocturne.bg}CC` },
-  paywall: { flex: 1, paddingTop: 4 },
+  paywall: { flex: 1, justifyContent: 'center', paddingBottom: 8 },
+  // Short phones have no spare height to centre in: start at the top so the title never clips.
+  paywallCompact: { justifyContent: 'flex-start', paddingBottom: 0 },
+  planSummary: { color: Nocturne.text, fontSize: 15, lineHeight: 20, textAlign: 'center', marginBottom: 4 },
   paywallTop: { flexDirection: 'row', justifyContent: 'flex-start' },
   paywallTitle: {
     color: Nocturne.text,
@@ -1384,27 +1350,7 @@ const styles = StyleSheet.create({
     marginTop: 8,
     marginHorizontal: 24,
   },
-  trialTimeline: { marginTop: 24 },
-  trialTimelineCompact: { marginTop: 14 },
-  trialBodyCompact: { paddingBottom: 10 },
-  trialTitleCompact: { fontSize: 17, lineHeight: 22 },
-  trialTextCompact: { fontSize: 14, lineHeight: 19 },
   paywallTitleCompact: { fontSize: 25, lineHeight: 30, marginTop: 0 },
-  trialRow: { flexDirection: 'row', gap: 16 },
-  trialBar: { width: 22, backgroundColor: Nocturne.cta, alignItems: 'center' },
-  trialBarFirst: { borderTopLeftRadius: 11, borderTopRightRadius: 11 },
-  trialBarLast: { backgroundColor: 'transparent' },
-  trialIcon: { height: 22, width: 22, alignItems: 'center', justifyContent: 'center', marginTop: 3 },
-  trialBody: { flex: 1, paddingBottom: 18 },
-  trialTitle: { color: Nocturne.text, fontSize: 20, lineHeight: 26, fontWeight: '700' },
-  trialText: { color: Nocturne.text2, fontSize: 16, lineHeight: 22, marginTop: 2 },
-  cancelLine: { color: Nocturne.text2, fontSize: 14, lineHeight: 19, textAlign: 'center', marginTop: 4 },
-  priceLine: { color: Nocturne.text, fontSize: 17, lineHeight: 24, textAlign: 'center', marginTop: 8 },
-  priceStrong: { fontWeight: '700' },
-  // Apple 3.1.2: the billed amount is the most prominent price; the per-month breakdown sits smaller.
-  pricePerMonth: { color: Nocturne.text2, fontSize: 14 },
-  otherPlans: { alignSelf: 'center', minHeight: 44, justifyContent: 'center', paddingHorizontal: 12, marginTop: 6 },
-  otherPlansLabel: { color: Nocturne.text, fontSize: 16, fontWeight: '600', textDecorationLine: 'underline' },
   faq: { marginTop: 20, marginBottom: 16, borderRadius: 16, backgroundColor: Nocturne.surface, padding: 20, gap: 8 },
   faqTitle: { color: Nocturne.text, fontSize: 17, fontWeight: '700' },
   faqText: { color: Nocturne.text2, fontSize: 16, lineHeight: 22 },
@@ -1422,29 +1368,19 @@ const styles = StyleSheet.create({
   twoLineTitle: { color: Nocturne.onCta, fontSize: 18, fontWeight: '700' },
   twoLineSub: { color: Nocturne.onCta, opacity: 0.7, fontSize: 13, fontWeight: '500', marginTop: 1 },
   paywallFine: { color: Nocturne.text2, fontSize: 12, lineHeight: 16, textAlign: 'center' },
-  sheetScrim: { flex: 1, backgroundColor: 'rgba(0,0,0,0.6)' },
-  sheet: {
-    backgroundColor: Nocturne.surface,
-    borderTopLeftRadius: 24,
-    borderTopRightRadius: 24,
-    paddingHorizontal: 24,
-    paddingTop: 10,
-    paddingBottom: 34,
-    gap: 14,
-  },
-  sheetHandle: { alignSelf: 'center', width: 36, height: 5, borderRadius: 3, backgroundColor: Nocturne.progressTrack },
-  sheetTitle: { color: Nocturne.text, fontSize: 20, fontWeight: '700', textAlign: 'center', marginTop: 4 },
-  sheetRows: { gap: 10 },
   planOption: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 14,
     borderRadius: 16,
-    padding: 16,
-    borderWidth: 1,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    backgroundColor: Nocturne.surface,
+    // Always 2 wide, so selecting a plan never nudges the layout.
+    borderWidth: 2,
     borderColor: Nocturne.edge,
   },
-  planOptionSelected: { borderWidth: 2, borderColor: Nocturne.text },
+  planOptionSelected: { borderColor: Nocturne.text, backgroundColor: Nocturne.raised },
   radio: {
     width: 22,
     height: 22,
@@ -1456,8 +1392,18 @@ const styles = StyleSheet.create({
   },
   radioOn: { borderColor: Nocturne.text, backgroundColor: Nocturne.text },
   radioDot: { width: 8, height: 8, borderRadius: 4, backgroundColor: Nocturne.onCta },
+  planOptionCompact: { paddingVertical: 10 },
+  planOptionTop: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: 8 },
   planOptionTitle: { color: Nocturne.text, fontSize: 17, fontWeight: '700' },
-  planOptionDetail: { color: Nocturne.text2, fontSize: 14, marginTop: 2 },
+  // Apple 3.1.2: the billed price is the largest; the per-month line sits under it, smaller.
+  planOptionPrice: { color: Nocturne.text, fontSize: 19, fontWeight: '700', marginTop: 2, fontVariant: ['tabular-nums'] },
+  planOptionDetail: { color: Nocturne.text, opacity: 0.75, fontSize: 14, marginTop: 1, fontVariant: ['tabular-nums'] },
+  checks: { gap: 10, marginTop: 18, alignSelf: 'center' },
+  checksCompact: { marginTop: 10, gap: 6 },
+  checkRow: { flexDirection: 'row', alignItems: 'center', gap: 10 },
+  checkText: { color: Nocturne.text, fontSize: 16, flexShrink: 1 },
+  remindRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 12, minHeight: 44 },
+  remindLabel: { color: Nocturne.text, fontSize: 15, flexShrink: 1 },
   modalScrim: {
     flex: 1,
     backgroundColor: 'rgba(0,0,0,0.6)',

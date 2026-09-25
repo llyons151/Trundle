@@ -91,11 +91,11 @@ export function yearSentence(count: number, unit: 'hour' | 'day'): string {
   return `That’s ${count.toLocaleString('en-US')} ${unit}${count === 1 ? '' : 's'} a year.`;
 }
 
-/** "That’s over 5 years of your life, gone." / nothing under a year. */
+/** "That’s over 5 years of your life." / nothing under a year. */
 export function lifetimeSentence(lifetimeDays: number): string {
   const years = Math.floor(lifetimeDays / 365);
   if (years < 1) return '';
-  return `That’s over ${years === 1 ? 'a year' : `${years} years`} of your life, gone.`;
+  return `That’s over ${years === 1 ? 'a year' : `${years} years`} of your life.`;
 }
 
 /** 7.5 → "7½", 0.5 → "½", 8 → "8". */

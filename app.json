@@ -33,7 +33,13 @@
           "imageWidth": 76
         }
       ],
-      "expo-video"
+      "expo-video",
+      [
+        "expo-sensors",
+        {
+          "motionPermission": "Trundle counts your steps each morning to wake your apps. That’s all it uses motion for."
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true,

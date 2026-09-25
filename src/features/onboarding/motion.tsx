@@ -142,7 +142,7 @@ export function WordsIn({
   const words = text.split(' ').filter(Boolean);
   return (
     <View
-      style={[styles.words, { columnGap: size * 0.24 }]}
+      style={[styles.words, flat.textAlign === 'center' && styles.wordsCentered, { columnGap: size * 0.24 }]}
       accessible
       accessibilityLabel={text}
       accessibilityRole={role}
@@ -163,4 +163,5 @@ export function WordsIn({
 const styles = StyleSheet.create({
   fill: { flex: 1 },
   words: { flexDirection: 'row', flexWrap: 'wrap' },
+  wordsCentered: { justifyContent: 'center' },
 });

@@ -16,6 +16,7 @@ import { Nocturne } from '@/constants/nocturne';
 
 import * as haptic from './haptics';
 import { Reveal } from './motion';
+import { useOnMoon } from './ui';
 
 const DAY = 24 * 60;
 const HOURS = ['12', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11'];
@@ -46,8 +47,10 @@ export function TimeWheel({
 }) {
   const { height } = useWindowDimensions();
   // Seven rows on a normal phone, five on short ones so the page still fits without scrolling.
+  // The quiz moon leaves less room under its curve, so it drops two rows there.
+  const moon = useOnMoon();
   const row = height < 700 ? 34 : 40;
-  const visible = height < 700 ? 5 : 7;
+  const visible = (height < 700 ? 5 : 7) - (moon ? 2 : 0);
 
   const hours24 = Math.floor(value / 60);
   const minute = value % 60;
@@ -94,7 +97,7 @@ export function TimeWheel({
       </View>
 
       <View style={styles.presetBlock}>
-        <Text style={styles.presetsLabel}>Presets</Text>
+        <Text style={[styles.presetsLabel, moon && styles.presetsLabelOnMoon]}>Presets</Text>
         <View style={styles.presets} accessibilityRole="radiogroup">
           {presets.map((preset) => {
             const selected = preset === value;
@@ -337,6 +340,7 @@ const styles = StyleSheet.create({
   itemTextWide: { fontSize: 32, fontWeight: '600' },
   presetBlock: { gap: 10 },
   presetsLabel: { color: Nocturne.text2, fontSize: 14, fontWeight: '500' },
+  presetsLabelOnMoon: { color: Nocturne.text },
   presets: { flexDirection: 'row', gap: 8 },
   preset: {
     flex: 1,

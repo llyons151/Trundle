@@ -140,8 +140,10 @@ hourly breakdowns are unknown.
 **B. Quiz (8)**
 
 4–7. Q1–Q4.
-8. Interstitial: one cited statistic (Pew: 62% of 18–29s say their phone hurts
-   their sleep) and a quip from him.
+8. Interstitial: one cited statistic (Reviews.org: about 85% of U.S. adults check
+   their phone within 10 minutes of waking) and a quip from him that echoes their
+   morning-minutes answer. It follows the morning question, so it stays on the
+   morning angle. Reviews.org is an industry survey, weaker than Pew.
 9–11. Q5–Q7.
 
 **C. Reveal (2)**
@@ -189,7 +191,7 @@ italic serif, and badges as an inverted white pill. **No glow.**
    - "Passes for sick days"
 4. **Timeline:**
    - **Today:** "Tonight's lock arms. No payment due now."
-   - **Day 5:** "We'll remind you with a notification that your trial is ending." (backed by the in-app fallback when notifications are off)
+   - **Day 5:** "I'll remind you with a notification that your trial is ending." (backed by the in-app fallback when notifications are off)
    - **Day 7:** "You'll be charged on {date}, cancel anytime before."
 5. Plans: only yearly is on the page. The price line ("Unlimited free access for
    7 days, then **$39.99 per year**. ($3.33/month)") sits under the timeline and
@@ -397,3 +399,126 @@ fully fixed. The morning angle and the reveal are only partly fixed: the quiz st
 opens on nights, and the grid is still dense. Still open: a live 20-step walk before
 the paywall and an activation plan for the first morning (see
 [MORNING_ANGLE.md](MORNING_ANGLE.md)), real footage, and funnel data.
+
+## Rating, September 25, 2026
+
+**8/10** as a pre-launch flow, up from 7.5. Based on screenshots of all 27 screens at
+390×844 (web preview, taken at 3 AM so the late-night copy showed) and the code.
+
+**What improved:** the `motion` screen is now a live 10-step test, which closes the
+"prove it works before paying" gap. The `ready` schedule card (times, the 200-step
+line, real app icons) is the best setup screen. The mocked Apple alert tells people
+what's coming, and `tried-echo` handles the main objection well. `tomorrow` is still
+the strongest screen.
+
+**Costing points:**
+1. **The reveal lifetime line breaks the voice rules.** "That's over 2 years of your
+   life, gone." is guilt, which VOICE.md and this doc both rule out
+   (`lifetimeSentence` in `estimate.ts`). The age hint, "So does how much time is left
+   to spend.", reads morbid for the same reason.
+2. **The quiz has a lot of empty space.** Every moon question has about 150 px of
+   blurred moon between the title and the answers.
+3. **`offer` is the weakest screen before the money.** It's plain text on black, with
+   the bottom 40% empty. It says "TikTok, Instagram and 1 more" when three names
+   would fit.
+4. **Paywall details:** the title leaves "works" alone on the second line. The
+   timeline icons are 12 px and hard to see. "We'll remind you" breaks from his "I".
+5. **The ending is three sparse screens** (`armed`, `first-morning`, `done`), with the
+   top half of each empty. `done` could fold into `first-morning`.
+6. **Nothing is measured yet.** Same as before: anything above 8 needs TestFlight data.
+
+**Fixed the same day:** point 5. `done` is merged into `first-morning`, which is now
+the last screen. It ends with "That's it. Go to sleep." / "I'll be asleep. Don't wake
+me." `armed` and `first-morning` no longer get the old top padding, which dated from
+when the moon rested in the top corner, so their content sits centered. Point 1 is
+still open: the lifetime line may work well as loss framing, and it's the founder's
+decision whether to keep it and add an exception to VOICE.md.
+Point 1, later the same day: the lifetime line now reads "That's over 2 years of your
+life." The loss framing stays, and "gone" is dropped.
+Also fixed the same day: the age hint is now just "Sleep needs change with age." On the
+paywall, the title breaks as "How your free / trial works" with no orphan, the timeline
+icons went from 12 to 15 px on a wider bar, and Day 5 says "I'll remind you". The price
+line is still fully visible at 390×844.
+
+## Cut/move check against this doc, September 25, 2026
+
+A code-only review suggested six changes. Checked against the evidence above, four
+of them don't hold up:
+
+| Suggestion | Verdict | Why |
+|---|---|---|
+| Cut 3–4 screens before the reveal | **Rejected as a goal** | Longer onboarding beat shorter (Lose It, Adapty [M]); 27 screens is in the 17–42 range [W]. Cut only screens that don't earn their place. |
+| Echo or cut Q1 (`nights`) | **Supported: echo it** | Personalization gave +8.5% trial starts [M]; the table above says Q1 is "echoed in his lines", but the code never uses it. |
+| Move age next to bedtime/wake | **Rejected** | No evidence on placement. The spec puts it at Q5, and the lifetime line needs it before the reveal. |
+| Cut the 85% statistic | **Rejected** | It's in the spec (screen 8) and sets up the morning angle. No evidence either way; the weak Reviews.org source is the only open point. |
+| Merge `ready` and `commit` | **Rejected** | The IKEA effect needs completed setup [S]. The flow already has fewer setup screens than the spec (8 vs 11 between the reveal and the price). |
+| Wire or delete `declined` | **Supported: wire it** | The spec's declined path calls for one honest fallback screen. Right now nothing reaches it, and the paywall's X just exits. |
+
+**One supported move:** bedtime and wake belong to setup, after the reveal (spec
+screens 17–18). They're in the quiz now, but the reveal number doesn't use them
+(Formula A is `S × n + M × n`). Moving them to after the reveal and before `tomorrow`
+(the demo shows the wake time) puts the number 2 screens earlier without cutting
+anything, and turns them into investment.
+
+**Applied the same day:**
+- **`bedtime` and `wake` now come after the reveal**, before `tomorrow`. The reveal is
+  screen 15 of 27 instead of 17. The math loader's third line changed from "Your
+  schedule" to "Nights a week", so it only lists what the number is actually made of.
+- **Q1 is echoed** as the loader headline (`NIGHTS_ECHO` in `content.ts`, e.g.
+  "“One more video.” Counting all of them."). "Can't sleep" gets sympathy, not advice.
+- **`declined` is wired up.** Exit on `offer` or `plans` goes to "Fair." once. After
+  that, Exit really exits, so the follow-up offer never loops.
+
+**Re-rated: 8/10**, from web-preview screenshots at 390×844 and the code. What's
+still open: real footage and funnel data.
+
+**Founder decisions, September 25, 2026:**
+- **The quiz stays night-first.** It follows the order of the product (bedtime, then
+  morning) and of the moon scene, and Trundle sells on both. This overrides
+  MORNING_ANGLE.md §4's morning-first quiz, which was judgment [J] with teardown
+  support [W] and no test data. Mornings are still covered by the opener, the `deal`
+  beats, the morning statistic, the reveal's morning line, the `tomorrow` demo and the
+  step test. A morning-first Q1 can be an A/B test once there's traffic.
+- **`tried` doesn't need a second echo.** Its job is handling the objection right
+  away, on `tried-echo`. The paywall already echoes Q6 and Q7, and repeating a third
+  answer there would be the kind of bloat that was cut from the reveal.
+- **Re-rated after these decisions: 8.5/10.** With both points settled, nothing is
+  left to fix in the preview's structure or copy. The rest has to come from the real
+  build: native Screen Time, pedometer and StoreKit, real lock footage, and
+  TestFlight funnel data.
+
+## Paywall redesign, September 25, 2026
+
+The `plans` page was rebuilt from two references the user supplied: a dark card
+paywall (title, checklist, radio plan rows, pill button) and a plant app's "Try for
+free" plan list (Lifetime, Annual (labelled Yearly there), Monthly, reminder toggle). **It replaces the
+Blinkist trial timeline and the "See other plans" sheet.** That gives up Blinkist's
+published result (+23% trial starts, −55% complaints) in exchange for a layout that
+shows all three plans side by side. It's worth an A/B test once there's traffic.
+
+**Top to bottom:** the title "Try Trundle free", his line, then three checks
+("TikTok and 2 more sleep at 11:30 PM", "Awake again after 200 morning steps",
+"Passes for sick days and travel"). Then the plan cards:
+- **Lifetime:** $99.99 once. "Pay once. Yours forever." ($99.99 is placeholder
+  pricing, in line with Jomo's $99.99 and AppBlock's $89.99; see VALIDATION_RESEARCH.)
+- **Annual, selected by default:** $39.99/year, then "($3.33/month) · 7 days free"
+  under it, with a computed "Save 66%" badge against 12 months of monthly. (Labelled
+  "Annual", not "Yearly", at the user's request.)
+- **Monthly:** $9.99/month, "No free trial".
+
+Under the cards is "Remind me before the trial ends", on by default and shown only
+for the trial. The button and fine print change with the plan: "Start 7-day free
+trial", "Subscribe for $9.99/month" or "Buy lifetime for $99.99".
+
+**Deliberately different from the references:**
+- **The per-month price sits under the billed price, not in place of it.** Apple
+  3.1.2 requires the billed amount to be the most prominent price, and this doc
+  records a Sept 21 2026 rejection for exactly that. The plant reference does the
+  same thing ($220, then "$18.33 per month"). The annual plan still looks cheaper,
+  because $3.33/month sits right above the $9.99 monthly plan.
+- **No struck-through prices** (the plant app's $250 → $220). There was never a
+  higher price, so a "was" price would be a fake discount (FTC).
+- **No purple art or glow**, because of the project's no-glow rule. The cards are
+  Nocturne monochrome, with a white border on the selected plan.
+- **The reminder toggle isn't a trial toggle.** It doesn't change the plan or the
+  price, so the January 2026 toggle ban doesn't apply.
