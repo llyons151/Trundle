@@ -1,0 +1,505 @@
+import { SymbolView } from 'expo-symbols';
+import { useEffect, useRef, useState, type PropsWithChildren, type ReactNode } from 'react';
+import {
+  AccessibilityInfo,
+  Platform,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+  type StyleProp,
+  type TextStyle,
+} from 'react-native';
+import Animated, {
+  useAnimatedStyle,
+  useReducedMotion,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
+import { DisplayFont, Nocturne } from '@/constants/nocturne';
+
+import * as haptic from './haptics';
+import { MotionPage, Reveal, WordsIn, type TextMotion } from './motion';
+
+/** Display type is already large; let it grow a little with Dynamic Type, not 3x. */
+export const DISPLAY_MAX_SCALE = 1.3;
+
+type ShellProps = PropsWithChildren<{
+  /** 0–1, or null to hide the bar. */
+  progress: number | null;
+  onBack?: () => void;
+  onExit: () => void;
+  footer?: ReactNode;
+}>;
+
+/** Fixed full-screen page: top bar, content, and a bottom action that never scrolls away. */
+export function Shell({ progress, onBack, onExit, footer, children }: ShellProps) {
+  // Pad with the provider's window insets; the native SafeAreaView can measure zero inside a full-screen modal.
+  const insets = useSafeAreaInsets();
+  return (
+    <View style={[styles.shell, { paddingTop: insets.top, paddingBottom: insets.bottom }]}>
+      <View style={styles.topBar}>
+        <Pressable
+          onPress={onBack}
+          disabled={!onBack}
+          hitSlop={12}
+          accessibilityRole="button"
+          accessibilityLabel="Back"
+          style={[styles.roundButton, !onBack && styles.hidden]}
+        >
+          <SymbolView
+            name={{ ios: 'chevron.left', android: 'arrow_back', web: 'arrow_back' }}
+            size={16}
+            tintColor={Nocturne.text}
+          />
+        </Pressable>
+        {progress === null ? <View style={styles.progress} /> : <ProgressBar value={progress} />}
+        <Pressable onPress={onExit} hitSlop={8} accessibilityRole="button" accessibilityLabel="Exit preview" style={styles.exitButton}>
+          <Text style={styles.exit}>Exit</Text>
+        </Pressable>
+      </View>
+      {/* Onboarding pages never scroll: every screen is laid out to fit, with tighter layouts on short phones. */}
+      <View testID="onboarding-body" style={[styles.scroll, styles.body]}>{children}</View>
+      {footer ? <View testID="onboarding-footer" style={styles.footer}>{footer}</View> : null}
+    </View>
+  );
+}
+
+/** One continuous bar that eases to each new value. */
+function ProgressBar({ value }: { value: number }) {
+  const reduced = useReducedMotion();
+  const fill = useSharedValue(value);
+  useEffect(() => {
+    fill.value = reduced ? value : withTiming(value, { duration: 350 });
+  }, [value, reduced, fill]);
+  const fillStyle = useAnimatedStyle(() => ({ width: `${fill.value * 100}%` }));
+  return (
+    <View
+      style={[styles.progress, styles.track]}
+      accessibilityRole="progressbar"
+      accessibilityValue={{ min: 0, max: 100, now: Math.round(value * 100) }}
+    >
+      <Animated.View style={[styles.trackFill, fillStyle]} />
+    </View>
+  );
+}
+
+/** One page of onboarding. Keyed by step, so every entrance replays on each page. */
+export function StepEnter({ motion = 'drift', children }: PropsWithChildren<{ motion?: TextMotion }>) {
+  return <MotionPage motion={motion}>{children}</MotionPage>;
+}
+
+export function Eyebrow({ children }: PropsWithChildren) {
+  return (
+    <Reveal>
+      <Text style={styles.eyebrow}>{children}</Text>
+    </Reveal>
+  );
+}
+
+export function Title({ children, style }: { children: string; style?: StyleProp<TextStyle> }) {
+  return <WordsIn text={children} style={[styles.title, style]} header />;
+}
+
+export function Body({ children, style }: PropsWithChildren<{ style?: StyleProp<TextStyle> }>) {
+  return (
+    <Reveal>
+      <Text style={[styles.body2, style]}>{children}</Text>
+    </Reveal>
+  );
+}
+
+/** Trundle talking: heavy italic serif, entering with the page's text motion. */
+export function Voice({
+  text,
+  size = 34,
+  delay = 0,
+  header,
+  sub,
+  center,
+}: {
+  text: string;
+  size?: number;
+  /** The earliest this line starts, in ms after the page opens. */
+  delay?: number;
+  /** Set when the line is the page's title, so VoiceOver announces it as one. */
+  header?: boolean;
+  /** A secondary line under the headline. Always rises in as one line (Moonrise), whatever the page's motion. */
+  sub?: boolean;
+  /** Centered text. Only for sub lines, which render as one text run. */
+  center?: boolean;
+}) {
+  return (
+    <WordsIn
+      key={text}
+      text={text}
+      style={[styles.voice, { fontSize: size, lineHeight: size * 1.08 }, center && { textAlign: 'center' }]}
+      delay={delay}
+      header={header}
+      motion={sub ? 'moonrise' : undefined}
+      maxFontSizeMultiplier={DISPLAY_MAX_SCALE}
+    />
+  );
+}
+
+/** Footer buttons fade up shortly after the page's first line starts, without waiting for it to finish. */
+export function FooterEnter({ children }: PropsWithChildren) {
+  const reduced = useReducedMotion();
+  return (
+    <Animated.View
+      style={[
+        styles.footerStack,
+        !reduced && {
+          animationName: {
+            from: { opacity: 0, transform: [{ translateY: 8 }] },
+            to: { opacity: 1, transform: [{ translateY: 0 }] },
+          },
+          animationDuration: '420ms',
+          animationDelay: '450ms',
+          animationTimingFunction: 'ease-out',
+          animationFillMode: 'backwards',
+        },
+      ]}
+    >
+      {children}
+    </Animated.View>
+  );
+}
+
+export function PrimaryButton({
+  label,
+  onPress,
+  disabled,
+}: {
+  label: string;
+  onPress: () => void;
+  disabled?: boolean;
+}) {
+  return (
+    <Pressable
+      onPress={() => {
+        haptic.tap();
+        onPress();
+      }}
+      disabled={disabled}
+      accessibilityRole="button"
+      style={({ pressed }) => [styles.cta, disabled && styles.ctaDisabled, pressed && styles.pressed]}
+    >
+      <Text style={[styles.ctaLabel, disabled && styles.ctaLabelDisabled]}>{label}</Text>
+    </Pressable>
+  );
+}
+
+export function TextButton({ label, onPress }: { label: string; onPress: () => void }) {
+  return (
+    <Pressable onPress={onPress} accessibilityRole="button" hitSlop={8} style={styles.textButton}>
+      <Text style={styles.textButtonLabel}>{label}</Text>
+    </Pressable>
+  );
+}
+
+/** Single-choice list. Selecting an option advances after a short beat. */
+export function Options<T>({
+  options,
+  value,
+  onChoose,
+}: {
+  options: { label: string; value: T }[];
+  value: T | undefined;
+  onChoose: (value: T) => void;
+}) {
+  return (
+    <View style={styles.options} accessibilityRole="radiogroup">
+      {options.map((option) => {
+        const selected = option.value === value;
+        return (
+          <Reveal key={option.label}>
+            <Pressable
+              onPress={() => {
+                haptic.tap();
+                onChoose(option.value);
+              }}
+              accessibilityRole="radio"
+              accessibilityState={{ checked: selected }}
+              style={({ pressed }) => [styles.option, selected && styles.optionSelected, pressed && styles.pressed]}
+            >
+              <Text style={[styles.optionLabel, selected && styles.optionLabelSelected]}>{option.label}</Text>
+            </Pressable>
+          </Reveal>
+        );
+      })}
+    </View>
+  );
+}
+
+export function Chip({ label, selected, onPress }: { label: string; selected: boolean; onPress: () => void }) {
+  return (
+    <Reveal style={styles.appChipSlot}>
+      <Pressable
+        onPress={() => {
+          haptic.tap();
+          onPress();
+        }}
+        accessibilityRole="checkbox"
+        accessibilityState={{ checked: selected }}
+        style={({ pressed }) => [styles.appChip, selected && styles.chipSelected, pressed && styles.pressed]}
+      >
+        <Text style={[styles.appChipLabel, selected && styles.chipLabelSelected]}>{label}</Text>
+      </Pressable>
+    </Reveal>
+  );
+}
+
+/** Marks anything simulated in this draft, per GAME_PLAN: never imply a native feature works. */
+export function PreviewNote({ children }: PropsWithChildren) {
+  return (
+    <Reveal style={styles.previewNote}>
+      <Text style={styles.previewLabel}>PREVIEW</Text>
+      <Text style={styles.previewText}>{children}</Text>
+    </Reveal>
+  );
+}
+
+const HOLD_MS = 1600;
+const DONE_BEAT_MS = 700;
+const QUICK_TAP_MS = 350;
+const HINT_MS = 1800;
+
+// Mobile browsers turn a long press into text selection or a callout menu, which cancels the hold.
+const noLongPressMenu =
+  Platform.OS === 'web'
+    ? ({ userSelect: 'none', WebkitUserSelect: 'none', WebkitTouchCallout: 'none', touchAction: 'none' } as object)
+    : null;
+
+/**
+ * Press and hold to agree. Haptics build while the fill grows; letting go resets it.
+ * VoiceOver users get the same agreement through the default activate action.
+ */
+export function HoldButton({
+  label,
+  doneLabel,
+  onComplete,
+}: {
+  label: string;
+  doneLabel: string;
+  onComplete: () => void;
+}) {
+  const progress = useSharedValue(0);
+  const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const pulse = useRef<ReturnType<typeof setInterval> | undefined>(undefined);
+  const [phase, setPhase] = useState<'idle' | 'holding' | 'hint' | 'done'>('idle');
+  const pressedAt = useRef(0);
+  const hintTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const screenReader = useScreenReader();
+
+  const stopTimers = () => {
+    if (timer.current) clearTimeout(timer.current);
+    if (pulse.current) clearInterval(pulse.current);
+    if (hintTimer.current) clearTimeout(hintTimer.current);
+  };
+
+  useEffect(() => stopTimers, []);
+
+  const fillStyle = useAnimatedStyle(() => ({ width: `${progress.value * 100}%` }));
+
+  const finish = () => {
+    stopTimers();
+    progress.value = 1;
+    setPhase('done');
+    haptic.done();
+    timer.current = setTimeout(onComplete, DONE_BEAT_MS);
+  };
+
+  const start = () => {
+    if (phase === 'done') return;
+    stopTimers();
+    pressedAt.current = Date.now();
+    setPhase('holding');
+    progress.value = withTiming(1, { duration: HOLD_MS });
+    let beat = 0;
+    pulse.current = setInterval(() => {
+      beat += 1;
+      if (beat > 5) haptic.thud();
+      else haptic.tick();
+    }, 200);
+    timer.current = setTimeout(finish, HOLD_MS);
+  };
+
+  const cancel = () => {
+    if (phase === 'done') return;
+    stopTimers();
+    progress.value = withTiming(0, { duration: 200 });
+    // A quick tap is the most common first try: say what to do instead of doing nothing.
+    if (Date.now() - pressedAt.current < QUICK_TAP_MS) {
+      haptic.tick();
+      setPhase('hint');
+      hintTimer.current = setTimeout(() => setPhase('idle'), HINT_MS);
+    } else {
+      setPhase('idle');
+    }
+  };
+
+  const text =
+    phase === 'done'
+      ? doneLabel
+      : phase === 'holding'
+        ? 'Keep holding'
+        : phase === 'hint'
+          ? 'Hold it. Don’t just tap.'
+          : label;
+
+  // Holding isn't practical with VoiceOver or Switch Control: offer a plain button instead.
+  if (screenReader && phase !== 'done') {
+    return <PrimaryButton label="I agree" onPress={finish} />;
+  }
+
+  return (
+    <Pressable
+      onPressIn={start}
+      onPressOut={cancel}
+      style={noLongPressMenu}
+      accessibilityRole="button"
+      accessibilityLabel={label}
+      accessibilityHint="Press and hold. With VoiceOver, double-tap to agree."
+      accessibilityActions={[{ name: 'activate' }]}
+      onAccessibilityAction={(event) => {
+        if (event.nativeEvent.actionName === 'activate' && phase !== 'done') finish();
+      }}
+    >
+      <View style={[styles.hold, noLongPressMenu]}>
+        <Animated.View style={[styles.holdFill, fillStyle]} />
+        <Text selectable={false} style={[styles.holdLabel, phase === 'done' && styles.holdLabelDone, noLongPressMenu]}>
+          {text}
+        </Text>
+      </View>
+    </Pressable>
+  );
+}
+
+function useScreenReader() {
+  const [enabled, setEnabled] = useState(false);
+  useEffect(() => {
+    // React Native Web can't detect screen readers reliably; the hold's activate action still covers it.
+    if (Platform.OS === 'web') return;
+    let active = true;
+    AccessibilityInfo.isScreenReaderEnabled().then((value) => {
+      if (active) setEnabled(value);
+    });
+    const subscription = AccessibilityInfo.addEventListener('screenReaderChanged', setEnabled);
+    return () => {
+      active = false;
+      subscription.remove();
+    };
+  }, []);
+  return enabled;
+}
+
+export const styles = StyleSheet.create({
+  shell: { flex: 1, backgroundColor: 'transparent' },
+  scroll: { flex: 1, minHeight: 0, overflow: 'hidden' },
+  hidden: { opacity: 0 },
+  topBar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 14,
+    paddingHorizontal: 16,
+    paddingTop: 6,
+    paddingBottom: 10,
+  },
+  roundButton: {
+    width: 34,
+    height: 34,
+    borderRadius: 17,
+    backgroundColor: Nocturne.frost,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  progress: { flex: 1 },
+  track: { height: 6, borderRadius: 3, backgroundColor: Nocturne.progressTrack, overflow: 'hidden' },
+  trackFill: { height: '100%', borderRadius: 3, backgroundColor: Nocturne.text },
+  exitButton: { minHeight: 44, minWidth: 44, alignItems: 'flex-end', justifyContent: 'center' },
+  // Neutral shadow (not a glow) keeps it legible over the moon in the corner.
+  exit: { color: Nocturne.text2, fontSize: 15, fontWeight: '500', textShadowColor: 'rgba(0,0,0,0.55)', textShadowRadius: 6 },
+  body: { paddingHorizontal: 24, paddingBottom: 16 },
+  footer: { paddingHorizontal: 24, paddingTop: 8, paddingBottom: 8, gap: 10 },
+  eyebrow: {
+    color: Nocturne.text2,
+    fontSize: 12,
+    fontWeight: '600',
+    letterSpacing: 1.6,
+    textTransform: 'uppercase',
+    marginBottom: 12,
+  },
+  title: { color: Nocturne.text, fontSize: 28, lineHeight: 33, fontWeight: '700', letterSpacing: -0.4 },
+  body2: { color: Nocturne.text2, fontSize: 16, lineHeight: 23 },
+  voice: { ...DisplayFont, color: Nocturne.text, letterSpacing: -0.3 },
+  footerStack: { gap: 10 },
+  cta: {
+    minHeight: 56,
+    paddingVertical: 14,
+    paddingHorizontal: 20,
+    borderRadius: 28,
+    backgroundColor: Nocturne.cta,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  ctaDisabled: { backgroundColor: Nocturne.raised },
+  ctaLabel: { color: Nocturne.onCta, fontSize: 17, fontWeight: '600' },
+  ctaLabelDisabled: { color: Nocturne.text3 },
+  pressed: { opacity: 0.75 },
+  textButton: { alignSelf: 'center', paddingVertical: 6 },
+  textButtonLabel: { color: Nocturne.text2, fontSize: 15, fontWeight: '500' },
+  options: { gap: 10 },
+  option: {
+    minHeight: 58,
+    borderRadius: 18,
+    backgroundColor: Nocturne.surface,
+    borderWidth: 1,
+    borderColor: Nocturne.edge,
+    paddingHorizontal: 18,
+    paddingVertical: 16,
+    justifyContent: 'center',
+  },
+  optionSelected: { backgroundColor: Nocturne.cta, borderColor: Nocturne.cta },
+  optionLabel: { color: Nocturne.text, fontSize: 17, fontWeight: '500' },
+  optionLabelSelected: { color: Nocturne.onCta },
+  chipSelected: { backgroundColor: Nocturne.cta },
+  chipLabelSelected: { color: Nocturne.onCta },
+  appChip: {
+    borderRadius: 16,
+    backgroundColor: Nocturne.surface,
+    borderWidth: 1,
+    borderColor: Nocturne.edge,
+    paddingVertical: 16,
+    alignItems: 'center',
+  },
+  appChipSlot: { width: '47.5%' },
+  appChipLabel: { color: Nocturne.text, fontSize: 16, fontWeight: '500' },
+  previewNote: {
+    flexDirection: 'row',
+    gap: 10,
+    alignItems: 'flex-start',
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: Nocturne.line,
+    padding: 12,
+  },
+  previewLabel: { color: Nocturne.text, fontSize: 11, fontWeight: '700', letterSpacing: 1.2, marginTop: 2 },
+  previewText: { flex: 1, color: Nocturne.text2, fontSize: 13, lineHeight: 18 },
+  // Outlined at rest: a grey fill would read as disabled.
+  hold: {
+    minHeight: 64,
+    paddingVertical: 16,
+    borderRadius: 32,
+    borderWidth: 2,
+    borderColor: Nocturne.text,
+    overflow: 'hidden',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  holdFill: { position: 'absolute', left: 0, top: 0, bottom: 0, backgroundColor: Nocturne.cta },
+  holdLabel: { color: '#FFFFFF', fontSize: 17, fontWeight: '600', mixBlendMode: 'difference' },
+  holdLabelDone: { ...DisplayFont, fontSize: 20 },
+});

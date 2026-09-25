@@ -154,3 +154,28 @@ Also: `--s 0` removes most of Midjourney's polish, so go up to 25 or 50 only if 
 images look lifeless. Try a Vary (Subtle) pass on the best image. For the final
 mascot, have a person redraw the pick as vectors. That is the only reliable way to
 lose the AI look, and the app will need vectors for animation anyway.
+
+## Plush photo set (placeholder art for onboarding)
+
+Added September 24, 2026. A faked "photo of a real plush" in one bed nook, used
+until illustrator art exists. Make one hero image, then reuse it with `--oref`
+for every other state.
+
+**Hero (night, mask down):**
+
+```
+35mm film photo of a handmade plush raccoon toy tucked into a small unmade bed, soft grey faux fur with black eye-mask markings, round chubby body, small pointy ears, thick striped tail curled over him like a blanket, a dusty rose fabric sleep mask pulled down over his eyes, rumpled linen sheets, dim warm bedside lamp light from the left, deep shadows, shallow depth of field, slight film grain, muted colors, quiet and cozy --ar 3:4 --style raw --s 75 --no glow, neon, rim light, bloom, bokeh lights, text, watermark, cartoon, 3D render
+```
+
+**Other states:** add `--oref <hero URL> --ow 400`, keep the bed, sheets and
+camera angle, and change only the pose, mask and light.
+
+| State | Swap in |
+|---|---|
+| Dawn | `sleep mask pushed halfway up, one tired eye open, cool blue window light before sunrise` |
+| Day | `sleep mask pushed up on his forehead, sitting up, unimpressed half-lidded stare, bright flat daylight from a window` |
+| Betrayed (200 steps) | `sleep mask just lifted, eyes wide in betrayal, harsh morning sun across his face` |
+| Paywall | `fast asleep on his side, mask down, tail hugged like a pillow, dim warm lamp light` |
+
+Keep the mask color word identical in every prompt. Fix drift with Vary Region
+instead of rerolling.

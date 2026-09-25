@@ -100,6 +100,9 @@ Approved lines, by moment. Add as they're written and tested.
 
 | Moment | Line | Status |
 |---|---|---|
+| Onboarding opener, day | "Your phone keeps me up." / "I'm Trundle. Raccoon. I'd like to sleep." | In app |
+| Onboarding opener, 10 PM–5 AM | "It's 12:47." / "Why are we awake." | In app |
+| Onboarding opener, 5–10 AM | "You're still in bed." / "I can tell. I'm also still in bed." | In app |
 | Bedtime | "Phone down. I'm not asking." | Draft |
 | Blocked app | "Shh. I'm sleeping. So are they." | Draft |
 | App opened at 2am | "Why are we awake." | Draft |

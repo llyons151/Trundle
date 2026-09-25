@@ -314,3 +314,54 @@ background color or blur, a small icon, a title, a subtitle and buttons. The
 full-bleed painted shield in the mockup can't be built natively. Use it for share
 cards; the real shield uses a painted head icon, a dark background and his line
 as the title. See docs/MASCOT_DIRECTION.md, "Surfaces".
+
+## 6. Cool blue/black palettes for onboarding (September 24, 2026)
+
+The user found the neutral "graphite" onboarding too grey. The app is going for a
+cool blue and black look (moon-over-trees reference: navy-black, royal navy,
+moon white, steel blue). Five palettes are defined in `src/constants/nocturne.ts`.
+The default is `midnight`; on web, preview any of them with `?palette=<name>`.
+
+Comparison board of six screens in each palette:
+`docs/design-references/onboarding-palette-board.png`.
+
+All text pairs pass WCAG AA with a wide margin: body text 16–18:1, secondary
+text 8.7–10:1, progress track above 3:1.
+
+| Palette | Background | Surface | Button | Notes |
+|---|---|---|---|---|
+| graphite | `#0B0B0C` | `#161617` | white | The original; reads grey |
+| midnight (default) | `#060B18` | `#0F1A33` | moon white `#EEF6FB` | Near-black blue; subtle |
+| navy | `#0A1233` | `#121E4E` | white | The most visibly blue; bolder |
+| steel | `#07141D` | `#0E2230` | pale `#DDF0F8` | Teal slate; the pale button edges toward icy blue (LoL caution) |
+| moonrise | navy `#16254F` top → `#050A17` | `#111B36` | moon white | Sky gradient like the reference photo; the coziest |
+
+Rules kept:
+- No glow anywhere.
+- The pale moon-white is used only for text and buttons, never as a large fill,
+  so it doesn't read as ice.
+
+### Moonrise, built (September 24, 2026)
+
+Moonrise is now the default palette. The onboarding sits under one night sky
+(`src/features/onboarding/night-sky.tsx`):
+
+- **Sky:** a navy-to-black gradient.
+- **Moon:** a real moon photo, crisp-edged with no halo, tinted cold blue-white
+  (Ranni-inspired, but our own asset). It is fully visible on quiet screens
+  (intro, loader, Armed, Done), faint behind busy ones, and hidden on the reveal,
+  demo, app picker and paywall. Text on moon screens starts below it.
+- **Texture:** a fine film grain.
+- **Mark:** a faint "TRUNDLE · SLEEP DEPT. · EST. 2026" seal around a crescent.
+
+**Typography:** numbers use Barlow Condensed ExtraBold in moon white
+`#CFE6F7`: the 62% stat, the step count, and "That's 16 full days." The reveal
+rolls through neighboring values the way Opal's does (7 hours / **7½ hours** /
+8 hours), then the grid fills. The reveal has a "Share this" button.
+
+**Assets and licenses:**
+- Moon: NASA/GSFC/Arizona State University, LRO nearside, public domain
+  (Wikimedia Commons "Moon nearside LRO.jpg").
+- Barlow Condensed: SIL Open Font License.
+- Grain: generated in-house.
+- Opener photo: supplied by the user. Confirm its license before shipping.

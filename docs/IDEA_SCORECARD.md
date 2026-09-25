@@ -11,7 +11,7 @@ until it is updated.
 
 | Dimension | Score | Why |
 |---|---|---|
-| Problem strength | 9 | Pew (Sept 2026, n=9,750): 62% of 18–29s say their phone hurts their sleep, and only 25% of people who tried to cut back succeeded. About 85% check their phone within 10 minutes of waking. |
+| Problem strength | 9 | Pew (Sept 2026, n=9,750): 62% of smartphone owners aged 18–29 say it hurts how much sleep they get, and only 25% of people who tried to cut back say it went extremely or very well. About 85% check their phone within 10 minutes of waking. |
 | Willingness to pay | 7 | Opal converted 20% of downloads to paid when it had a hard paywall; Brick and Bloom sell $39–59 hardware. Price pushback starts around $100/yr. |
 | Founder–market fit | 8 | Short-form video is how this category grows (Quittr, BePresent, Early, Finch). |
 | Structural retention | 6 | A nightly lock keeps working by default, but Health & Fitness annual renewal is the lowest of any category (about 28–30%). |

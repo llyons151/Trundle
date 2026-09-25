@@ -3,8 +3,9 @@
 Updated September 24, 2026. This is the source of truth for product direction. It
 replaces the September 21 plan, which is archived at
 [docs/archive/GAME_PLAN_2026-09-21.md](docs/archive/GAME_PLAN_2026-09-21.md). The
-reasoning behind it is in [docs/IDEA_SCORECARD.md](docs/IDEA_SCORECARD.md) and
-[docs/VALIDATION_RESEARCH.md](docs/VALIDATION_RESEARCH.md).
+reasoning behind it is in [docs/IDEA_SCORECARD.md](docs/IDEA_SCORECARD.md),
+[docs/VALIDATION_RESEARCH.md](docs/VALIDATION_RESEARCH.md) and
+[docs/DESIRE_VALIDATION.md](docs/DESIRE_VALIDATION.md) (what makes people want it).
 
 ## The product in one line
 
@@ -18,7 +19,7 @@ He's strict about the situation and never shames the user.
 ## Why this, and why now
 
 - **The problem is big.** Pew (Sept 2026): 62% of 18–29s say their phone hurts
-  their sleep, and only 25% of people who tried to cut back succeeded.
+  their sleep, and only 25% of people who tried to cut back say it went extremely or very well.
 - **The bedtime lock is table stakes.** Opal advertises it ("Sleep Time 10PM–8AM
   Block All"). **The morning is the wedge.** Opal's morning ends at a clock time,
   even if you're still in bed. Trundle's ends when you get up. Morning-task apps
@@ -102,13 +103,20 @@ How to keep the brand from reading as generated:
 
 ## Money
 
-- **Hard paywall at the end of onboarding:** $29.99–34.99 a year and a monthly
-  plan, with a short trial. Plain renewal terms (App Store guideline 3.1.2), with
+- **Hard paywall at the end of onboarding:** $39.99 a year with a 7-day free trial
+  is the default and the only plan shown up front. $9.99 a month (no trial) sits
+  behind a "See other plans" link, so users have to switch on purpose. Plain renewal terms (App Store guideline 3.1.2), with
   no fake countdowns or hidden prices.
 - A lifetime plan is an experiment for later. Keep a freemium fallback ready if
   word of mouth is weak (Opal's revenue grew after it went freemium).
-- **Onboarding shape:** a short quiz → one number built from the user's own
-  answers → pick apps and times → tonight's lock scheduled → paywall.
+- **Onboarding shape:** about 25 screens (details in
+  [docs/ONBOARDING_CONVERSION.md](docs/ONBOARDING_CONVERSION.md)):
+  1. A 7-question quiz.
+  2. The "hours a week on your phone in bed" number.
+  3. Set up apps and times ("tonight's lock is ready").
+  4. A two-page paywall with a 7-day trial on the annual plan.
+  5. The lock **arms only after purchase**. Nothing ever blocks the phone of
+     someone who hasn't paid.
 
 ## Build order
 
@@ -169,6 +177,24 @@ A TestFlight group of 100–300 users should show:
 Pass, then launch hard. Fail, then fix it or stop, **before** spending the
 audience. Expectations: most new apps stay under $1K a month; a strong result is
 $10–25K a month by month 12 ([docs/IDEA_SCORECARD.md](docs/IDEA_SCORECARD.md)).
+
+## Ideas to test (not committed yet)
+
+From [docs/DESIRE_VALIDATION.md](docs/DESIRE_VALIDATION.md), September 24, 2026.
+
+- **Lead hook:** test "My phone won't work until I get out of bed" against "I have
+  to walk 200 steps before TikTok works."
+- **Positioning:** "the one lock you can't beat from bed."
+- **Back-to-bed risk:** after unlocking, people may get back into bed and scroll.
+  Measure it in the concierge week.
+  - Candidate fix, a two-part wake-up: 100 steps, then the last 100 count only
+    after about 10 minutes.
+- **Viral features:**
+  1. His voice as real audio, aiming to become a TikTok sound.
+  2. Roasts when the anti-shake check catches cheating.
+  3. An "excuse court" for passes, with rulings from the line bank rather than AI.
+  4. The morning share card as a receipt, including "time wasted in bed".
+  5. A falling-asleep goodnight at bedtime.
 
 ## Not part of the plan
 
